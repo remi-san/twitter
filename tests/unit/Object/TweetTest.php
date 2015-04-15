@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Twitter\Object\Tweet;
 use Twitter\Object\TwitterEntities;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
@@ -52,7 +53,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase {
         $source = null;
         $retweetedStatus = $this->getTweet();
 
-        $tweet = new \Twitter\Object\Tweet(
+        $tweet = new Tweet(
             $id,
             $this->sender,
             $text,
@@ -114,7 +115,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase {
         $this->entities->shouldReceive('getHashtags')->withNoArgs()->andReturn(array($hashtag));
         $this->entities->shouldReceive('getUserMentions')->withNoArgs()->andReturn(array($userMention));
 
-        $tweet = new \Twitter\Object\Tweet(
+        $tweet = new Tweet(
             $id,
             $this->sender,
             $text,

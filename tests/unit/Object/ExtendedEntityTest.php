@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Twitter\Object\TwitterExtendedEntity;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
 class ExtendedEntityTest extends \PHPUnit_Framework_TestCase {
@@ -24,7 +25,7 @@ class ExtendedEntityTest extends \PHPUnit_Framework_TestCase {
         $durationMillis = 1000;
         $variants = array('variant'=>$this->getVariantMedia());
 
-        $media = new \Twitter\Object\TwitterExtendedEntity(
+        $media = new TwitterExtendedEntity(
             $id,
             $mediaUrl,
             $mediaUrlHttps,

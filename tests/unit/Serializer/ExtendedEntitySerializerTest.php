@@ -5,7 +5,6 @@ use Twitter\Object\TwitterEntityIndices;
 use Twitter\Object\TwitterMediaSize;
 use Twitter\Object\TwitterVariantMedia;
 use Twitter\Serializer\TwitterExtendedEntitySerializer;
-use Twitter\Serializer\TwitterVariantMediaSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 

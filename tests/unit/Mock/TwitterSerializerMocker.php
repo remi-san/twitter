@@ -1,25 +1,19 @@
 <?php
 namespace Twitter\Test\Mock;
 
-use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Serializer\TwitterDeleteSerializer;
 use Twitter\Serializer\TwitterDirectMessageSerializer;
 use Twitter\Serializer\TwitterDisconnectSerializer;
 use Twitter\Serializer\TwitterEntitiesSerializer;
-use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterEventSerializer;
-use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Serializer\TwitterExtendedEntitySerializer;
 use Twitter\Serializer\TwitterFriendsSerializer;
 use Twitter\Serializer\TwitterHashtagSerializer;
 use Twitter\Serializer\TwitterMediaSerializer;
-use Twitter\Serializer\TwitterMediaSizeSerializer;
 use Twitter\Serializer\TwitterPlaceSerializer;
 use Twitter\Serializer\TwitterSymbolSerializer;
 use Twitter\Serializer\TwitterUrlSerializer;
-use Twitter\Serializer\TwitterUserMentionSerializer;
-use Twitter\Serializer\TwitterUserSerializer;
-use Twitter\Serializer\TwitterVariantMediaSerializer;
+
 
 trait TwitterSerializerMocker {
 

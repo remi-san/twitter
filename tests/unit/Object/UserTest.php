@@ -18,7 +18,7 @@ class UserTest extends \PHPUnit_Framework_TestCase {
         $profileHttpUrl = 'http://my.profile.url';
         $profileHttpsUrl = 'https://my.profile.url';
 
-        $user = new \Twitter\Object\TwitterUser($id, $screenName, $name, $lang, $location, $profileHttpUrl, $profileHttpsUrl);
+        $user = new TwitterUser($id, $screenName, $name, $lang, $location, $profileHttpUrl, $profileHttpsUrl);
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($name, $user->getName());

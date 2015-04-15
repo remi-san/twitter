@@ -15,7 +15,7 @@ class DeleteTest extends \PHPUnit_Framework_TestCase {
         $userId = 314;
         $date = new \DateTime();
 
-        $delete = new \Twitter\Object\TwitterDelete($type, $id, $userId, $date);
+        $delete = new TwitterDelete($type, $id, $userId, $date);
 
         $this->assertEquals($type, $delete->getType());
         $this->assertEquals($id, $delete->getId());

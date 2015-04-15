@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Twitter\Object\TwitterEntities;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
 class EntitiesTest extends \PHPUnit_Framework_TestCase {
@@ -18,7 +19,7 @@ class EntitiesTest extends \PHPUnit_Framework_TestCase {
         $media = array($this->getMedia());
         $extendedEntities = array($this->getExtendedEntity());
 
-        $entities = new \Twitter\Object\TwitterEntities($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
+        $entities = new TwitterEntities($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
 
         $this->assertEquals($hashtags, $entities->getHashtags());
         $this->assertEquals($symbols, $entities->getSymbols());

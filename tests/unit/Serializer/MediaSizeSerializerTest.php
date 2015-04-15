@@ -54,7 +54,7 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase {
         $mediaSizeObj->h = 1080;
         $mediaSizeObj->resize = false;
 
-        $mediaSize = $this->serializer->unserialize($mediaSizeObj, array(\Twitter\Serializer\TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
+        $mediaSize = $this->serializer->unserialize($mediaSizeObj, array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
 
         $this->assertEquals($sizeName, $mediaSize->getName());
         $this->assertEquals($mediaSizeObj->resize, $mediaSize->getResize());

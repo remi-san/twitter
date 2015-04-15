@@ -18,7 +18,7 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $object = $this->getTwitterEventTarget(); $object->shouldReceive('__toString')->andReturn('target');
         $date = new \DateTime();
 
-        $event = new \Twitter\Object\TwitterEvent($type, $source, $target, $object, $date);
+        $event = new TwitterEvent($type, $source, $target, $object, $date);
 
         $this->assertEquals($type, $event->getType());
         $this->assertEquals($source, $event->getSource());

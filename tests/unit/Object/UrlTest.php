@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Twitter\Object\TwitterUrl;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
 class UrlTest extends \PHPUnit_Framework_TestCase {
@@ -16,7 +17,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase {
         $expandedUrl = 'http://expanded.url';
         $indices = $this->getIndices();
 
-        $urlObject = new \Twitter\Object\TwitterUrl($url, $displayUrl, $expandedUrl, $indices);
+        $urlObject = new TwitterUrl($url, $displayUrl, $expandedUrl, $indices);
 
         $this->assertEquals($url, $urlObject->getUrl());
         $this->assertEquals($displayUrl, $urlObject->getDisplayUrl());

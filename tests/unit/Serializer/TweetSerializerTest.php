@@ -3,10 +3,10 @@ namespace Twitter\Test\Serializer;
 
 use Twitter\Object\Tweet;
 use Twitter\Serializer\TweetSerializer;
-use Twitter\Serializer\TwitterCoordinatesSerializer;
+
 use Twitter\Serializer\TwitterEntitiesSerializer;
-use Twitter\Serializer\TwitterPlaceSerializer;
-use Twitter\Serializer\TwitterUserSerializer;
+
+
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
