@@ -1,7 +1,7 @@
 <?php
 namespace Twitter\Serializer;
 
-use TwitterStream\Serializer;
+use Twitter\Serializer;
 
 class TwitterJsonSerializer implements Serializer
 {

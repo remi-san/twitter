@@ -1,0 +1,74 @@
+<?php
+namespace Twitter\Test\Serializer;
+
+use Twitter\Object\TwitterEntityIndices;
+use Twitter\Serializer\TwitterEntityIndicesSerializer;
+use Twitter\Serializer\TwitterUserMentionSerializer;
+use Twitter\Test\Mock\TwitterObjectMocker;
+use Twitter\Test\Mock\TwitterSerializerMocker;
+
+class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase {
+    use TwitterObjectMocker, TwitterSerializerMocker;
+
+    /**
+     * @var \Twitter\Serializer\TwitterUserMentionSerializer
+     */
+    private $serializer;
+
+    /**
+     * @var TwitterEntityIndicesSerializer
+     */
+    private $entityIndicesSerializer;
+
+    public function setUp()
+    {
+        $this->entityIndicesSerializer = $this->getEntityIndicesSerializer();
+        $this->serializer = new TwitterUserMentionSerializer($this->entityIndicesSerializer);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithIllegalObject()
+    {
+        $user = $this->getTwitterUser(42, 'douglas');
+
+        $this->setExpectedException('\\InvalidArgumentException');
+
+        $this->serializer->serialize($user);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithLegalObject()
+    {
+        $obj = $this->getUserMention('user');
+
+        $this->setExpectedException('\\BadMethodCallException');
+
+        $this->serializer->serialize($obj);
+    }
+
+    /**
+     * @test
+     */
+    public function testUnserialize()
+    {
+        $userMentionObj = new \stdClass();
+        $userMentionObj->id = 42;
+        $userMentionObj->screen_name = 'douglas';
+        $userMentionObj->name = 'Douglas Adams';
+        $userMentionObj->indices = array(42, 666);
+
+        $indices = new TwitterEntityIndices(42, 666);
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
+
+        $userMention = $this->serializer->unserialize($userMentionObj);
+
+        $this->assertEquals($userMentionObj->id, $userMention->getId());
+        $this->assertEquals($userMentionObj->screen_name, $userMention->getScreenName());
+        $this->assertEquals($userMentionObj->name, $userMention->getName());
+        $this->assertEquals($indices, $userMention->getIndices());
+    }
+} 
