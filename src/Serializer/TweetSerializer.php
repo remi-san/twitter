@@ -29,10 +29,10 @@ class TweetSerializer implements TwitterSerializer
     private $placeSerializer;
 
     /**
-     * @param TwitterUserSerializer $userSerializer
-     * @param TwitterEntitiesSerializer $twitterEntitiesSerializer
+     * @param TwitterUserSerializer        $userSerializer
+     * @param TwitterEntitiesSerializer    $twitterEntitiesSerializer
      * @param TwitterCoordinatesSerializer $coordinatesSerializer
-     * @param TwitterPlaceSerializer $placeSerializer
+     * @param TwitterPlaceSerializer       $placeSerializer
      */
     function __construct(
         TwitterUserSerializer $userSerializer,

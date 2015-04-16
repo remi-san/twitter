@@ -2,6 +2,9 @@
 namespace Twitter\Test\Serializer;
 
 use Twitter\Serializer\TwitterEntitiesSerializer;
+use Twitter\Serializer\TwitterExtendedEntitySerializer;
+use Twitter\Serializer\TwitterHashtagSerializer;
+use Twitter\Serializer\TwitterMediaSerializer;
 use Twitter\Serializer\TwitterSymbolSerializer;
 use Twitter\Serializer\TwitterUrlSerializer;
 use Twitter\Serializer\TwitterUserMentionSerializer;
@@ -12,22 +15,22 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterEntitiesSerializer
+     * @var TwitterEntitiesSerializer
      */
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterExtendedEntitySerializer
+     * @var TwitterExtendedEntitySerializer
      */
     private $extendedEntitySerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterHashtagSerializer
+     * @var TwitterHashtagSerializer
      */
     private $hashtagSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterMediaSerializer
+     * @var TwitterMediaSerializer
      */
     private $mediaSerializer;
 
@@ -42,7 +45,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
     private $urlSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterUserMentionSerializer
+     * @var TwitterUserMentionSerializer
      */
     private $userMentionSerializer;
 

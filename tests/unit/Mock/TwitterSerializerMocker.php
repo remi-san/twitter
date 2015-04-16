@@ -1,24 +1,31 @@
 <?php
 namespace Twitter\Test\Mock;
 
+use Twitter\Serializer\TweetSerializer;
+use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Serializer\TwitterDeleteSerializer;
 use Twitter\Serializer\TwitterDirectMessageSerializer;
 use Twitter\Serializer\TwitterDisconnectSerializer;
 use Twitter\Serializer\TwitterEntitiesSerializer;
+use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterEventSerializer;
+use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Serializer\TwitterExtendedEntitySerializer;
 use Twitter\Serializer\TwitterFriendsSerializer;
 use Twitter\Serializer\TwitterHashtagSerializer;
 use Twitter\Serializer\TwitterMediaSerializer;
+use Twitter\Serializer\TwitterMediaSizeSerializer;
 use Twitter\Serializer\TwitterPlaceSerializer;
 use Twitter\Serializer\TwitterSymbolSerializer;
 use Twitter\Serializer\TwitterUrlSerializer;
-
+use Twitter\Serializer\TwitterUserMentionSerializer;
+use Twitter\Serializer\TwitterUserSerializer;
+use Twitter\Serializer\TwitterVariantMediaSerializer;
 
 trait TwitterSerializerMocker {
 
     /**
-     * @return \Twitter\Serializer\TweetSerializer
+     * @return TweetSerializer
      */
     public function getTweetSerializer()
     {
@@ -50,7 +57,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterUserSerializer
+     * @return TwitterUserSerializer
      */
     public function getUserSerializer()
     {
@@ -66,7 +73,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterCoordinatesSerializer
+     * @return TwitterCoordinatesSerializer
      */
     public function getCoordinatesSerializer()
     {
@@ -106,7 +113,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterUserMentionSerializer
+     * @return TwitterUserMentionSerializer
      */
     public function getUserMentionSerializer()
     {
@@ -122,7 +129,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterEventTargetSerializer
+     * @return TwitterEventTargetSerializer
      */
     public function getEventTargetSerializer()
     {
@@ -154,7 +161,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterEntityIndicesSerializer
+     * @return TwitterEntityIndicesSerializer
      */
     public function getEntityIndicesSerializer()
     {
@@ -162,7 +169,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterMediaSizeSerializer
+     * @return TwitterMediaSizeSerializer
      */
     public function getMediaSizeSerializer()
     {
@@ -170,7 +177,7 @@ trait TwitterSerializerMocker {
     }
 
     /**
-     * @return \Twitter\Serializer\TwitterVariantMediaSerializer
+     * @return TwitterVariantMediaSerializer
      */
     public function getVariantMediaSerializer()
     {

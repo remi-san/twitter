@@ -3,6 +3,7 @@ namespace Twitter\Test\Serializer;
 
 use Twitter\Object\TwitterEntityIndices;
 use Twitter\Object\TwitterMediaSize;
+use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterMediaSerializer;
 use Twitter\Serializer\TwitterMediaSizeSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
@@ -17,7 +18,7 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase {
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterEntityIndicesSerializer
+     * @var TwitterEntityIndicesSerializer
      */
     private $entityIndicesSerializer;
 

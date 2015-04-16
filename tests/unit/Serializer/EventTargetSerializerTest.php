@@ -3,6 +3,7 @@ namespace Twitter\Test\Serializer;
 
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterUser;
+use Twitter\Serializer\TweetSerializer;
 use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
@@ -17,7 +18,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase {
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TweetSerializer
+     * @var TweetSerializer
      */
     private $tweetSerializer;
 

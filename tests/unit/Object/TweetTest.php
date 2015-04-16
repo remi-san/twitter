@@ -3,18 +3,19 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterEntities;
+use Twitter\Object\TwitterUser;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
 class TweetTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker;
 
     /**
-     * @var \Twitter\Object\TwitterUser
+     * @var TwitterUser
      */
     private $sender;
 
     /**
-     * @var \Twitter\Object\TwitterUser
+     * @var TwitterUser
      */
     private $recipient;
 

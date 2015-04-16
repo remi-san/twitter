@@ -44,8 +44,8 @@ trait TwitterObjectMocker {
     /**
      * @param int             $id
      * @param string          $text
-     * @param \Twitter\Object\TwitterUser     $sender
-     * @param \Twitter\Object\TwitterEntities $entities
+     * @param TwitterUser     $sender
+     * @param TwitterEntities $entities
      * @return TwitterMessage
      */
     public function getTwitterMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null)

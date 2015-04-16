@@ -24,7 +24,7 @@ class TwitterUserSerializer implements TwitterSerializer
     /**
      * @param  \stdClass $obj
      * @param  array     $context
-     * @return \Twitter\Object\TwitterUser
+     * @return TwitterUser
      */
     public function unserialize($obj, array $context = array())
     {

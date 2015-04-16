@@ -64,7 +64,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
     }
 
     /**
-     * @param  \Twitter\TwitterSerializable $object
+     * @param  TwitterSerializable $object
      * @return array
      */
     public function serialize(TwitterSerializable $object)
@@ -79,7 +79,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
     /**
      * @param  \stdClass $obj
      * @param  array     $context
-     * @return \Twitter\Object\TwitterEntities
+     * @return TwitterEntities
      */
     public function unserialize($obj, array $context = array())
     {

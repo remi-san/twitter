@@ -24,7 +24,7 @@ class TwitterHashtagSerializer implements TwitterSerializer
     }
 
     /**
-     * @param  \Twitter\TwitterSerializable $object
+     * @param  TwitterSerializable $object
      * @return array
      */
     public function serialize(TwitterSerializable $object)
@@ -39,7 +39,7 @@ class TwitterHashtagSerializer implements TwitterSerializer
     /**
      * @param  \stdClass $obj
      * @param  array     $context
-     * @return \Twitter\Object\TwitterHashtag
+     * @return TwitterHashtag
      */
     public function unserialize($obj, array $context = array())
     {

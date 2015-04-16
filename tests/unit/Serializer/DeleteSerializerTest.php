@@ -10,7 +10,7 @@ class DeleteSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterDeleteSerializer
+     * @var TwitterDeleteSerializer
      */
     private $serializer;
 

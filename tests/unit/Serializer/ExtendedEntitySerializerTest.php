@@ -4,7 +4,10 @@ namespace Twitter\Test\Serializer;
 use Twitter\Object\TwitterEntityIndices;
 use Twitter\Object\TwitterMediaSize;
 use Twitter\Object\TwitterVariantMedia;
+use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterExtendedEntitySerializer;
+use Twitter\Serializer\TwitterMediaSizeSerializer;
+use Twitter\Serializer\TwitterVariantMediaSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
@@ -17,17 +20,17 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase {
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterEntityIndicesSerializer
+     * @var TwitterEntityIndicesSerializer
      */
     private $entityIndicesSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterMediaSizeSerializer
+     * @var TwitterMediaSizeSerializer
      */
     private $mediaSizeSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterVariantMediaSerializer
+     * @var TwitterVariantMediaSerializer
      */
     private $variantMediaSerializer;
 

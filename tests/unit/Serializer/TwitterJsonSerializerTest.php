@@ -1,7 +1,12 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Twitter\Serializer\TwitterDeleteSerializer;
+use Twitter\Serializer\TwitterDirectMessageSerializer;
+use Twitter\Serializer\TwitterDisconnectSerializer;
 use Twitter\Serializer\TwitterEventSerializer;
+use Twitter\Serializer\TwitterEventTargetSerializer;
+use Twitter\Serializer\TwitterFriendsSerializer;
 use Twitter\Serializer\TwitterJsonSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
@@ -15,12 +20,12 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterEventTargetSerializer
+     * @var TwitterEventTargetSerializer
      */
     private $eventTargetSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterDirectMessageSerializer
+     * @var TwitterDirectMessageSerializer
      */
     private $directMessageSerializer;
 
@@ -30,17 +35,17 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
     private $eventSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterFriendsSerializer
+     * @var TwitterFriendsSerializer
      */
     private $friendsSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterDisconnectSerializer
+     * @var TwitterDisconnectSerializer
      */
     private $disconnectSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterDeleteSerializer
+     * @var TwitterDeleteSerializer
      */
     private $deleteSerializer;
 

@@ -9,7 +9,7 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterMediaSizeSerializer
+     * @var TwitterMediaSizeSerializer
      */
     private $serializer;
 

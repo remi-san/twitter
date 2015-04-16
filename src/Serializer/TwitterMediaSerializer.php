@@ -46,7 +46,7 @@ class TwitterMediaSerializer implements TwitterSerializer
     /**
      * @param  \stdClass $obj
      * @param  array     $context
-     * @return \Twitter\Object\TwitterMedia
+     * @return TwitterMedia
      */
     public function unserialize($obj, array $context = array())
     {

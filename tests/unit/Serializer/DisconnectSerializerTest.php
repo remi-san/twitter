@@ -9,7 +9,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterDisconnectSerializer
+     * @var TwitterDisconnectSerializer
      */
     private $serializer;
 

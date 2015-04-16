@@ -24,7 +24,7 @@ class TwitterDisconnectSerializer implements TwitterSerializer
     /**
      * @param  \stdClass $obj
      * @param  array     $context
-     * @return \Twitter\Object\TwitterDisconnect
+     * @return TwitterDisconnect
      */
     public function unserialize($obj, array $context = array())
     {

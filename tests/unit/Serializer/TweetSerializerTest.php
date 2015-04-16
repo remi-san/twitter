@@ -4,9 +4,12 @@ namespace Twitter\Test\Serializer;
 use Twitter\Object\Tweet;
 use Twitter\Serializer\TweetSerializer;
 
+use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Serializer\TwitterEntitiesSerializer;
 
 
+use Twitter\Serializer\TwitterPlaceSerializer;
+use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
@@ -14,12 +17,12 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TweetSerializer
+     * @var TweetSerializer
      */
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterUserSerializer
+     * @var TwitterUserSerializer
      */
     private $userSerializer;
 
@@ -29,12 +32,12 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
     private $entitiesSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterCoordinatesSerializer
+     * @var TwitterCoordinatesSerializer
      */
     private $coordinatesSerializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterPlaceSerializer
+     * @var TwitterPlaceSerializer
      */
     private $placeSerializer;
 

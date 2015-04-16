@@ -2,6 +2,7 @@
 namespace Twitter\Test\Serializer;
 
 use Twitter\Object\TwitterEntityIndices;
+use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterHashtagSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
@@ -15,7 +16,7 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase {
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterEntityIndicesSerializer
+     * @var TwitterEntityIndicesSerializer
      */
     private $entityIndicesSerializer;
 

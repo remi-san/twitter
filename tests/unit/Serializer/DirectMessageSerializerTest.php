@@ -11,12 +11,12 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterDirectMessageSerializer
+     * @var TwitterDirectMessageSerializer
      */
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterUserSerializer
+     * @var TwitterUserSerializer
      */
     private $userSerializer;
 

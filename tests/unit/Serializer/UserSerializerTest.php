@@ -9,7 +9,7 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterUserSerializer
+     * @var TwitterUserSerializer
      */
     private $serializer;
 

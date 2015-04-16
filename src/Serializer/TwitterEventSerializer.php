@@ -44,7 +44,7 @@ class TwitterEventSerializer implements TwitterSerializer
     /**
      * @param  \stdClass $obj
      * @param  array     $context
-     * @return \Twitter\Object\TwitterEvent
+     * @return TwitterEvent
      */
     public function unserialize($obj, array $context = array())
     {

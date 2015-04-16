@@ -29,7 +29,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
     }
 
     /**
-     * @param  \Twitter\TwitterSerializable $object
+     * @param  TwitterSerializable $object
      * @return array
      */
     public function serialize(TwitterSerializable $object)

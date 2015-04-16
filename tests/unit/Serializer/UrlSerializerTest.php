@@ -2,6 +2,7 @@
 namespace Twitter\Test\Serializer;
 
 use Twitter\Object\TwitterEntityIndices;
+use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterUrlSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
@@ -10,12 +11,12 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterUrlSerializer
+     * @var TwitterUrlSerializer
      */
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterEntityIndicesSerializer
+     * @var TwitterEntityIndicesSerializer
      */
     private $entityIndicesSerializer;
 

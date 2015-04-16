@@ -13,12 +13,12 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var \Twitter\Serializer\TwitterEventSerializer
+     * @var TwitterEventSerializer
      */
     private $serializer;
 
     /**
-     * @var \Twitter\Serializer\TwitterUserSerializer
+     * @var TwitterUserSerializer
      */
     private $userSerializer;
 

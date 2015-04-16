@@ -2,23 +2,25 @@
 namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterDirectMessage;
+use Twitter\Object\TwitterEntities;
+use Twitter\Object\TwitterUser;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
 class DirectMessageTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker;
 
     /**
-     * @var \Twitter\Object\TwitterUser
+     * @var TwitterUser
      */
     private $sender;
 
     /**
-     * @var \Twitter\Object\TwitterUser
+     * @var TwitterUser
      */
     private $recipient;
 
     /**
-     * @var \Twitter\Object\TwitterEntities
+     * @var TwitterEntities
      */
     private $entities;
 
