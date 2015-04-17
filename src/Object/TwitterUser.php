@@ -122,4 +122,12 @@ class TwitterUser implements TwitterSerializable
     {
         return $this->screenName;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return '@'.$this->screenName;
+    }
 } 
