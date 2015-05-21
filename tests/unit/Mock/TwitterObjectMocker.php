@@ -42,10 +42,10 @@ trait TwitterObjectMocker {
     }
 
     /**
-     * @param int             $id
-     * @param string          $text
-     * @param TwitterUser     $sender
-     * @param TwitterEntities $entities
+     * @param  int             $id
+     * @param  string          $text
+     * @param  TwitterUser     $sender
+     * @param  TwitterEntities $entities
      * @return TwitterMessage
      */
     public function getTwitterMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null)
@@ -60,24 +60,36 @@ trait TwitterObjectMocker {
     }
 
     /**
-     * @param  int $id
+     * @param  int             $id
+     * @param  string          $text
+     * @param  TwitterUser     $sender
+     * @param  TwitterEntities $entities
      * @return Tweet
      */
-    public function getTweet($id = null) {
+    public function getTweet($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null) {
         $tweet = \Mockery::mock('\\Twitter\\Object\\Tweet');
         $tweet->shouldReceive('getId')->andReturn($id);
+        if ($text) { $tweet->shouldReceive('getText')->andReturn($text); }
+        if ($text) { $tweet->shouldReceive('getEntities')->andReturn($entities); }
+        if ($text) { $tweet->shouldReceive('getSender')->andReturn($sender); }
 
         return $tweet;
     }
 
     /**
-     * @param  int $id
+     * @param  int             $id
+     * @param  string          $text
+     * @param  TwitterUser     $sender
+     * @param  TwitterEntities $entities
      * @return TwitterDirectMessage
      */
-    public function getDirectMessage($id = null)
+    public function getDirectMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null)
     {
         $dm = \Mockery::mock('\\Twitter\\Object\\TwitterDirectMessage');
         $dm->shouldReceive('getId')->andReturn($id);
+        if ($text) { $dm->shouldReceive('getText')->andReturn($text); }
+        if ($text) { $dm->shouldReceive('getEntities')->andReturn($entities); }
+        if ($text) { $dm->shouldReceive('getSender')->andReturn($sender); }
 
         return $dm;
     }
@@ -139,6 +151,7 @@ trait TwitterObjectMocker {
         $twitterUser->shouldReceive('getId')->andReturn($id);
         $twitterUser->shouldReceive('getName')->andReturn($name);
         $twitterUser->shouldReceive('getScreenName')->andReturn($name);
+        $twitterUser->shouldReceive('__toString')->andReturn('@'.$name);
 
         return $twitterUser;
     }
