@@ -46,15 +46,17 @@ trait TwitterObjectMocker {
      * @param  string          $text
      * @param  TwitterUser     $sender
      * @param  TwitterEntities $entities
+     * @param  \DateTime       $date
      * @return TwitterMessage
      */
-    public function getTwitterMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null)
+    public function getTwitterMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null, \DateTime $date = null)
     {
         $twitterMessage = \Mockery::mock('\\Twitter\\TwitterMessage');
         $twitterMessage->shouldReceive('getId')->andReturn($id);
         $twitterMessage->shouldReceive('getText')->andReturn($text);
         $twitterMessage->shouldReceive('getEntities')->andReturn($entities);
         $twitterMessage->shouldReceive('getSender')->andReturn($sender);
+        $twitterMessage->shouldReceive('getDate')->andReturn($date);
 
         return $twitterMessage;
     }
