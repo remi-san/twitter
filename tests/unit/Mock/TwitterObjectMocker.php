@@ -162,17 +162,20 @@ trait TwitterObjectMocker {
      * @param  TwitterUser $dmUser
      * @param  string      $dmMessage
      * @param  string      $tweetMessage
+     * @param  mixed       $context
      * @return TwitterRestApi
      */
-    public function getTwitterRestApi(TwitterUser $dmUser = null, $dmMessage = null, $tweetMessage = null)
+    public function getTwitterRestApi(TwitterUser $dmUser = null, $dmMessage = null, $tweetMessage = null, $context = null)
     {
+        var_dump($tweetMessage);
+
         $tra = \Mockery::mock('\\TwitterStream\\API\\REST\\TwitterRestApi');
 
-        $dmFunction = $tra->shouldReceive('sendDirectMessage');
-        if ($dmUser && $dmMessage) { $dmFunction->with($dmUser, $dmMessage)->once() ;}
+        if ($dmUser && $dmMessage) { $tra->shouldReceive('sendDirectMessage')->with($dmUser, $dmMessage)->once() ;}
+        else { $tra->shouldReceive('sendDirectMessage'); }
 
-        $tweetFunction = $tra->shouldReceive('sendTweet');
-        if ($tweetMessage) { $tweetFunction->with($tweetMessage)->once(); }
+        if ($tweetMessage) { $tra->shouldReceive('sendTweet')->with($tweetMessage, $context)->once(); }
+        else { $tra->shouldReceive('sendTweet'); }
 
         return $tra;
     }
