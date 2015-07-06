@@ -167,8 +167,6 @@ trait TwitterObjectMocker {
      */
     public function getTwitterRestApi(TwitterUser $dmUser = null, $dmMessage = null, $tweetMessage = null, $context = null)
     {
-        var_dump($tweetMessage);
-
         $tra = \Mockery::mock('\\TwitterStream\\API\\REST\\TwitterRestApi');
 
         if ($dmUser && $dmMessage) { $tra->shouldReceive('sendDirectMessage')->with($dmUser, $dmMessage)->once() ;}
