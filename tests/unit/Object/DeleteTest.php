@@ -5,6 +5,11 @@ use Twitter\Object\TwitterDelete;
 
 class DeleteTest extends \PHPUnit_Framework_TestCase {
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

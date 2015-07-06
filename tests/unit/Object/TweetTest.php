@@ -32,6 +32,11 @@ class TweetTest extends \PHPUnit_Framework_TestCase {
         $this->entities  = $this->getTwitterEntities();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

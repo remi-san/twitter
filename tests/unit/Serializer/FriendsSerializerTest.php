@@ -18,6 +18,11 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterFriendsSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

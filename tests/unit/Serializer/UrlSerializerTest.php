@@ -26,6 +26,11 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterUrlSerializer($this->entityIndicesSerializer);
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

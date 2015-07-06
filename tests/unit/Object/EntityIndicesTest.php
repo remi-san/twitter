@@ -5,6 +5,11 @@ use Twitter\Object\TwitterEntityIndices;
 
 class EntityIndicesTest extends \PHPUnit_Framework_TestCase {
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

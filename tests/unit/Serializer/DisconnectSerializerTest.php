@@ -18,6 +18,11 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterDisconnectSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

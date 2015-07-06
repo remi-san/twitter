@@ -5,6 +5,11 @@ use Twitter\Object\TwitterCoordinates;
 
 class CoordinatesTest extends \PHPUnit_Framework_TestCase {
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

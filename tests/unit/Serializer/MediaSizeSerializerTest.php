@@ -18,6 +18,11 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterMediaSizeSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

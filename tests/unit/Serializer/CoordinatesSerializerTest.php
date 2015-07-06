@@ -18,6 +18,11 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterCoordinatesSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

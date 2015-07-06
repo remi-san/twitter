@@ -19,6 +19,11 @@ class DeleteSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterDeleteSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

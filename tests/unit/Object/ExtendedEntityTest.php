@@ -7,6 +7,11 @@ use Twitter\Test\Mock\TwitterObjectMocker;
 class ExtendedEntityTest extends \PHPUnit_Framework_TestCase {
     use TwitterObjectMocker;
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

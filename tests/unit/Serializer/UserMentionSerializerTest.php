@@ -26,6 +26,11 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterUserMentionSerializer($this->entityIndicesSerializer);
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

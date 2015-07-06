@@ -5,6 +5,11 @@ use Twitter\Object\TwitterUser;
 
 class UserTest extends \PHPUnit_Framework_TestCase {
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

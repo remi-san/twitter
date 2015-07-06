@@ -18,6 +18,11 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterEntityIndicesSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

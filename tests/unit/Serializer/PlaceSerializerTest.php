@@ -19,6 +19,11 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterPlaceSerializer();
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

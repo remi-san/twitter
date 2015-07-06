@@ -28,6 +28,11 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->serializer = new TwitterEventTargetSerializer($this->tweetSerializer);
     }
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */

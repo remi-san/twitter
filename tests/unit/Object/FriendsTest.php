@@ -5,6 +5,11 @@ use Twitter\Object\TwitterFriends;
 
 class FriendsTest extends \PHPUnit_Framework_TestCase {
 
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @test
      */
