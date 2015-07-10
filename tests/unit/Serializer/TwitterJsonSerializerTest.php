@@ -8,6 +8,7 @@ use Twitter\Serializer\TwitterEventSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Serializer\TwitterFriendsSerializer;
 use Twitter\Serializer\TwitterJsonSerializer;
+use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
@@ -49,6 +50,11 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     private $deleteSerializer;
 
+    /**
+     * @var TwitterUserSerializer
+     */
+    private $userSerializer;
+
     public function setUp()
     {
         $this->eventTargetSerializer = $this->getEventTargetSerializer();
@@ -57,6 +63,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->friendsSerializer = $this->getFriendsSerializer();
         $this->disconnectSerializer = $this->getDisconnectSerializer();
         $this->deleteSerializer = $this->getDeleteSerializer();
+        $this->userSerializer = $this->getUserSerializer();
 
         $this->serializer = new TwitterJsonSerializer(
             $this->eventTargetSerializer,
@@ -64,7 +71,8 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
             $this->eventSerializer,
             $this->friendsSerializer,
             $this->disconnectSerializer,
-            $this->deleteSerializer
+            $this->deleteSerializer,
+            $this->userSerializer
         );
     }
 

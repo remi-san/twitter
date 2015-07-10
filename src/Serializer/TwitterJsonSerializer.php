@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Serializer;
 
+use Twitter\Object\TwitterUser;
 use Twitter\Serializer;
 
 class TwitterJsonSerializer implements Serializer
@@ -37,13 +38,20 @@ class TwitterJsonSerializer implements Serializer
     private $twitterDeleteSerializer;
 
     /**
+     * @var TwitterUserSerializer
+     */
+    private $twitterUserSerializer;
+
+    /**
+     * Constructor
+     *
      * @param TwitterEventTargetSerializer $twitterTargetSerializer
      * @param TwitterDirectMessageSerializer $directMessageSerializer
      * @param TwitterEventSerializer $twitterEventSerializer
      * @param TwitterFriendsSerializer $twitterFriendsSerializer
      * @param TwitterDisconnectSerializer $twitterDisconnectSerializer
      * @param TwitterDeleteSerializer $twitterDeleteSerializer
-     * @internal param TwitterEventTargetSerializer $tweetSerializer
+     * @param TwitterUserSerializer $twitterUserSerializer
      */
     function __construct(
         TwitterEventTargetSerializer $twitterTargetSerializer,
@@ -51,7 +59,8 @@ class TwitterJsonSerializer implements Serializer
         TwitterEventSerializer $twitterEventSerializer,
         TwitterFriendsSerializer $twitterFriendsSerializer,
         TwitterDisconnectSerializer $twitterDisconnectSerializer,
-        TwitterDeleteSerializer $twitterDeleteSerializer
+        TwitterDeleteSerializer $twitterDeleteSerializer,
+        TwitterUserSerializer $twitterUserSerializer
     )
     {
         $this->twitterTargetSerializer = $twitterTargetSerializer;
@@ -60,6 +69,7 @@ class TwitterJsonSerializer implements Serializer
         $this->twitterFriendsSerializer = $twitterFriendsSerializer;
         $this->twitterDisconnectSerializer = $twitterDisconnectSerializer;
         $this->twitterDeleteSerializer = $twitterDeleteSerializer;
+        $this->twitterUserSerializer = $twitterUserSerializer;
     }
 
     /**
@@ -68,6 +78,9 @@ class TwitterJsonSerializer implements Serializer
      */
     public function serialize($object)
     {
+        if ($object instanceof TwitterUser) {
+            return json_encode($this->twitterUserSerializer->serialize($object));
+        }
         throw new \BadMethodCallException('Not Implemented');
     }
 
@@ -93,6 +106,8 @@ class TwitterJsonSerializer implements Serializer
             $object = $this->twitterDisconnectSerializer->unserialize($obj);
         } else if (isset($obj->delete)) {
             $object = $this->twitterDeleteSerializer->unserialize($obj);
+        } else if (isset($obj->screen_name)) {
+            $object = $this->twitterUserSerializer->unserialize($obj);
         }
 
         return $object;

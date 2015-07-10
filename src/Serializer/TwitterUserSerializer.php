@@ -9,8 +9,10 @@ class TwitterUserSerializer implements TwitterSerializer
 {
 
     /**
+     * Serialize a twitter user
+     *
      * @param  TwitterSerializable $object
-     * @return array
+     * @return array|object
      */
     public function serialize(TwitterSerializable $object)
     {
@@ -18,10 +20,21 @@ class TwitterUserSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterUser');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $user = new \stdClass();
+        $user->id = $object->getId();
+        $user->screen_name = $object->getScreenName();
+        $user->name = $object->getName();
+        $user->lang = $object->getLang();
+        $user->location = $object->getLocation();
+        $user->profile_background_image_url = $object->getProfileImageUrl();
+        $user->profile_background_image_url_https = $object->getProfileImageUrlHttps();
+
+        return $user;
     }
 
     /**
+     * Unserialize a twitter user
+     *
      * @param  \stdClass $obj
      * @param  array     $context
      * @return TwitterUser
