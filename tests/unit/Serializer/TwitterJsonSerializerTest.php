@@ -84,13 +84,27 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function testSerializeWithIllegalObject()
     {
         $obj = $this->getUserMention('user');
 
         $this->setExpectedException('\\BadMethodCallException');
 
         $this->serializer->serialize($obj);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithLegalObject()
+    {
+        $obj = $this->getTwitterUser(1, 'douglas');
+
+        $this->userSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals('{}', $serialized);
     }
 
     /**
@@ -187,12 +201,29 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
         $obj = new \stdClass();
         $obj->delete = new \stdClass();
 
-        $delete = $this->getDeleteSerializer();
+        $delete = $this->getDelete();
 
         $this->deleteSerializer->shouldReceive('unserialize')->andReturn($delete)->once();
 
         $return = $this->serializer->unserialize(json_encode($obj));
 
         $this->assertEquals($delete, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function testUnserializeUser()
+    {
+        $obj = new \stdClass();
+        $obj->screen_name = 'douglas';
+
+        $user = $this->getTwitterUser(1, 'douglas');
+
+        $this->userSerializer->shouldReceive('unserialize')->andReturn($user)->once();
+
+        $return = $this->serializer->unserialize(json_encode($obj));
+
+        $this->assertEquals($user, $return);
     }
 } 

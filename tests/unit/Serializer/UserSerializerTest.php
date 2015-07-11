@@ -40,11 +40,21 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $obj = $this->getTwitterUser(1, 'user');
+        $twitterUser = $this->getTwitterUser(1, 'user');
+        $twitterUser->shouldReceive('getLang')->andReturn('en');
+        $twitterUser->shouldReceive('getLocation')->andReturn('location');
+        $twitterUser->shouldReceive('getProfileImageUrl')->andReturn('url');
+        $twitterUser->shouldReceive('getProfileImageUrlHttps')->andReturn('surl');
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($twitterUser);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($twitterUser->getId(), $serialized->id);
+        $this->assertEquals($twitterUser->getScreenName(), $serialized->screen_name);
+        $this->assertEquals($twitterUser->getName(), $serialized->name);
+        $this->assertEquals($twitterUser->getLang(), $serialized->lang);
+        $this->assertEquals($twitterUser->getLocation(), $serialized->location);
+        $this->assertEquals($twitterUser->getProfileImageUrl(), $serialized->profile_background_image_url);
+        $this->assertEquals($twitterUser->getProfileImageUrlHttps(), $serialized->profile_background_image_url_https);
     }
 
     /**
