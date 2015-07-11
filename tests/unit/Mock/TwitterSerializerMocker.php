@@ -13,6 +13,7 @@ use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Serializer\TwitterExtendedEntitySerializer;
 use Twitter\Serializer\TwitterFriendsSerializer;
 use Twitter\Serializer\TwitterHashtagSerializer;
+use Twitter\Serializer\TwitterJsonSerializer;
 use Twitter\Serializer\TwitterMediaSerializer;
 use Twitter\Serializer\TwitterMediaSizeSerializer;
 use Twitter\Serializer\TwitterPlaceSerializer;
@@ -23,6 +24,14 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Serializer\TwitterVariantMediaSerializer;
 
 trait TwitterSerializerMocker {
+
+    /**
+     * @return TwitterJsonSerializer
+     */
+    public function getTwitterJsonSerializer()
+    {
+        return \Mockery::mock('\\Twitter\\Serializer\\TwitterJsonSerializer');
+    }
 
     /**
      * @return TweetSerializer
