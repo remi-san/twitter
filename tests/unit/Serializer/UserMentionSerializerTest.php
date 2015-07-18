@@ -48,11 +48,23 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $obj = $this->getUserMention('user');
+        $id = 42;
+        $name = 'douglas';
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $indices = $this->getIndices();
+        $indicesObj = new \stdClass();
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
 
-        $this->serializer->serialize($obj);
+        $obj = $this->getUserMention($name);
+        $obj->shouldReceive('getId')->andReturn($id);
+        $obj->shouldReceive('getIndices')->andReturn($indices);
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals($id, $serialized->id);
+        $this->assertEquals($name, $serialized->screen_name);
+        $this->assertEquals($name, $serialized->name);
+        $this->assertEquals($indicesObj, $serialized->indices);
     }
 
     /**

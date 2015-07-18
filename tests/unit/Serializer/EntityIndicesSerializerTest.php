@@ -40,11 +40,17 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $from = 42;
+        $to = 666;
+
         $obj = $this->getTwitterEntityIndices();
+        $obj->shouldReceive('getFrom')->andReturn($from);
+        $obj->shouldReceive('getTo')->andReturn($to);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($from, $serialized[0]);
+        $this->assertEquals($to, $serialized[1]);
     }
 
     /**

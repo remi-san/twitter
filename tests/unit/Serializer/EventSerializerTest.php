@@ -2,6 +2,7 @@
 namespace Twitter\Test\Serializer;
 
 use Twitter\Object\Tweet;
+use Twitter\Object\TwitterEvent;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterEventSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
@@ -56,11 +57,35 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $type = TwitterEvent::FAVORITE;
+        $date = new \DateTime();
+
+        $sourceObj = new \stdClass(); $sourceObj->type = 'source';
+        $source = $this->getTwitterUser(33, 'doc');
+        $this->userSerializer->shouldReceive('serialize')->with($source)->andReturn($sourceObj);
+
+        $userObj = new \stdClass(); $userObj->type = 'user';
+        $user = $this->getTwitterUser(42, 'douglas');
+        $this->userSerializer->shouldReceive('serialize')->with($user)->andReturn($userObj);
+
+        $tweetObj = new \stdClass(); $tweetObj->type = 'tweet';
+        $tweet = new Tweet(1, new TwitterUser(), 'text', 'fr', new \DateTime());
+        $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
+
         $obj = $this->getEvent();
+        $obj->shouldReceive('getType')->andReturn($type);
+        $obj->shouldReceive('getSource')->andReturn($source);
+        $obj->shouldReceive('getTarget')->andReturn($user);
+        $obj->shouldReceive('getObject')->andReturn($tweet);
+        $obj->shouldReceive('getDate')->andReturn($date);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($type, $serialized->event);
+        $this->assertEquals($date, new \DateTime($serialized->created_at));
+        $this->assertEquals($sourceObj, $serialized->source);
+        $this->assertEquals($userObj, $serialized->target);
+        $this->assertEquals($tweetObj, $serialized->target_object);
     }
 
     /**

@@ -40,11 +40,20 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $long = 24;
+        $lat = 42;
+        $type = 'point';
+
         $obj = $this->getCoordinates();
+        $obj->shouldReceive('getLongitude')->andReturn($long);
+        $obj->shouldReceive('getLatitude')->andReturn($lat);
+        $obj->shouldReceive('getType')->andReturn($type);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($long, $serialized->coordinates[0]);
+        $this->assertEquals($lat, $serialized->coordinates[1]);
+        $this->assertEquals($type, $serialized->type);
     }
 
     /**

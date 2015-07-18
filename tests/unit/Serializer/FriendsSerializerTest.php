@@ -40,11 +40,14 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $friends = array(1, 2, 3);
+
         $obj = $this->getFriends();
+        $obj->shouldReceive('getFriends')->andReturn($friends);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($friends, $serialized->friends);
     }
 
     /**

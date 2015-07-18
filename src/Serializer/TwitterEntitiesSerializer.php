@@ -73,7 +73,57 @@ class TwitterEntitiesSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterEntities');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $entities = new \stdClass();
+
+        // Hashtags
+        if ($object->getHashtags()) {
+            $entities->hashtags = array();
+            foreach ($object->getHashtags() as $hashtag) {
+                $entities->hashtags[] = $this->hashtagSerializer->serialize($hashtag);
+            }
+        }
+
+        // Symbols
+        if ($object->getSymbols()) {
+            $entities->symbols = array();
+            foreach ($object->getSymbols() as $symbol) {
+                $entities->symbols[] = $this->symbolSerializer->serialize($symbol);
+            }
+        }
+
+        // Urls
+        if ($object->getUrls()) {
+            $entities->urls = array();
+            foreach ($object->getUrls() as $url) {
+                $entities->urls[] = $this->urlSerializer->serialize($url);
+            }
+        }
+
+        // User mentions
+        if ($object->getUserMentions()) {
+            $entities->user_mentions = array();
+            foreach ($object->getUserMentions() as $userMention) {
+                $entities->user_mentions[] = $this->userMentionSerializer->serialize($userMention);
+            }
+        }
+
+        // Media
+        if ($object->getMedia()) {
+            $entities->media = array();
+            foreach ($object->getMedia() as $media) {
+                $entities->media[] = $this->mediaSerializer->serialize($media);
+            }
+        }
+
+        // Extended entities
+        if ($object->getExtendedEntities()) {
+            $entities->extended_entities = array();
+            foreach ($object->getExtendedEntities() as $extendedEntity) {
+                $entities->extended_entities[] = $this->extendedEntitySerializer->serialize($extendedEntity);
+            }
+        }
+
+        return $entities;
     }
 
     /**

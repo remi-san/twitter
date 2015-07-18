@@ -48,11 +48,20 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $text = 'symbol';
+
+        $indices = $this->getIndices();
+        $indicesObj = new \stdClass();
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+
         $obj = $this->getSymbol();
+        $obj->shouldReceive('getText')->andReturn($text);
+        $obj->shouldReceive('getIndices')->andReturn($indices);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($text, $serialized->text);
+        $this->assertEquals($indicesObj, $serialized->indices);
     }
 
     /**

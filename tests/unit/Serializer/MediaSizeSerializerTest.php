@@ -40,11 +40,20 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $w = 1920;
+        $h = 1080;
+        $resize = false;
+
         $obj = $this->getTwitterMediaSize();
+        $obj->shouldReceive('getWidth')->andReturn($w);
+        $obj->shouldReceive('getHeight')->andReturn($h);
+        $obj->shouldReceive('getResize')->andReturn($resize);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($w, $serialized->w);
+        $this->assertEquals($h, $serialized->h);
+        $this->assertEquals($resize, $serialized->resize);
     }
 
     /**

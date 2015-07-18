@@ -18,7 +18,26 @@ class TwitterDeleteSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterDelete');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $refObject = new \stdClass();
+        $refObject->id = $object->getId();
+        $refObject->user_id = $object->getUserId();
+
+        $obj = new \stdClass();
+
+        switch ($object->getType()) {
+            case TwitterDelete::TWEET: $obj->status = $refObject; break;
+            case TwitterDelete::DM: $obj->direct_message = $refObject; break;
+            default: throw new \InvalidArgumentException('Invalid delete type');
+        }
+
+        if ($object->getDate()) {
+            $obj->timestamp_ms = $object->getDate()->getTimestamp() * 1000;
+        }
+
+        $delete = new \stdClass();
+        $delete->delete = $obj;
+
+        return $delete;
     }
 
     /**

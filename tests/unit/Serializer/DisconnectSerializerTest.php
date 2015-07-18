@@ -40,11 +40,20 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $code = '42';
+        $streamName = 'abcde';
+        $reason = 'whatever';
+
         $obj = $this->getDisconnect();
+        $obj->shouldReceive('getCode')->andReturn($code);
+        $obj->shouldReceive('getStreamName')->andReturn($streamName);
+        $obj->shouldReceive('getReason')->andReturn($reason);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($code, $serialized->disconnect->code);
+        $this->assertEquals($streamName, $serialized->disconnect->stream_name);
+        $this->assertEquals($reason, $serialized->disconnect->reason);
     }
 
     /**

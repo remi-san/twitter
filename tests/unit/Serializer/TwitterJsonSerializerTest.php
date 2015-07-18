@@ -86,6 +86,18 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithIllegalObject()
     {
+        $obj = new \stdClass();
+
+        $this->setExpectedException('\\InvalidArgumentException');
+
+        $this->serializer->serialize($obj);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithUnsupportedObject()
+    {
         $obj = $this->getUserMention('user');
 
         $this->setExpectedException('\\BadMethodCallException');
@@ -96,11 +108,39 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function testSerializeWithUser()
     {
         $obj = $this->getTwitterUser(1, 'douglas');
 
         $this->userSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals('{}', $serialized);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithTweet()
+    {
+        $obj = $this->getTweet();
+
+        $this->eventTargetSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals('{}', $serialized);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithDirectMessage()
+    {
+        $obj = $this->getDirectMessage();
+
+        $this->directMessageSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
 
         $serialized = $this->serializer->serialize($obj);
 

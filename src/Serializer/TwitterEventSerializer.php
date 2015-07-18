@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Serializer;
 
+use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterEvent;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -38,7 +39,20 @@ class TwitterEventSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterEvent');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $event = new \stdClass();
+        $event->event = $object->getType();
+        $event->source = $this->userSerializer->serialize($object->getSource());
+        $event->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
+
+        if ($object->getTarget()) {
+            $event->target = $this->userSerializer->serialize($object->getTarget());
+        }
+
+        if ($object->getObject()) {
+            $event->target_object = $this->targetSerializer->serialize($object->getObject());
+        }
+
+        return $event;
     }
 
     /**

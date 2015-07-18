@@ -40,11 +40,20 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $url = 'http://www.simple.com';
+        $contentType = 'text/html';
+        $bitrate = 1024;
+
         $obj = $this->getVariantMedia();
+        $obj->shouldReceive('getContentType')->andReturn($contentType);
+        $obj->shouldReceive('getUrl')->andReturn($url);
+        $obj->shouldReceive('getBitrate')->andReturn($bitrate);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($url, $serialized->url);
+        $this->assertEquals($contentType, $serialized->content_type);
+        $this->assertEquals($bitrate, $serialized->bitrate);
     }
 
     /**

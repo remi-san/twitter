@@ -40,7 +40,22 @@ class TwitterMediaSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterMedia');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $media = new \stdClass();
+        $media->id = $object->getId();
+        $media->media_url = $object->getMediaUrl();
+        $media->media_url_https = $object->getMediaUrlHttps();
+        $media->url = $object->getUrl();
+        $media->display_url = $object->getDisplayUrl();
+        $media->expanded_url = $object->getExpandedUrl();
+        $media->type = $object->getType();
+        $media->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
+
+        $media->sizes = array();
+        foreach($object->getSizes() as $size) {
+            $media->sizes[$size->getName()] = $this->mediaSizeSerializer->serialize($size);
+        }
+
+        return $media;
     }
 
     /**

@@ -48,11 +48,26 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $url = 'http://www.simple.com';
+        $displayUrl = 'http://www.display.com';
+        $expandedUrl = 'http://www.expanded.com';
+
+        $indices = $this->getIndices();
+        $indicesObj = new \stdClass();
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+
         $obj = $this->getUrl();
+        $obj->shouldReceive('getUrl')->andReturn($url);
+        $obj->shouldReceive('getDisplayUrl')->andReturn($displayUrl);
+        $obj->shouldReceive('getExpandedUrl')->andReturn($expandedUrl);
+        $obj->shouldReceive('getIndices')->andReturn($indices);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($url, $serialized->url);
+        $this->assertEquals($displayUrl, $serialized->display_url);
+        $this->assertEquals($expandedUrl, $serialized->expanded_url);
+        $this->assertEquals($indicesObj, $serialized->indices);
     }
 
     /**

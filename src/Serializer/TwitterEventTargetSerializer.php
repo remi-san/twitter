@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Serializer;
 
+use Twitter\Object\Tweet;
 use Twitter\TwitterEventTarget;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -28,6 +29,10 @@ class TwitterEventTargetSerializer implements TwitterSerializer
     {
         if (!($object instanceof TwitterEventTarget)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterEventTarget');
+        }
+
+        if ($object instanceof Tweet) {
+            return $this->tweetSerializer->serialize($object);
         }
 
         throw new \BadMethodCallException('Not Implemented');

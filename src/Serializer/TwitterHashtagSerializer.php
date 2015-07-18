@@ -33,7 +33,11 @@ class TwitterHashtagSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterHashtag');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $hashtag = new \stdClass();
+        $hashtag->text = $object->getText();
+        $hashtag->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
+
+        return $hashtag;
     }
 
     /**

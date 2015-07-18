@@ -90,11 +90,46 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $hashtagObj = new \stdClass(); $hashtagObj->type = 'hashtag';
+        $hashtag = $this->getHashTag('hashtag');
+        $this->hashtagSerializer->shouldReceive('serialize')->with($hashtag)->andReturn($hashtagObj);
+
+        $symbolObj = new \stdClass(); $symbolObj->type = 'symbol';
+        $symbol = $this->getSymbol();
+        $this->symbolSerializer->shouldReceive('serialize')->with($symbol)->andReturn($symbolObj);
+
+        $urlObj = new \stdClass(); $urlObj->type = 'url';
+        $url = $this->getUrl();
+        $this->urlSerializer->shouldReceive('serialize')->with($url)->andReturn($urlObj);
+
+        $userMentionObj = new \stdClass(); $userMentionObj->type = 'user mention';
+        $userMention = $this->getUserMention();
+        $this->userMentionSerializer->shouldReceive('serialize')->with($userMention)->andReturn($userMentionObj);
+
+        $mediumObj = new \stdClass(); $mediumObj->type = 'medium';
+        $medium = $this->getMedia();
+        $this->mediaSerializer->shouldReceive('serialize')->with($medium)->andReturn($mediumObj);
+
+        $extendedEntityObj = new \stdClass(); $extendedEntityObj->type = 'extended entity';
+        $extendedEntity = $this->getExtendedEntity();
+        $this->extendedEntitySerializer->shouldReceive('serialize')->with($extendedEntity)->andReturn($extendedEntityObj);
+
         $obj = $this->getTwitterEntities();
+        $obj->shouldReceive('getHashtags')->andReturn(array($hashtag));
+        $obj->shouldReceive('getSymbols')->andReturn(array($symbol));
+        $obj->shouldReceive('getUrls')->andReturn(array($url));
+        $obj->shouldReceive('getUserMentions')->andReturn(array($userMention));
+        $obj->shouldReceive('getMedia')->andReturn(array($medium));
+        $obj->shouldReceive('getExtendedEntities')->andReturn(array($extendedEntity));
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals(array($hashtagObj), $serialized->hashtags);
+        $this->assertEquals(array($symbolObj), $serialized->symbols);
+        $this->assertEquals(array($urlObj), $serialized->urls);
+        $this->assertEquals(array($userMentionObj), $serialized->user_mentions);
+        $this->assertEquals(array($mediumObj), $serialized->media);
+        $this->assertEquals(array($extendedEntityObj), $serialized->extended_entities);
     }
 
     /**

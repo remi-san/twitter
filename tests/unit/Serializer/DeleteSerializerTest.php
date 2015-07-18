@@ -39,11 +39,66 @@ class DeleteSerializerTest extends \PHPUnit_Framework_TestCase {
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function testSerializeWithLegalDM()
     {
-        $obj = $this->getDelete();
+        $id = 42;
+        $userId = 666;
+        $type = TwitterDelete::DM;
+        $date = new \DateTime();
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $obj = $this->getDelete();
+        $obj->shouldReceive('getId')->andReturn($id);
+        $obj->shouldReceive('getUserId')->andReturn($userId);
+        $obj->shouldReceive('getType')->andReturn($type);
+        $obj->shouldReceive('getDate')->andReturn($date);
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals($id, $serialized->delete->direct_message->id);
+        $this->assertEquals($userId, $serialized->delete->direct_message->user_id);
+        $this->assertEquals($date->getTimestamp()*1000, $serialized->delete->timestamp_ms);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithLegalTweet()
+    {
+        $id = 42;
+        $userId = 666;
+        $type = TwitterDelete::TWEET;
+        $date = new \DateTime();
+
+        $obj = $this->getDelete();
+        $obj->shouldReceive('getId')->andReturn($id);
+        $obj->shouldReceive('getUserId')->andReturn($userId);
+        $obj->shouldReceive('getType')->andReturn($type);
+        $obj->shouldReceive('getDate')->andReturn($date);
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals($id, $serialized->delete->status->id);
+        $this->assertEquals($userId, $serialized->delete->status->user_id);
+        $this->assertEquals($date->getTimestamp()*1000, $serialized->delete->timestamp_ms);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithIllegalType()
+    {
+        $id = 42;
+        $userId = 666;
+        $type = null;
+        $date = new \DateTime();
+
+        $obj = $this->getDelete();
+        $obj->shouldReceive('getId')->andReturn($id);
+        $obj->shouldReceive('getUserId')->andReturn($userId);
+        $obj->shouldReceive('getType')->andReturn($type);
+        $obj->shouldReceive('getDate')->andReturn($date);
+
+        $this->setExpectedException('\InvalidArgumentException');
 
         $this->serializer->serialize($obj);
     }

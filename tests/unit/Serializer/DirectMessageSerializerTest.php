@@ -57,11 +57,34 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $obj = $this->getDirectMessage();
+        $id = 666;
+        $text = 'dm';
+        $date = new \DateTime();
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $senderObj = new \stdClass(); $senderObj->type = 'sender';
+        $sender = $this->getTwitterUser(33, 'doc');
+        $this->userSerializer->shouldReceive('serialize')->with($sender)->andReturn($senderObj);
 
-        $this->serializer->serialize($obj);
+        $recipientObj = new \stdClass(); $recipientObj->type = 'recipient';
+        $recipient = $this->getTwitterUser(42, 'douglas');
+        $this->userSerializer->shouldReceive('serialize')->with($recipient)->andReturn($recipientObj);
+
+        $entitiesObj = new \stdClass(); $entitiesObj->type = 'entities';
+        $entities = $this->getTwitterEntities();
+        $this->entitiesSerializer->shouldReceive('serialize')->with($entities)->andReturn($entitiesObj);
+
+        $obj = $this->getDirectMessage($id, $text, $sender, $entities);
+        $obj->shouldReceive('getRecipient')->andReturn($recipient);
+        $obj->shouldReceive('getDate')->andReturn($date);
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals($id, $serialized->id);
+        $this->assertEquals($senderObj, $serialized->sender);
+        $this->assertEquals($recipientObj, $serialized->recipient);
+        $this->assertEquals($text, $serialized->text);
+        $this->assertEquals($date, new \DateTime($serialized->created_at));
+        $this->assertEquals($entitiesObj, $serialized->entities);
     }
 
     /**

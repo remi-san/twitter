@@ -59,11 +59,46 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $obj = $this->getMedia();
+        $id = 42;
+        $mediaUrl = 'http://media.url';
+        $mediaUrlHttps = 'https://media.url';
+        $url = 'http://ur.l';
+        $displayUrl = 'http://display.url';
+        $expandedUrl = 'http://expanded.url';
+        $type = 'type';
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $sizeName = 'screen';
+        $mediaSize = $this->getTwitterMediaSize();
+        $mediaSize->shouldReceive('getName')->andReturn($sizeName);
+        $sizeObj = new \stdClass();
+        $this->mediaSizeSerializer->shouldReceive('serialize')->with($mediaSize)->andReturn($sizeObj);
 
-        $this->serializer->serialize($obj);
+        $indices = $this->getIndices();
+        $indicesObj = new \stdClass();
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+
+        $obj = $this->getExtendedEntity();
+        $obj->shouldReceive('getId')->andReturn($id);
+        $obj->shouldReceive('getMediaUrl')->andReturn($mediaUrl);
+        $obj->shouldReceive('getMediaUrlHttps')->andReturn($mediaUrlHttps);
+        $obj->shouldReceive('getUrl')->andReturn($url);
+        $obj->shouldReceive('getDisplayUrl')->andReturn($displayUrl);
+        $obj->shouldReceive('getExpandedUrl')->andReturn($expandedUrl);
+        $obj->shouldReceive('getType')->andReturn($type);
+        $obj->shouldReceive('getIndices')->andReturn($indices);
+        $obj->shouldReceive('getSizes')->andReturn(array($mediaSize));
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals($id, $serialized->id);
+        $this->assertEquals($mediaUrl, $serialized->media_url);
+        $this->assertEquals($mediaUrlHttps, $serialized->media_url_https);
+        $this->assertEquals($url, $serialized->url);
+        $this->assertEquals($displayUrl, $serialized->display_url);
+        $this->assertEquals($expandedUrl, $serialized->expanded_url);
+        $this->assertEquals($type, $serialized->type);
+        $this->assertEquals($indicesObj, $serialized->indices);
+        $this->assertEquals(array($sizeName => $sizeObj), $serialized->sizes);
     }
 
     /**

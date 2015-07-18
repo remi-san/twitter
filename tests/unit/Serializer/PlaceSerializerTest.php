@@ -43,9 +43,9 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase {
     {
         $obj = $this->getPlace();
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals(new \stdClass(), $serialized);
     }
 
     /**

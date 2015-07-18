@@ -18,7 +18,11 @@ class TwitterCoordinatesSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterCoordinates');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $coords = new \stdClass();
+        $coords->coordinates = array($object->getLongitude(), $object->getLatitude());
+        $coords->type = $object->getType();
+
+        return $coords;
     }
 
     /**

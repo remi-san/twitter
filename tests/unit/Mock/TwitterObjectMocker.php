@@ -235,6 +235,14 @@ trait TwitterObjectMocker {
     }
 
     /**
+     * @return TwitterMediaSize
+     */
+    public function getMediaSize()
+    {
+        return \Mockery::mock('\\Twitter\\Object\\TwitterMediaSize');
+    }
+
+    /**
      * @return TwitterUrl
      */
     public function getUrl()

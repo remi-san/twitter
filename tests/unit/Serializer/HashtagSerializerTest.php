@@ -48,11 +48,19 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $obj = $this->getHashTag('hashtag');
+        $text = 'hashtag';
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $indices = $this->getIndices();
+        $indicesObj = new \stdClass();
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
 
-        $this->serializer->serialize($obj);
+        $obj = $this->getHashTag($text);
+        $obj->shouldReceive('getIndices')->andReturn($indices);
+
+        $serialized = $this->serializer->serialize($obj);
+
+        $this->assertEquals($text, $serialized->text);
+        $this->assertEquals($indicesObj, $serialized->indices);
     }
 
     /**

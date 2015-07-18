@@ -1,8 +1,11 @@
 <?php
 namespace Twitter\Serializer;
 
+use Twitter\Object\Tweet;
+use Twitter\Object\TwitterDirectMessage;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer;
+use Twitter\TwitterSerializable;
 
 class TwitterJsonSerializer implements Serializer
 {
@@ -78,10 +81,23 @@ class TwitterJsonSerializer implements Serializer
      */
     public function serialize($object)
     {
-        if ($object instanceof TwitterUser) {
-            return json_encode($this->twitterUserSerializer->serialize($object));
+        if (!($object instanceof TwitterSerializable)) {
+            throw new \InvalidArgumentException('$object must be an instance of TwitterSerializable');
         }
-        throw new \BadMethodCallException('Not Implemented');
+
+        $serializedObject = null;
+
+        if ($object instanceof TwitterUser) {
+            $serializedObject = $this->twitterUserSerializer->serialize($object);
+        } elseif ($object instanceof Tweet) { // or list
+            $serializedObject =  $this->twitterTargetSerializer->serialize($object);
+        } elseif ($object instanceof TwitterDirectMessage) {
+            $serializedObject = $this->directMessageSerializer->serialize($object);
+        } else {
+            throw new \BadMethodCallException('Not Implemented');
+        }
+
+        return json_encode($serializedObject);
     }
 
     /**
@@ -96,17 +112,17 @@ class TwitterJsonSerializer implements Serializer
 
         if (isset($obj->text) && isset($obj->user)) {
             $object = $this->twitterTargetSerializer->unserialize($obj);
-        } else if (isset($obj->direct_message)) {
+        } elseif (isset($obj->direct_message)) {
             $object = $this->directMessageSerializer->unserialize($obj->direct_message);
-        } else if (isset($obj->event)) {
+        } elseif (isset($obj->event)) {
             $object = $this->twitterEventSerializer->unserialize($obj);
-        } else if (isset($obj->friends)) {
+        } elseif (isset($obj->friends)) {
             $object = $this->twitterFriendsSerializer->unserialize($obj);
-        } else if (isset($obj->disconnect)) {
+        } elseif (isset($obj->disconnect)) {
             $object = $this->twitterDisconnectSerializer->unserialize($obj);
-        } else if (isset($obj->delete)) {
+        } elseif (isset($obj->delete)) {
             $object = $this->twitterDeleteSerializer->unserialize($obj);
-        } else if (isset($obj->screen_name)) {
+        } elseif (isset($obj->screen_name)) {
             $object = $this->twitterUserSerializer->unserialize($obj);
         }
 

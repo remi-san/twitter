@@ -18,7 +18,10 @@ class TwitterFriendsSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterFriends');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $friends = new \stdClass();
+        $friends->friends = $object->getFriends();
+
+        return $friends;
     }
 
     /**

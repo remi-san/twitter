@@ -19,7 +19,12 @@ class TwitterVariantMediaSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterVariantMedia');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $variantMedia = new \stdClass();
+        $variantMedia->content_type = $object->getContentType();
+        $variantMedia->url = $object->getUrl();
+        $variantMedia->bitrate = $object->getBitrate();
+
+        return $variantMedia;
     }
 
     /**

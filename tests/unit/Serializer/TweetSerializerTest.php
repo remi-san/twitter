@@ -2,6 +2,11 @@
 namespace Twitter\Test\Serializer;
 
 use Twitter\Object\Tweet;
+use Twitter\Object\TwitterCoordinates;
+use Twitter\Object\TwitterDate;
+use Twitter\Object\TwitterEntities;
+use Twitter\Object\TwitterPlace;
+use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TweetSerializer;
 
 use Twitter\Serializer\TwitterCoordinatesSerializer;
@@ -78,11 +83,70 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $tweet = $this->getTweet();
+        $id = 666;
+        $text = 'text';
+        $lang = 'en';
+        $date = new \DateTime('2010-01-01 12:00:00 +00:00');
+        $replyStatusId = 12;
+        $replyUserId = 2048;
+        $replyUserScreenName = 'gc';
+        $retweetCount = 2;
+        $favoriteCount = 5;
+        $source = 'twitter';
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $userObj = new \stdClass(); $userObj->type = 'user';
+        $user = $this->getTwitterUser(33, 'doc');
+        $this->userSerializer->shouldReceive('serialize')->with($user)->andReturn($userObj)->twice();
 
-        $this->serializer->serialize($tweet);
+        $entitiesObj = new \stdClass(); $entitiesObj->type = 'entities';
+        $entities = $this->getTwitterEntities();
+        $this->entitiesSerializer->shouldReceive('serialize')->with($entities)->andReturn($entitiesObj);
+
+        $coordinatesObj = new \stdClass(); $coordinatesObj->type = 'coordinates';
+        $coordinates = $this->getCoordinates();
+        $this->coordinatesSerializer->shouldReceive('serialize')->with($coordinates)->andReturn($coordinatesObj);
+
+        $placeObj = new \stdClass(); $placeObj->type = 'place';
+        $place = $this->getPlace();
+        $this->placeSerializer->shouldReceive('serialize')->with($place)->andReturn($placeObj);
+
+        $retweet = $this->buildTweet(99, 'original', $user, null, 'en', new \DateTime());
+
+        $tweet = $this->getTweet($id, $text, $user, $entities);
+        $tweet->shouldReceive('getLang')->andReturn($lang);
+        $tweet->shouldReceive('getDate')->andReturn($date);
+        $tweet->shouldReceive('getCoordinates')->andReturn($coordinates);
+        $tweet->shouldReceive('getPlace')->andReturn($place);
+        $tweet->shouldReceive('getInReplyToStatusId')->andReturn($replyStatusId);
+        $tweet->shouldReceive('getInReplyToUserId')->andReturn($replyUserId);
+        $tweet->shouldReceive('getInReplyToScreenName')->andReturn($replyUserScreenName);
+        $tweet->shouldReceive('isRetweeted')->andReturn(true);
+        $tweet->shouldReceive('getRetweetCount')->andReturn($retweetCount);
+        $tweet->shouldReceive('isFavorited')->andReturn(true);
+        $tweet->shouldReceive('getFavoriteCount')->andReturn($favoriteCount);
+        $tweet->shouldReceive('isTruncated')->andReturn(false);
+        $tweet->shouldReceive('getSource')->andReturn($source);
+        $tweet->shouldReceive('getRetweetedStatus')->andReturn($retweet);
+
+        $serialized = $this->serializer->serialize($tweet);
+        $this->assertEquals($id, $serialized->id);
+        $this->assertEquals($text, $serialized->text);
+        $this->assertEquals($userObj, $serialized->user);
+        $this->assertEquals($lang, $serialized->lang);
+        $this->assertEquals($date->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT), $serialized->created_at);
+        $this->assertEquals($entitiesObj, $serialized->entities);
+        $this->assertEquals($coordinatesObj, $serialized->coordinates);
+        $this->assertEquals($placeObj, $serialized->place);
+        $this->assertEquals($replyStatusId, $serialized->in_reply_to_status_id);
+        $this->assertEquals($replyUserId, $serialized->in_reply_to_user_id);
+        $this->assertEquals($replyUserScreenName, $serialized->in_reply_to_screen_name);
+        $this->assertTrue($serialized->retweeted);
+        $this->assertEquals($retweetCount, $serialized->retweet_count);
+        $this->assertTrue($serialized->favorited);
+        $this->assertEquals($favoriteCount, $serialized->favorite_count);
+        $this->assertFalse($serialized->truncated);
+        $this->assertEquals($source, $serialized->source);
+        $this->assertNotNull($serialized->retweeted_status);
     }
 
     /**
@@ -148,5 +212,44 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($tweetObj->truncated, $tweet->isTruncated());
         $this->assertEquals($tweetObj->source, $tweet->getSource());
         $this->assertTrue($tweet->getRetweetedStatus() instanceof Tweet);
+    }
+
+    private function buildTweet(
+        $id = null,
+        $text = null,
+        TwitterUser $sender = null,
+        TwitterEntities $entities = null,
+        $lang = null,
+        \DateTime $createdAt = null,
+        TwitterCoordinates $coordinates = null,
+        TwitterPlace $place = null,
+        $inReplyToStatusId = null,
+        $inReplyToUserId = null,
+        $inReplyToScreenName = null,
+        $retweeted = false,
+        $retweetCount = 0,
+        $favorited = false,
+        $favoriteCount = 0,
+        $truncated = false,
+        $source = null,
+        Tweet $retweetedStatus = null
+    ) {
+        $tweet = $this->getTweet($id, $text, $sender, $entities);
+        $tweet->shouldReceive('getLang')->andReturn($lang);
+        $tweet->shouldReceive('getDate')->andReturn($createdAt);
+        $tweet->shouldReceive('getCoordinates')->andReturn($coordinates);
+        $tweet->shouldReceive('getPlace')->andReturn($place);
+        $tweet->shouldReceive('getInReplyToStatusId')->andReturn($inReplyToStatusId);
+        $tweet->shouldReceive('getInReplyToUserId')->andReturn($inReplyToUserId);
+        $tweet->shouldReceive('getInReplyToScreenName')->andReturn($inReplyToScreenName);
+        $tweet->shouldReceive('isRetweeted')->andReturn($retweeted);
+        $tweet->shouldReceive('getRetweetCount')->andReturn($retweetCount);
+        $tweet->shouldReceive('isFavorited')->andReturn($favorited);
+        $tweet->shouldReceive('getFavoriteCount')->andReturn($favoriteCount);
+        $tweet->shouldReceive('isTruncated')->andReturn($truncated);
+        $tweet->shouldReceive('getSource')->andReturn($source);
+        $tweet->shouldReceive('getRetweetedStatus')->andReturn($retweetedStatus);
+
+        return $tweet;
     }
 } 

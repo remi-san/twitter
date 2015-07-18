@@ -33,7 +33,13 @@ class TwitterUrlSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterUrl');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $url = new \stdClass();
+        $url->url = $object->getUrl();
+        $url->display_url = $object->getDisplayUrl();
+        $url->expanded_url = $object->getExpandedUrl();
+        $url->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
+
+        return $url;
     }
 
     /**

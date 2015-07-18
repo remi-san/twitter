@@ -18,7 +18,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterEntityIndices');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        return array($object->getFrom(), $object->getTo());
     }
 
     /**

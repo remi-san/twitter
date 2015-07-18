@@ -48,7 +48,29 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterExtendedEntity');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $extendedEntity = new \stdClass();
+        $extendedEntity->id = $object->getId();
+        $extendedEntity->media_url = $object->getMediaUrl();
+        $extendedEntity->media_url_https = $object->getMediaUrlHttps();
+        $extendedEntity->url = $object->getUrl();
+        $extendedEntity->display_url = $object->getDisplayUrl();
+        $extendedEntity->expanded_url = $object->getExpandedUrl();
+        $extendedEntity->type = $object->getType();
+        $extendedEntity->video_info = $object->getVideoInfo();
+        $extendedEntity->duration_millis = $object->getDurationMillis();
+        $extendedEntity->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
+
+        $extendedEntity->sizes = array();
+        foreach($object->getSizes() as $size) {
+            $extendedEntity->sizes[$size->getName()] = $this->mediaSizeSerializer->serialize($size);
+        }
+
+        $extendedEntity->variants = array();
+        foreach($object->getVariants() as $variant) {
+            $extendedEntity->variants[] = $this->variantMediaSerializer->serialize($variant);
+        }
+
+        return $extendedEntity;
     }
 
     /**

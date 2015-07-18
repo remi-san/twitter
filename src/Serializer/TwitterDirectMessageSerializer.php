@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Serializer;
 
+use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterDirectMessage;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -38,7 +39,15 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterDirectMessage');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $dm = new \stdClass();
+        $dm->id = $object->getId();
+        $dm->sender = $this->userSerializer->serialize($object->getSender());
+        $dm->recipient = $this->userSerializer->serialize($object->getRecipient());
+        $dm->text = $object->getText();
+        $dm->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
+        $dm->entities = $object->getEntities()?$this->twitterEntitiesSerializer->serialize($object->getEntities()):null;
+
+        return $dm;
     }
 
     /**

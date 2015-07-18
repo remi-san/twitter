@@ -68,11 +68,58 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
+        $id = 42;
+        $mediaUrl = 'http://media.url';
+        $mediaUrlHttps = 'https://media.url';
+        $url = 'http://ur.l';
+        $displayUrl = 'http://display.url';
+        $expandedUrl = 'http://expanded.url';
+        $type = 'type';
+        $videoInfo = 'info';
+        $durationMillis = 1000;
+
+        $sizeName = 'screen';
+        $mediaSize = $this->getTwitterMediaSize();
+        $mediaSize->shouldReceive('getName')->andReturn($sizeName);
+        $sizeObj = new \stdClass();
+        $this->mediaSizeSerializer->shouldReceive('serialize')->with($mediaSize)->andReturn($sizeObj);
+
+        $variant = $this->getVariantMedia();
+        $variantObj = new \stdClass();
+        $this->variantMediaSerializer->shouldReceive('serialize')->with($variant)->andReturn($variantObj);
+
+        $indices = $this->getIndices();
+        $indicesObj = new \stdClass();
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+
         $obj = $this->getExtendedEntity();
+        $obj->shouldReceive('getId')->andReturn($id);
+        $obj->shouldReceive('getMediaUrl')->andReturn($mediaUrl);
+        $obj->shouldReceive('getMediaUrlHttps')->andReturn($mediaUrlHttps);
+        $obj->shouldReceive('getUrl')->andReturn($url);
+        $obj->shouldReceive('getDisplayUrl')->andReturn($displayUrl);
+        $obj->shouldReceive('getExpandedUrl')->andReturn($expandedUrl);
+        $obj->shouldReceive('getType')->andReturn($type);
+        $obj->shouldReceive('getVideoInfo')->andReturn($videoInfo);
+        $obj->shouldReceive('getDurationMillis')->andReturn($durationMillis);
+        $obj->shouldReceive('getIndices')->andReturn($indices);
+        $obj->shouldReceive('getSizes')->andReturn(array($mediaSize));
+        $obj->shouldReceive('getVariants')->andReturn(array($variant));
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $serialized = $this->serializer->serialize($obj);
 
-        $this->serializer->serialize($obj);
+        $this->assertEquals($id, $serialized->id);
+        $this->assertEquals($mediaUrl, $serialized->media_url);
+        $this->assertEquals($mediaUrlHttps, $serialized->media_url_https);
+        $this->assertEquals($url, $serialized->url);
+        $this->assertEquals($displayUrl, $serialized->display_url);
+        $this->assertEquals($expandedUrl, $serialized->expanded_url);
+        $this->assertEquals($type, $serialized->type);
+        $this->assertEquals($videoInfo, $serialized->video_info);
+        $this->assertEquals($durationMillis, $serialized->duration_millis);
+        $this->assertEquals($indicesObj, $serialized->indices);
+        $this->assertEquals(array($sizeName => $sizeObj), $serialized->sizes);
+        $this->assertEquals(array($variantObj), $serialized->variants);
     }
 
     /**

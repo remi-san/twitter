@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Mockery\Mock;
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TweetSerializer;
@@ -50,9 +51,26 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $obj = $this->getTweet();
+        $tweetObj = new \stdClass();
+        $tweetObj->id = 42;
+        $tweetObj->user = new \stdClass();
+        $tweetObj->text = 'my tweet';
 
+        $tweet = $this->getTweet();
+
+        $this->tweetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj)->once();
+
+        $this->serializer->serialize($tweet);
+    }
+
+    /**
+     * @test
+     */
+    public function testSerializeWithLegalObjectNotImplemented()
+    {
         $this->setExpectedException('\\BadMethodCallException');
+
+        $obj = \Mockery::mock('\\Twitter\\TwitterEventTarget');
 
         $this->serializer->serialize($obj);
     }

@@ -2,6 +2,7 @@
 namespace Twitter\Serializer;
 
 use Twitter\Object\Tweet;
+use Twitter\Object\TwitterDate;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
 
@@ -56,7 +57,30 @@ class TweetSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of Tweet');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $tweet = new \stdClass();
+        $tweet->id = $object->getId();
+        $tweet->user = $this->userSerializer->serialize($object->getSender());
+        $tweet->text = $object->getText();
+        $tweet->lang = $object->getLang();
+        $tweet->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
+        $tweet->entities = $object->getEntities()?$this->twitterEntitiesSerializer->serialize($object->getEntities()):array();
+        $tweet->coordinates = $object->getCoordinates()?$this->coordinatesSerializer->serialize($object->getCoordinates()):null;
+        $tweet->place = $object->getPlace()?$this->placeSerializer->serialize($object->getPlace()):null;
+        $tweet->in_reply_to_status_id = $object->getInReplyToStatusId();
+        $tweet->in_reply_to_user_id = $object->getInReplyToUserId();
+        $tweet->in_reply_to_screen_name = $object->getInReplyToScreenName();
+        $tweet->retweeted = $object->isRetweeted();
+        $tweet->retweet_count = $object->getRetweetCount();
+        $tweet->favorited = $object->isFavorited();
+        $tweet->favorite_count = $object->getFavoriteCount();
+        $tweet->truncated = $object->isTruncated();
+        $tweet->source = $object->getSource();
+
+        if ($object->getRetweetedStatus()) {
+            $tweet->retweeted_status = $this->serialize($object->getRetweetedStatus());
+        }
+
+        return $tweet;
     }
 
     /**

@@ -33,7 +33,13 @@ class TwitterUserMentionSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterUserMention');
         }
 
-        throw new \BadMethodCallException('Not Implemented');
+        $userMention = new \stdClass();
+        $userMention->id = $object->getId();
+        $userMention->screen_name = $object->getScreenName();
+        $userMention->name = $object->getName();
+        $userMention->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
+
+        return $userMention;
     }
 
     /**
