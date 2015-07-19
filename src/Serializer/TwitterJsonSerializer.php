@@ -92,7 +92,8 @@ class TwitterJsonSerializer implements Serializer
         } elseif ($object instanceof Tweet) { // or list
             $serializedObject =  $this->twitterTargetSerializer->serialize($object);
         } elseif ($object instanceof TwitterDirectMessage) {
-            $serializedObject = $this->directMessageSerializer->serialize($object);
+            $serializedObject = new \stdClass();
+            $serializedObject->direct_message = $this->directMessageSerializer->serialize($object);
         } else {
             throw new \BadMethodCallException('Not Implemented');
         }

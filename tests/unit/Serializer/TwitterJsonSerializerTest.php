@@ -144,7 +144,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
 
         $serialized = $this->serializer->serialize($obj);
 
-        $this->assertEquals('{}', $serialized);
+        $this->assertEquals('{"direct_message":{}}', $serialized);
     }
 
     /**
