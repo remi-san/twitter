@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase {
+class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -65,4 +66,4 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(42, $indices->getFrom());
         $this->assertEquals(666, $indices->getTo());
     }
-} 
+}

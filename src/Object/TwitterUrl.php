@@ -5,7 +5,6 @@ use Twitter\TwitterEntity;
 
 class TwitterUrl extends TwitterEntity
 {
-
     /**
      * @var string
      */
@@ -29,7 +28,7 @@ class TwitterUrl extends TwitterEntity
      * @param string               $expandedUrl
      * @param TwitterEntityIndices $indices
      */
-    function __construct($url, $displayUrl, $expandedUrl, TwitterEntityIndices $indices)
+    public function __construct($url, $displayUrl, $expandedUrl, TwitterEntityIndices $indices)
     {
         parent::__construct($indices);
         $this->displayUrl = $displayUrl;
@@ -60,4 +59,4 @@ class TwitterUrl extends TwitterEntity
     {
         return $this->url;
     }
-} 
+}

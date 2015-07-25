@@ -3,7 +3,6 @@ namespace Twitter\Object;
 
 class TwitterExtendedEntity extends TwitterMedia
 {
-
     /**
      * @var string
      */
@@ -35,14 +34,25 @@ class TwitterExtendedEntity extends TwitterMedia
      * @param TwitterVariantMedia[] $variants
      * @param TwitterEntityIndices  $indices
      */
-    function __construct($id = null, $mediaUrl = null, $mediaUrlHttps = null, $url = null, $displayUrl = null, $expandedUrl = null, array $sizes = array(), $type = null, $videoInfo = null, $durationMillis = null, array $variants = array(), TwitterEntityIndices $indices = null)
-    {
+    public function __construct(
+        $id = null,
+        $mediaUrl = null,
+        $mediaUrlHttps = null,
+        $url = null,
+        $displayUrl = null,
+        $expandedUrl = null,
+        array $sizes = array(),
+        $type = null,
+        $videoInfo = null,
+        $durationMillis = null,
+        array $variants = array(),
+        TwitterEntityIndices $indices = null
+    ) {
         parent::__construct($id, $mediaUrl, $mediaUrlHttps, $url, $displayUrl, $expandedUrl, $sizes, $type, $indices);
         $this->durationMillis = $durationMillis;
         $this->variants = $variants;
         $this->videoInfo = $videoInfo;
     }
-
 
     /**
      * @return int
@@ -67,4 +77,4 @@ class TwitterExtendedEntity extends TwitterMedia
     {
         return $this->videoInfo;
     }
-} 
+}

@@ -1,11 +1,9 @@
 <?php
 namespace Twitter\Serializer;
 
-
 use Twitter\Object\TwitterExtendedEntity;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
-
 
 class TwitterExtendedEntitySerializer implements TwitterSerializer
 {
@@ -31,8 +29,11 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
      * @param TwitterMediaSizeSerializer $mediaSizeSerializer
      * @param TwitterVariantMediaSerializer $variantMediaSerializer
      */
-    public function __construct(TwitterEntityIndicesSerializer $entityIndicesSerializer, TwitterMediaSizeSerializer $mediaSizeSerializer, TwitterVariantMediaSerializer $variantMediaSerializer)
-    {
+    public function __construct(
+        TwitterEntityIndicesSerializer $entityIndicesSerializer,
+        TwitterMediaSizeSerializer     $mediaSizeSerializer,
+        TwitterVariantMediaSerializer  $variantMediaSerializer
+    ) {
         $this->entityIndicesSerializer = $entityIndicesSerializer;
         $this->mediaSizeSerializer = $mediaSizeSerializer;
         $this->variantMediaSerializer = $variantMediaSerializer;
@@ -61,12 +62,12 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
         $extendedEntity->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
 
         $extendedEntity->sizes = array();
-        foreach($object->getSizes() as $size) {
+        foreach ($object->getSizes() as $size) {
             $extendedEntity->sizes[$size->getName()] = $this->mediaSizeSerializer->serialize($size);
         }
 
         $extendedEntity->variants = array();
-        foreach($object->getVariants() as $variant) {
+        foreach ($object->getVariants() as $variant) {
             $extendedEntity->variants[] = $this->variantMediaSerializer->serialize($variant);
         }
 
@@ -75,7 +76,7 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
 
     /**
      * @param  \stdClass $obj
-     * @param  array $context
+     * @param  array     $context
      * @return TwitterExtendedEntity
      */
     public function unserialize($obj, array $context = array())
@@ -83,7 +84,10 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
         $sizesObjects = array();
         if ($obj->sizes) {
             foreach ($obj->sizes as $sizeName => $sizeObj) {
-                $sizesObjects[$sizeName] = $this->mediaSizeSerializer->unserialize($sizeObj, array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
+                $sizesObjects[$sizeName] = $this->mediaSizeSerializer->unserialize(
+                    $sizeObj,
+                    array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName)
+                );
             }
         }
 

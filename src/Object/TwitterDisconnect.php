@@ -5,7 +5,6 @@ use Twitter\TwitterObject;
 
 class TwitterDisconnect implements TwitterObject
 {
-
     /**
      * @var string
      */
@@ -28,7 +27,7 @@ class TwitterDisconnect implements TwitterObject
      * @param string $reason
      * @param string $streamName
      */
-    function __construct($code, $streamName, $reason)
+    public function __construct($code, $streamName, $reason)
     {
         $this->code = $code;
         $this->reason = $reason;
@@ -62,7 +61,8 @@ class TwitterDisconnect implements TwitterObject
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return 'Disconnect ['.$this->streamName.']';
     }
-} 
+}

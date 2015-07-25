@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterUserMention;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class UserMentionTest extends \PHPUnit_Framework_TestCase {
+class UserMentionTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -30,4 +31,4 @@ class UserMentionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($indices, $userMention->getIndices());
         $this->assertEquals('@'.$screenName, $userMention->__toString());
     }
-} 
+}

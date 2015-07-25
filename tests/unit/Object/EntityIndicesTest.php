@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterEntityIndices;
 
-class EntityIndicesTest extends \PHPUnit_Framework_TestCase {
-
+class EntityIndicesTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -23,4 +23,4 @@ class EntityIndicesTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($from, $entityIndices->getFrom());
         $this->assertEquals($to, $entityIndices->getTo());
     }
-} 
+}

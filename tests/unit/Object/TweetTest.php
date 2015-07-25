@@ -6,7 +6,8 @@ use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterUser;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class TweetTest extends \PHPUnit_Framework_TestCase {
+class TweetTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     /**
@@ -136,4 +137,4 @@ class TweetTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($tweet->containsHashtag($hashtagText));
         $this->assertFalse($tweet->containsHashtag('dummy'));
     }
-} 
+}

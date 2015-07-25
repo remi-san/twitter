@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterEvent;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class EventTest extends \PHPUnit_Framework_TestCase {
+class EventTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -20,7 +21,8 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $type = TwitterEvent::ACCESS_REVOKED;
         $source = $this->getTwitterUser(42, 'douglas');
         $target = $this->getTwitterUser(314, 'pi');
-        $object = $this->getTwitterEventTarget(); $object->shouldReceive('__toString')->andReturn('target');
+        $object = $this->getTwitterEventTarget();
+        $object->shouldReceive('__toString')->andReturn('target');
         $date = new \DateTime();
 
         $event = new TwitterEvent($type, $source, $target, $object, $date);
@@ -32,5 +34,4 @@ class EventTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($date, $event->getDate());
         $this->assertEquals('Event ['.$type.']: target', $event->__toString());
     }
-
-} 
+}

@@ -10,7 +10,8 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class EventSerializerTest extends \PHPUnit_Framework_TestCase {
+class EventSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -60,15 +61,18 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase {
         $type = TwitterEvent::FAVORITE;
         $date = new \DateTime();
 
-        $sourceObj = new \stdClass(); $sourceObj->type = 'source';
+        $sourceObj = new \stdClass();
+        $sourceObj->type = 'source';
         $source = $this->getTwitterUser(33, 'doc');
         $this->userSerializer->shouldReceive('serialize')->with($source)->andReturn($sourceObj);
 
-        $userObj = new \stdClass(); $userObj->type = 'user';
+        $userObj = new \stdClass();
+        $userObj->type = 'user';
         $user = $this->getTwitterUser(42, 'douglas');
         $this->userSerializer->shouldReceive('serialize')->with($user)->andReturn($userObj);
 
-        $tweetObj = new \stdClass(); $tweetObj->type = 'tweet';
+        $tweetObj = new \stdClass();
+        $tweetObj->type = 'tweet';
         $tweet = new Tweet(1, new TwitterUser(), 'text', 'fr', new \DateTime());
         $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
 
@@ -93,15 +97,18 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testUnserialize()
     {
-        $sourceObj = new \stdClass(); $sourceObj->type = 'source';
+        $sourceObj = new \stdClass();
+        $sourceObj->type = 'source';
         $source = $this->getTwitterUser(33, 'doc');
         $this->userSerializer->shouldReceive('unserialize')->with($sourceObj)->andReturn($source);
 
-        $userObj = new \stdClass(); $userObj->type = 'user';
+        $userObj = new \stdClass();
+        $userObj->type = 'user';
         $user = $this->getTwitterUser(42, 'douglas');
         $this->userSerializer->shouldReceive('unserialize')->with($userObj)->andReturn($user);
 
-        $tweetObj = new \stdClass(); $tweetObj->type = 'tweet';
+        $tweetObj = new \stdClass();
+        $tweetObj->type = 'tweet';
         $tweet = new Tweet(1, new TwitterUser(), 'text', 'fr', new \DateTime());
         $this->eventTargetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
 
@@ -120,4 +127,4 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($tweet, $event->getObject());
         $this->assertEquals(new \DateTime($eventObj->created_at), $event->getDate());
     }
-} 
+}

@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterMediaSize;
 
-class MediaSizeTest extends \PHPUnit_Framework_TestCase {
-
+class MediaSizeTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -27,4 +27,4 @@ class MediaSizeTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($height, $mediaSize->getHeight());
         $this->assertEquals($resize, $mediaSize->getResize());
     }
-} 
+}

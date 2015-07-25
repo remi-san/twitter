@@ -7,7 +7,8 @@ use Twitter\Serializer\TwitterUserMentionSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase {
+class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -88,4 +89,4 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($userMentionObj->name, $userMention->getName());
         $this->assertEquals($indices, $userMention->getIndices());
     }
-} 
+}

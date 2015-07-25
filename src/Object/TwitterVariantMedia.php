@@ -1,12 +1,10 @@
 <?php
 namespace Twitter\Object;
 
-
 use Twitter\TwitterSerializable;
 
 class TwitterVariantMedia implements TwitterSerializable
 {
-
     /**
      * @var string
      */
@@ -29,7 +27,7 @@ class TwitterVariantMedia implements TwitterSerializable
      * @param string $url
      * @param int    $bitrate
      */
-    function __construct($contentType, $url, $bitrate)
+    public function __construct($contentType, $url, $bitrate)
     {
         $this->bitrate = $bitrate;
         $this->contentType = $contentType;
@@ -59,4 +57,4 @@ class TwitterVariantMedia implements TwitterSerializable
     {
         return $this->url;
     }
-} 
+}

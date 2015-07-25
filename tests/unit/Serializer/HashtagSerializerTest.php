@@ -7,7 +7,8 @@ use Twitter\Serializer\TwitterHashtagSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class HashtagSerializerTest extends \PHPUnit_Framework_TestCase {
+class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -80,4 +81,4 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($hashtagObj->text, $hashtag->getText());
         $this->assertEquals($indices, $hashtag->getIndices());
     }
-} 
+}

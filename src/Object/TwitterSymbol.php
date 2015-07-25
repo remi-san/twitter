@@ -5,7 +5,6 @@ use Twitter\TwitterEntity;
 
 class TwitterSymbol extends TwitterEntity
 {
-
     /**
      * @var string
      */
@@ -17,7 +16,7 @@ class TwitterSymbol extends TwitterEntity
      * @param string               $text
      * @param TwitterEntityIndices $indices
      */
-    function __construct($text, TwitterEntityIndices $indices)
+    public function __construct($text, TwitterEntityIndices $indices)
     {
         parent::__construct($indices);
         $this->text = $text;
@@ -30,4 +29,4 @@ class TwitterSymbol extends TwitterEntity
     {
         return $this->text;
     }
-} 
+}

@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterMediaSizeSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase {
+class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -68,11 +69,12 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase {
         $mediaSizeObj->h = 1080;
         $mediaSizeObj->resize = false;
 
-        $mediaSize = $this->serializer->unserialize($mediaSizeObj, array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
+        $mediaSize = $this->serializer
+            ->unserialize($mediaSizeObj, array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
 
         $this->assertEquals($sizeName, $mediaSize->getName());
         $this->assertEquals($mediaSizeObj->resize, $mediaSize->getResize());
         $this->assertEquals($mediaSizeObj->w, $mediaSize->getWidth());
         $this->assertEquals($mediaSizeObj->h, $mediaSize->getHeight());
     }
-} 
+}

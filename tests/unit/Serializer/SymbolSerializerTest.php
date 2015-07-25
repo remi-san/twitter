@@ -7,7 +7,8 @@ use Twitter\Serializer\TwitterSymbolSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class SymbolSerializerTest extends \PHPUnit_Framework_TestCase {
+class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -81,4 +82,4 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($symbolObj->text, $symbol->getText());
         $this->assertEquals($indices, $symbol->getIndices());
     }
-} 
+}

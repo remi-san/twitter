@@ -5,7 +5,6 @@ use Twitter\TwitterEntity;
 
 class TwitterUserMention extends TwitterEntity
 {
-
     /**
      * @var int
      */
@@ -27,7 +26,7 @@ class TwitterUserMention extends TwitterEntity
      * @param string               $name
      * @param TwitterEntityIndices $indices
      */
-    function __construct($id, $screenName, $name, TwitterEntityIndices $indices)
+    public function __construct($id, $screenName, $name, TwitterEntityIndices $indices)
     {
         parent::__construct($indices);
         $this->id = $id;
@@ -62,7 +61,8 @@ class TwitterUserMention extends TwitterEntity
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return '@'.$this->screenName;
     }
-} 
+}

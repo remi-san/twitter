@@ -5,7 +5,6 @@ use Twitter\TwitterSerializable;
 
 class TwitterEntities implements TwitterSerializable
 {
-
     /**
      * @var TwitterHashtag[]
      */
@@ -36,7 +35,6 @@ class TwitterEntities implements TwitterSerializable
      */
     private $extendedEntities;
 
-
     /**
      * Constructor
      *
@@ -47,8 +45,14 @@ class TwitterEntities implements TwitterSerializable
      * @param TwitterSymbol[]         $symbols
      * @param TwitterExtendedEntity[] $extendedEntities
      */
-    function __construct(array $hashtags = array(), array $userMentions = array(), array $urls = array(), array $media = array(), array $symbols = array(), array $extendedEntities = array())
-    {
+    public function __construct(
+        array $hashtags = array(),
+        array $userMentions = array(),
+        array $urls = array(),
+        array $media = array(),
+        array $symbols = array(),
+        array $extendedEntities = array()
+    ) {
         $this->extendedEntities = $extendedEntities;
         $this->hashtags = $hashtags;
         $this->media = $media;
@@ -104,4 +108,4 @@ class TwitterEntities implements TwitterSerializable
     {
         return $this->userMentions;
     }
-} 
+}

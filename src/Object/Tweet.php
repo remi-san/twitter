@@ -93,7 +93,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
      * @param null               $source
      * @param Tweet              $retweetedStatus
      */
-    function __construct(
+    public function __construct(
         $id,
         TwitterUser $sender,
         $text,
@@ -238,7 +238,8 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return 'Tweet ['.$this->id.']';
     }
 }

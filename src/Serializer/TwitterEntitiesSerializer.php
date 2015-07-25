@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterEntitiesSerializer implements TwitterSerializer
 {
-
     /**
      * @var TwitterHashtagSerializer
      */
@@ -46,15 +45,14 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      * @param TwitterUrlSerializer $urlSerializer
      * @param TwitterUserMentionSerializer $userMentionSerializer
      */
-    function __construct(
+    public function __construct(
         TwitterExtendedEntitySerializer $extendedEntitySerializer,
         TwitterHashtagSerializer $hashtagSerializer,
         TwitterMediaSerializer $mediaSerializer,
         TwitterSymbolSerializer $symbolSerializer,
         TwitterUrlSerializer $urlSerializer,
         TwitterUserMentionSerializer $userMentionSerializer
-    )
-    {
+    ) {
         $this->extendedEntitySerializer = $extendedEntitySerializer;
         $this->hashtagSerializer = $hashtagSerializer;
         $this->mediaSerializer = $mediaSerializer;
@@ -183,4 +181,4 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         return new TwitterEntities($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
     }
-} 
+}

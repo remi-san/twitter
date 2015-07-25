@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterCoordinatesSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array
@@ -27,7 +26,7 @@ class TwitterCoordinatesSerializer implements TwitterSerializer
 
     /**
      * @param  \stdClass $obj
-     * @param  array     $context
+     * @param  array $context
      * @return TwitterCoordinates
      */
     public function unserialize($obj, array $context = array())

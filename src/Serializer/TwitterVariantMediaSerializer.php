@@ -1,14 +1,12 @@
 <?php
 namespace Twitter\Serializer;
 
-
 use Twitter\Object\TwitterVariantMedia;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
 
 class TwitterVariantMediaSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array

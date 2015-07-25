@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterVariantMediaSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase {
+class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -72,4 +73,4 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($variantMediaObj->bitrate, $variantMedia->getBitrate());
         $this->assertEquals($variantMediaObj->content_type, $variantMedia->getContentType());
     }
-} 
+}

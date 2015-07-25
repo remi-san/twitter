@@ -23,8 +23,8 @@ use Twitter\Serializer\TwitterUserMentionSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Serializer\TwitterVariantMediaSerializer;
 
-trait TwitterSerializerMocker {
-
+trait TwitterSerializerMocker
+{
     /**
      * @return TwitterJsonSerializer
      */
@@ -192,4 +192,4 @@ trait TwitterSerializerMocker {
     {
         return \Mockery::mock('\\Twitter\\Serializer\\TwitterVariantMediaSerializer');
     }
-} 
+}

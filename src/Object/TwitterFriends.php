@@ -5,7 +5,6 @@ use Twitter\TwitterObject;
 
 class TwitterFriends implements TwitterObject
 {
-
     /**
      * @var int[]
      */
@@ -16,7 +15,7 @@ class TwitterFriends implements TwitterObject
      *
      * @param int[] $friends
      */
-    function __construct(array $friends = array())
+    public function __construct(array $friends = array())
     {
         $this->friends = $friends;
     }
@@ -32,7 +31,8 @@ class TwitterFriends implements TwitterObject
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return 'Friends List';
     }
-} 
+}

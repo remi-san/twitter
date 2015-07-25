@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterMedia;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class MediaTest extends \PHPUnit_Framework_TestCase {
+class MediaTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -49,4 +50,4 @@ class MediaTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($type, $media->getType());
         $this->assertEquals($indices, $media->getIndices());
     }
-} 
+}

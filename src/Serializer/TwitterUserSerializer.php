@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterUserSerializer implements TwitterSerializer
 {
-
     /**
      * Serialize a twitter user
      *
@@ -51,4 +50,4 @@ class TwitterUserSerializer implements TwitterSerializer
             $obj->profile_background_image_url_https
         );
     }
-} 
+}

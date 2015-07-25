@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterUser;
 
-class UserTest extends \PHPUnit_Framework_TestCase {
-
+class UserTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -34,4 +34,4 @@ class UserTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($profileHttpsUrl, $user->getProfileImageUrlHttps());
         $this->assertEquals('@'.$screenName, $user->__toString());
     }
-} 
+}

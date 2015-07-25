@@ -25,19 +25,21 @@ use Twitter\TwitterMessage;
 use Twitter\TwitterObject;
 use TwitterStream\API\REST\TwitterRestApi;
 
-trait TwitterObjectMocker {
-
+trait TwitterObjectMocker
+{
     /**
      * @return TwitterObject
      */
-    public function getTwitterObject() {
+    public function getTwitterObject()
+    {
         return \Mockery::mock('\\Twitter\\TwitterObject');
     }
 
     /**
      * @return TwitterEventTarget
      */
-    public function getTwitterEventTarget() {
+    public function getTwitterEventTarget()
+    {
         return \Mockery::mock('\\Twitter\\TwitterEventTarget');
     }
 
@@ -49,8 +51,13 @@ trait TwitterObjectMocker {
      * @param  \DateTime       $date
      * @return TwitterMessage
      */
-    public function getTwitterMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null, \DateTime $date = null)
-    {
+    public function getTwitterMessage(
+        $id = null,
+        $text = null,
+        TwitterUser $sender = null,
+        TwitterEntities $entities = null,
+        \DateTime $date = null
+    ) {
         $twitterMessage = \Mockery::mock('\\Twitter\\TwitterMessage');
         $twitterMessage->shouldReceive('getId')->andReturn($id);
         $twitterMessage->shouldReceive('getText')->andReturn($text);
@@ -68,12 +75,23 @@ trait TwitterObjectMocker {
      * @param  TwitterEntities $entities
      * @return Tweet
      */
-    public function getTweet($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null) {
+    public function getTweet(
+        $id = null,
+        $text = null,
+        TwitterUser $sender = null,
+        TwitterEntities $entities = null
+    ) {
         $tweet = \Mockery::mock('\\Twitter\\Object\\Tweet');
         $tweet->shouldReceive('getId')->andReturn($id);
-        if ($text) { $tweet->shouldReceive('getText')->andReturn($text); }
-        if ($text) { $tweet->shouldReceive('getEntities')->andReturn($entities); }
-        if ($text) { $tweet->shouldReceive('getSender')->andReturn($sender); }
+        if ($text) {
+            $tweet->shouldReceive('getText')->andReturn($text);
+        }
+        if ($text) {
+            $tweet->shouldReceive('getEntities')->andReturn($entities);
+        }
+        if ($text) {
+            $tweet->shouldReceive('getSender')->andReturn($sender);
+        }
 
         return $tweet;
     }
@@ -85,13 +103,23 @@ trait TwitterObjectMocker {
      * @param  TwitterEntities $entities
      * @return TwitterDirectMessage
      */
-    public function getDirectMessage($id = null, $text = null, TwitterUser $sender = null, TwitterEntities $entities = null)
-    {
+    public function getDirectMessage(
+        $id = null,
+        $text = null,
+        TwitterUser $sender = null,
+        TwitterEntities $entities = null
+    ) {
         $dm = \Mockery::mock('\\Twitter\\Object\\TwitterDirectMessage');
         $dm->shouldReceive('getId')->andReturn($id);
-        if ($text) { $dm->shouldReceive('getText')->andReturn($text); }
-        if ($text) { $dm->shouldReceive('getEntities')->andReturn($entities); }
-        if ($text) { $dm->shouldReceive('getSender')->andReturn($sender); }
+        if ($text) {
+            $dm->shouldReceive('getText')->andReturn($text);
+        }
+        if ($text) {
+            $dm->shouldReceive('getEntities')->andReturn($entities);
+        }
+        if ($text) {
+            $dm->shouldReceive('getSender')->andReturn($sender);
+        }
 
         return $dm;
     }
@@ -148,7 +176,8 @@ trait TwitterObjectMocker {
      * @param  string $name
      * @return TwitterUser
      */
-    public function getTwitterUser($id, $name) {
+    public function getTwitterUser($id, $name)
+    {
         $twitterUser = \Mockery::mock('\\Twitter\\Object\\TwitterUser');
         $twitterUser->shouldReceive('getId')->andReturn($id);
         $twitterUser->shouldReceive('getName')->andReturn($name);
@@ -165,15 +194,25 @@ trait TwitterObjectMocker {
      * @param  mixed       $context
      * @return TwitterRestApi
      */
-    public function getTwitterRestApi(TwitterUser $dmUser = null, $dmMessage = null, $tweetMessage = null, $context = null)
-    {
+    public function getTwitterRestApi(
+        TwitterUser $dmUser = null,
+        $dmMessage = null,
+        $tweetMessage = null,
+        $context = null
+    ) {
         $tra = \Mockery::mock('\\TwitterStream\\API\\REST\\TwitterRestApi');
 
-        if ($dmUser && $dmMessage) { $tra->shouldReceive('sendDirectMessage')->with($dmUser, $dmMessage)->once() ;}
-        else { $tra->shouldReceive('sendDirectMessage'); }
+        if ($dmUser && $dmMessage) {
+            $tra->shouldReceive('sendDirectMessage')->with($dmUser, $dmMessage)->once() ;
+        } else {
+            $tra->shouldReceive('sendDirectMessage');
+        }
 
-        if ($tweetMessage) { $tra->shouldReceive('sendTweet')->with($tweetMessage, $context)->once(); }
-        else { $tra->shouldReceive('sendTweet'); }
+        if ($tweetMessage) {
+            $tra->shouldReceive('sendTweet')->with($tweetMessage, $context)->once();
+        } else {
+            $tra->shouldReceive('sendTweet');
+        }
 
         return $tra;
     }
@@ -297,4 +336,4 @@ trait TwitterObjectMocker {
     {
         return \Mockery::mock('\\Twitter\\Object\\TwitterFriends');
     }
-} 
+}

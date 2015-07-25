@@ -18,7 +18,8 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
+class TweetSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -94,19 +95,23 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
         $favoriteCount = 5;
         $source = 'twitter';
 
-        $userObj = new \stdClass(); $userObj->type = 'user';
+        $userObj = new \stdClass();
+        $userObj->type = 'user';
         $user = $this->getTwitterUser(33, 'doc');
         $this->userSerializer->shouldReceive('serialize')->with($user)->andReturn($userObj)->twice();
 
-        $entitiesObj = new \stdClass(); $entitiesObj->type = 'entities';
+        $entitiesObj = new \stdClass();
+        $entitiesObj->type = 'entities';
         $entities = $this->getTwitterEntities();
         $this->entitiesSerializer->shouldReceive('serialize')->with($entities)->andReturn($entitiesObj);
 
-        $coordinatesObj = new \stdClass(); $coordinatesObj->type = 'coordinates';
+        $coordinatesObj = new \stdClass();
+        $coordinatesObj->type = 'coordinates';
         $coordinates = $this->getCoordinates();
         $this->coordinatesSerializer->shouldReceive('serialize')->with($coordinates)->andReturn($coordinatesObj);
 
-        $placeObj = new \stdClass(); $placeObj->type = 'place';
+        $placeObj = new \stdClass();
+        $placeObj->type = 'place';
         $place = $this->getPlace();
         $this->placeSerializer->shouldReceive('serialize')->with($place)->andReturn($placeObj);
 
@@ -133,7 +138,10 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($text, $serialized->text);
         $this->assertEquals($userObj, $serialized->user);
         $this->assertEquals($lang, $serialized->lang);
-        $this->assertEquals($date->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT), $serialized->created_at);
+        $this->assertEquals(
+            $date->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT),
+            $serialized->created_at
+        );
         $this->assertEquals($entitiesObj, $serialized->entities);
         $this->assertEquals($coordinatesObj, $serialized->coordinates);
         $this->assertEquals($placeObj, $serialized->place);
@@ -154,19 +162,23 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testUnserialize()
     {
-        $userObj = new \stdClass(); $userObj->type = 'user';
+        $userObj = new \stdClass();
+        $userObj->type = 'user';
         $user = $this->getTwitterUser(33, 'doc');
         $this->userSerializer->shouldReceive('unserialize')->with($userObj)->andReturn($user);
 
-        $entitiesObj = new \stdClass(); $entitiesObj->type = 'entities';
+        $entitiesObj = new \stdClass();
+        $entitiesObj->type = 'entities';
         $entities = $this->getTwitterEntities();
         $this->entitiesSerializer->shouldReceive('unserialize')->with($entitiesObj)->andReturn($entities);
 
-        $coordinatesObj = new \stdClass(); $coordinatesObj->type = 'coordinates';
+        $coordinatesObj = new \stdClass();
+        $coordinatesObj->type = 'coordinates';
         $coordinates = $this->getCoordinates();
         $this->coordinatesSerializer->shouldReceive('unserialize')->with($coordinatesObj)->andReturn($coordinates);
 
-        $placeObj = new \stdClass(); $placeObj->type = 'place';
+        $placeObj = new \stdClass();
+        $placeObj->type = 'place';
         $place = $this->getPlace();
         $this->placeSerializer->shouldReceive('unserialize')->with($placeObj)->andReturn($place);
 
@@ -252,4 +264,4 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase {
 
         return $tweet;
     }
-} 
+}

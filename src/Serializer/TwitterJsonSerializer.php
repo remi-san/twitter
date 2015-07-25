@@ -9,7 +9,6 @@ use Twitter\TwitterSerializable;
 
 class TwitterJsonSerializer implements Serializer
 {
-
     /**
      * @var TwitterEventTargetSerializer
      */
@@ -56,7 +55,7 @@ class TwitterJsonSerializer implements Serializer
      * @param TwitterDeleteSerializer $twitterDeleteSerializer
      * @param TwitterUserSerializer $twitterUserSerializer
      */
-    function __construct(
+    public function __construct(
         TwitterEventTargetSerializer $twitterTargetSerializer,
         TwitterDirectMessageSerializer $directMessageSerializer,
         TwitterEventSerializer $twitterEventSerializer,
@@ -64,8 +63,7 @@ class TwitterJsonSerializer implements Serializer
         TwitterDisconnectSerializer $twitterDisconnectSerializer,
         TwitterDeleteSerializer $twitterDeleteSerializer,
         TwitterUserSerializer $twitterUserSerializer
-    )
-    {
+    ) {
         $this->twitterTargetSerializer = $twitterTargetSerializer;
         $this->directMessageSerializer = $directMessageSerializer;
         $this->twitterEventSerializer = $twitterEventSerializer;

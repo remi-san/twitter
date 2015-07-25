@@ -1,8 +1,8 @@
 <?php
 namespace Twitter;
 
-interface Serializer {
-
+interface Serializer
+{
     /**
      * @param  object $object
      * @return string
@@ -14,4 +14,4 @@ interface Serializer {
      * @return object
      */
     public function unserialize($string);
-} 
+}

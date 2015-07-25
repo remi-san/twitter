@@ -11,7 +11,8 @@ use Twitter\Serializer\TwitterVariantMediaSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase {
+class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -179,4 +180,4 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(array($sizeName => $size), $extendedEntity->getSizes());
         $this->assertEquals(array($variant), $extendedEntity->getVariants());
     }
-} 
+}

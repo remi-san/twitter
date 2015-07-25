@@ -6,7 +6,8 @@ use Twitter\Serializer\TwitterPlaceSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class PlaceSerializerTest extends \PHPUnit_Framework_TestCase {
+class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -59,4 +60,4 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertTrue($place instanceof TwitterPlace);
     }
-} 
+}

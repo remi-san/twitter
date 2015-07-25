@@ -3,8 +3,8 @@ namespace Twitter;
 
 use Twitter\Object\TwitterEntityIndices;
 
-abstract class TwitterEntity implements TwitterSerializable {
-
+abstract class TwitterEntity implements TwitterSerializable
+{
     /**
      * @var TwitterEntityIndices
      */
@@ -15,7 +15,8 @@ abstract class TwitterEntity implements TwitterSerializable {
      *
      * @param TwitterEntityIndices $indices
      */
-    public function __construct(TwitterEntityIndices $indices) {
+    public function __construct(TwitterEntityIndices $indices)
+    {
         $this->indices = $indices;
     }
 
@@ -26,4 +27,4 @@ abstract class TwitterEntity implements TwitterSerializable {
     {
         return $this->indices;
     }
-} 
+}

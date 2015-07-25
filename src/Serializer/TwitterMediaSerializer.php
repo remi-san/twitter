@@ -1,7 +1,6 @@
 <?php
 namespace Twitter\Serializer;
 
-
 use Twitter\Object\TwitterMedia;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -24,8 +23,10 @@ class TwitterMediaSerializer implements TwitterSerializer
      * @param TwitterEntityIndicesSerializer $entityIndicesSerializer
      * @param TwitterMediaSizeSerializer     $mediaSizeSerializer
      */
-    public function __construct(TwitterEntityIndicesSerializer $entityIndicesSerializer, TwitterMediaSizeSerializer $mediaSizeSerializer)
-    {
+    public function __construct(
+        TwitterEntityIndicesSerializer $entityIndicesSerializer,
+        TwitterMediaSizeSerializer $mediaSizeSerializer
+    ) {
         $this->entityIndicesSerializer  = $entityIndicesSerializer;
         $this->mediaSizeSerializer = $mediaSizeSerializer;
     }
@@ -51,7 +52,7 @@ class TwitterMediaSerializer implements TwitterSerializer
         $media->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
 
         $media->sizes = array();
-        foreach($object->getSizes() as $size) {
+        foreach ($object->getSizes() as $size) {
             $media->sizes[$size->getName()] = $this->mediaSizeSerializer->serialize($size);
         }
 
@@ -68,7 +69,10 @@ class TwitterMediaSerializer implements TwitterSerializer
         $sizesObjects = array();
         if ($obj->sizes) {
             foreach ($obj->sizes as $sizeName => $sizeObj) {
-                $sizesObjects[$sizeName] = $this->mediaSizeSerializer->unserialize($sizeObj, array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
+                $sizesObjects[$sizeName] = $this->mediaSizeSerializer->unserialize(
+                    $sizeObj,
+                    array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName)
+                );
             }
         }
 

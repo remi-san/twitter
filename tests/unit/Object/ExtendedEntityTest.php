@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterExtendedEntity;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class ExtendedEntityTest extends \PHPUnit_Framework_TestCase {
+class ExtendedEntityTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -58,4 +59,4 @@ class ExtendedEntityTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($durationMillis, $media->getDurationMillis());
         $this->assertEquals($variants, $media->getVariants());
     }
-} 
+}

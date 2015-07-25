@@ -12,7 +12,8 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
+class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -266,4 +267,4 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals($user, $return);
     }
-} 
+}

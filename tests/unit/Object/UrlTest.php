@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterUrl;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class UrlTest extends \PHPUnit_Framework_TestCase {
+class UrlTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -29,5 +30,4 @@ class UrlTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($expandedUrl, $urlObject->getExpandedUrl());
         $this->assertEquals($indices, $urlObject->getIndices());
     }
-
-} 
+}

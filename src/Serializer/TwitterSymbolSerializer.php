@@ -1,7 +1,6 @@
 <?php
 namespace Twitter\Serializer;
 
-
 use Twitter\Object\TwitterSymbol;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;

@@ -5,7 +5,6 @@ use Twitter\TwitterEntity;
 
 class TwitterMedia extends TwitterEntity
 {
-
     /**
      * @var int
      */
@@ -59,8 +58,17 @@ class TwitterMedia extends TwitterEntity
      * @param string               $type
      * @param TwitterEntityIndices $indices
      */
-    function __construct($id = null, $mediaUrl = null, $mediaUrlHttps = null, $url = null, $displayUrl = null, $expandedUrl = null, array $sizes = array(), $type = null, TwitterEntityIndices $indices = null)
-    {
+    public function __construct(
+        $id = null,
+        $mediaUrl = null,
+        $mediaUrlHttps = null,
+        $url = null,
+        $displayUrl = null,
+        $expandedUrl = null,
+        array $sizes = array(),
+        $type = null,
+        TwitterEntityIndices $indices = null
+    ) {
         parent::__construct($indices);
         $this->displayUrl = $displayUrl;
         $this->expandedUrl = $expandedUrl;
@@ -71,7 +79,6 @@ class TwitterMedia extends TwitterEntity
         $this->type = $type;
         $this->url = $url;
     }
-
 
     /**
      * @return string
@@ -136,4 +143,4 @@ class TwitterMedia extends TwitterEntity
     {
         return $this->url;
     }
-} 
+}

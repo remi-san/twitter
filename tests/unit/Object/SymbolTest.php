@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterSymbol;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class SymbolTest extends \PHPUnit_Framework_TestCase {
+class SymbolTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -25,4 +26,4 @@ class SymbolTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($text, $symbol->getText());
         $this->assertEquals($indices, $symbol->getIndices());
     }
-} 
+}

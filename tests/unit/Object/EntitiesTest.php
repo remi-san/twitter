@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterEntities;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class EntitiesTest extends \PHPUnit_Framework_TestCase {
+class EntitiesTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -33,4 +34,4 @@ class EntitiesTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($media, $entities->getMedia());
         $this->assertEquals($extendedEntities, $entities->getExtendedEntities());
     }
-} 
+}

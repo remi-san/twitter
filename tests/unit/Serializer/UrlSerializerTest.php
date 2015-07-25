@@ -7,7 +7,8 @@ use Twitter\Serializer\TwitterUrlSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class UrlSerializerTest extends \PHPUnit_Framework_TestCase {
+class UrlSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -91,4 +92,4 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($urlObj->expanded_url, $url->getExpandedUrl());
         $this->assertEquals($indices, $url->getIndices());
     }
-} 
+}

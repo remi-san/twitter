@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterDisconnect;
 
-class DisconnectTest extends \PHPUnit_Framework_TestCase {
-
+class DisconnectTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -26,4 +26,4 @@ class DisconnectTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($reason, $disconnect->getReason());
         $this->assertEquals('Disconnect ['.$streamName.']', $disconnect->__toString());
     }
-} 
+}

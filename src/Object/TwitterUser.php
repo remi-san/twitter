@@ -5,7 +5,6 @@ use Twitter\TwitterSerializable;
 
 class TwitterUser implements TwitterSerializable
 {
-
     /**
      * @var int
      */
@@ -52,8 +51,15 @@ class TwitterUser implements TwitterSerializable
      * @param string $profileImageUrl
      * @param string $profileImageUrlHttps
      */
-    function __construct($id = null, $screenName = null, $name = null, $lang = 'en', $location = null, $profileImageUrl = null, $profileImageUrlHttps = null)
-    {
+    public function __construct(
+        $id = null,
+        $screenName = null,
+        $name = null,
+        $lang = 'en',
+        $location = null,
+        $profileImageUrl = null,
+        $profileImageUrlHttps = null
+    ) {
         $this->id = $id;
 
         $this->screenName = $screenName;
@@ -130,4 +136,4 @@ class TwitterUser implements TwitterSerializable
     {
         return '@'.$this->screenName;
     }
-} 
+}

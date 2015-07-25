@@ -11,7 +11,8 @@ use Twitter\Serializer\TwitterUserMentionSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
+class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -90,29 +91,38 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testSerializeWithLegalObject()
     {
-        $hashtagObj = new \stdClass(); $hashtagObj->type = 'hashtag';
+        $hashtagObj = new \stdClass();
+        $hashtagObj->type = 'hashtag';
         $hashtag = $this->getHashTag('hashtag');
         $this->hashtagSerializer->shouldReceive('serialize')->with($hashtag)->andReturn($hashtagObj);
 
-        $symbolObj = new \stdClass(); $symbolObj->type = 'symbol';
+        $symbolObj = new \stdClass();
+        $symbolObj->type = 'symbol';
         $symbol = $this->getSymbol();
         $this->symbolSerializer->shouldReceive('serialize')->with($symbol)->andReturn($symbolObj);
 
-        $urlObj = new \stdClass(); $urlObj->type = 'url';
+        $urlObj = new \stdClass();
+        $urlObj->type = 'url';
         $url = $this->getUrl();
         $this->urlSerializer->shouldReceive('serialize')->with($url)->andReturn($urlObj);
 
-        $userMentionObj = new \stdClass(); $userMentionObj->type = 'user mention';
+        $userMentionObj = new \stdClass();
+        $userMentionObj->type = 'user mention';
         $userMention = $this->getUserMention();
         $this->userMentionSerializer->shouldReceive('serialize')->with($userMention)->andReturn($userMentionObj);
 
-        $mediumObj = new \stdClass(); $mediumObj->type = 'medium';
+        $mediumObj = new \stdClass();
+        $mediumObj->type = 'medium';
         $medium = $this->getMedia();
         $this->mediaSerializer->shouldReceive('serialize')->with($medium)->andReturn($mediumObj);
 
-        $extendedEntityObj = new \stdClass(); $extendedEntityObj->type = 'extended entity';
+        $extendedEntityObj = new \stdClass();
+        $extendedEntityObj->type = 'extended entity';
         $extendedEntity = $this->getExtendedEntity();
-        $this->extendedEntitySerializer->shouldReceive('serialize')->with($extendedEntity)->andReturn($extendedEntityObj);
+        $this->extendedEntitySerializer
+            ->shouldReceive('serialize')
+            ->with($extendedEntity)
+            ->andReturn($extendedEntityObj);
 
         $obj = $this->getTwitterEntities();
         $obj->shouldReceive('getHashtags')->andReturn(array($hashtag));
@@ -137,29 +147,38 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testUnserialize()
     {
-        $hashtagObj = new \stdClass(); $hashtagObj->type = 'hashtag';
+        $hashtagObj = new \stdClass();
+        $hashtagObj->type = 'hashtag';
         $hashtag = $this->getHashTag('hashtag');
         $this->hashtagSerializer->shouldReceive('unserialize')->with($hashtagObj)->andReturn($hashtag);
 
-        $symbolObj = new \stdClass(); $symbolObj->type = 'symbol';
+        $symbolObj = new \stdClass();
+        $symbolObj->type = 'symbol';
         $symbol = $this->getSymbol();
         $this->symbolSerializer->shouldReceive('unserialize')->with($symbolObj)->andReturn($symbol);
 
-        $urlObj = new \stdClass(); $urlObj->type = 'url';
+        $urlObj = new \stdClass();
+        $urlObj->type = 'url';
         $url = $this->getUrl();
         $this->urlSerializer->shouldReceive('unserialize')->with($urlObj)->andReturn($url);
 
-        $userMentionObj = new \stdClass(); $userMentionObj->type = 'user mention';
+        $userMentionObj = new \stdClass();
+        $userMentionObj->type = 'user mention';
         $userMention = $this->getUserMention();
         $this->userMentionSerializer->shouldReceive('unserialize')->with($userMentionObj)->andReturn($userMention);
 
-        $mediumObj = new \stdClass(); $mediumObj->type = 'medium';
+        $mediumObj = new \stdClass();
+        $mediumObj->type = 'medium';
         $medium = $this->getMedia();
         $this->mediaSerializer->shouldReceive('unserialize')->with($mediumObj)->andReturn($medium);
 
-        $extendedEntityObj = new \stdClass(); $extendedEntityObj->type = 'extended entity';
+        $extendedEntityObj = new \stdClass();
+        $extendedEntityObj->type = 'extended entity';
         $extendedEntity = $this->getExtendedEntity();
-        $this->extendedEntitySerializer->shouldReceive('unserialize')->with($extendedEntityObj)->andReturn($extendedEntity);
+        $this->extendedEntitySerializer
+            ->shouldReceive('unserialize')
+            ->with($extendedEntityObj)
+            ->andReturn($extendedEntity);
 
         $entityObj = new \stdClass();
         $entityObj->hashtags = array($hashtagObj);
@@ -178,4 +197,4 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(array($medium), $entity->getMedia());
         $this->assertEquals(array($extendedEntity), $entity->getExtendedEntities());
     }
-} 
+}

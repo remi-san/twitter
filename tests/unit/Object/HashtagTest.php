@@ -4,7 +4,8 @@ namespace Twitter\Test\Object;
 use Twitter\Object\TwitterHashtag;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class HashtagTest extends \PHPUnit_Framework_TestCase {
+class HashtagTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     public function tearDown()
@@ -26,5 +27,4 @@ class HashtagTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($indices, $hashtag->getIndices());
         $this->assertEquals('#'.$text, $hashtag->__toString());
     }
-
-} 
+}

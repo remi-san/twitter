@@ -16,7 +16,7 @@ class TwitterEventTargetSerializer implements TwitterSerializer
     /**
      * @param TweetSerializer $tweetSerializer
      */
-    function __construct(TweetSerializer $tweetSerializer)
+    public function __construct(TweetSerializer $tweetSerializer)
     {
         $this->tweetSerializer = $tweetSerializer;
     }

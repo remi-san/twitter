@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterVariantMedia;
 
-class VariantMediaTest extends \PHPUnit_Framework_TestCase {
-
+class VariantMediaTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -25,4 +25,4 @@ class VariantMediaTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($url, $variantMedia->getUrl());
         $this->assertEquals($bitrate, $variantMedia->getBitrate());
     }
-} 
+}

@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterDelete;
 
-class DeleteTest extends \PHPUnit_Framework_TestCase {
-
+class DeleteTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -28,4 +28,4 @@ class DeleteTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($date, $delete->getDate());
         $this->assertEquals('Delete ['.$type.']['.$id.']', $delete->__toString());
     }
-} 
+}

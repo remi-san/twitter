@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterPlaceSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array

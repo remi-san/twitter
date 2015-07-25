@@ -1,4 +1,6 @@
 <?php
 namespace Twitter;
 
-interface TwitterSerializable {}
+interface TwitterSerializable
+{
+}

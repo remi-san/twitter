@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterEntityIndicesSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array

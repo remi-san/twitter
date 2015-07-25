@@ -5,7 +5,6 @@ use Twitter\TwitterMessage;
 
 class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
 {
-
     /**
      * @var TwitterUser
      */
@@ -21,8 +20,14 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
      * @param \DateTime       $createdAt
      * @param TwitterEntities $entities
      */
-    function __construct($id, TwitterUser $sender, TwitterUser $recipient, $text, \DateTime $createdAt, TwitterEntities $entities = null)
-    {
+    public function __construct(
+        $id,
+        TwitterUser $sender,
+        TwitterUser $recipient,
+        $text,
+        \DateTime $createdAt,
+        TwitterEntities $entities = null
+    ) {
         parent::__construct($id, $sender, $text, $entities, $createdAt);
 
         $this->recipient = $recipient;
@@ -39,7 +44,8 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return 'DM ['.$this->id.']';
     }
-} 
+}

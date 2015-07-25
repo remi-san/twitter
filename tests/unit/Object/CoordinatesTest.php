@@ -3,8 +3,8 @@ namespace Twitter\Test\Object;
 
 use Twitter\Object\TwitterCoordinates;
 
-class CoordinatesTest extends \PHPUnit_Framework_TestCase {
-
+class CoordinatesTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -25,4 +25,4 @@ class CoordinatesTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($lat, $coordinates->getLatitude());
         $this->assertEquals($type, $coordinates->getType());
     }
-} 
+}

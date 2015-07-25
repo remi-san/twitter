@@ -7,7 +7,8 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase {
+class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -61,15 +62,18 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase {
         $text = 'dm';
         $date = new \DateTime();
 
-        $senderObj = new \stdClass(); $senderObj->type = 'sender';
+        $senderObj = new \stdClass();
+        $senderObj->type = 'sender';
         $sender = $this->getTwitterUser(33, 'doc');
         $this->userSerializer->shouldReceive('serialize')->with($sender)->andReturn($senderObj);
 
-        $recipientObj = new \stdClass(); $recipientObj->type = 'recipient';
+        $recipientObj = new \stdClass();
+        $recipientObj->type = 'recipient';
         $recipient = $this->getTwitterUser(42, 'douglas');
         $this->userSerializer->shouldReceive('serialize')->with($recipient)->andReturn($recipientObj);
 
-        $entitiesObj = new \stdClass(); $entitiesObj->type = 'entities';
+        $entitiesObj = new \stdClass();
+        $entitiesObj->type = 'entities';
         $entities = $this->getTwitterEntities();
         $this->entitiesSerializer->shouldReceive('serialize')->with($entities)->andReturn($entitiesObj);
 
@@ -92,15 +96,18 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase {
      */
     public function testUnserialize()
     {
-        $senderObj = new \stdClass(); $senderObj->type = 'sender';
+        $senderObj = new \stdClass();
+        $senderObj->type = 'sender';
         $sender = $this->getTwitterUser(33, 'doc');
         $this->userSerializer->shouldReceive('unserialize')->with($senderObj)->andReturn($sender);
 
-        $recipientObj = new \stdClass(); $recipientObj->type = 'recipient';
+        $recipientObj = new \stdClass();
+        $recipientObj->type = 'recipient';
         $recipient = $this->getTwitterUser(42, 'douglas');
         $this->userSerializer->shouldReceive('unserialize')->with($recipientObj)->andReturn($recipient);
 
-        $entitiesObj = new \stdClass(); $entitiesObj->type = 'entities';
+        $entitiesObj = new \stdClass();
+        $entitiesObj->type = 'entities';
         $entities = $this->getTwitterEntities();
         $this->entitiesSerializer->shouldReceive('unserialize')->with($entitiesObj)->andReturn($entities);
 
@@ -121,4 +128,4 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(new \DateTime($dmObj->created_at), $dm->getDate());
         $this->assertEquals($entities, $dm->getEntities());
     }
-} 
+}

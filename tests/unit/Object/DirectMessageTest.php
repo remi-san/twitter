@@ -6,7 +6,8 @@ use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterUser;
 use Twitter\Test\Mock\TwitterObjectMocker;
 
-class DirectMessageTest extends \PHPUnit_Framework_TestCase {
+class DirectMessageTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker;
 
     /**
@@ -40,7 +41,8 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase {
     /**
      * @test
      */
-    public function testConstructor() {
+    public function testConstructor()
+    {
 
         $id = 42;
         $text = 'Message';
@@ -91,4 +93,4 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($tweet->containsHashtag($hashtagText));
         $this->assertFalse($tweet->containsHashtag('dummy'));
     }
-} 
+}

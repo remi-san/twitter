@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterFriendsSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array
@@ -33,4 +32,4 @@ class TwitterFriendsSerializer implements TwitterSerializer
     {
         return new TwitterFriends($obj->friends);
     }
-} 
+}

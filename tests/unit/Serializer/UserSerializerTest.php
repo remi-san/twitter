@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class UserSerializerTest extends \PHPUnit_Framework_TestCase {
+class UserSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -81,4 +82,4 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($userObj->profile_background_image_url, $user->getProfileImageUrl());
         $this->assertEquals($userObj->profile_background_image_url_https, $user->getProfileImageUrlHttps());
     }
-} 
+}

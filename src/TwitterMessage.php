@@ -4,8 +4,8 @@ namespace Twitter;
 use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterUser;
 
-interface TwitterMessage extends TwitterDatedObject {
-
+interface TwitterMessage extends TwitterDatedObject
+{
     /**
      * @return int
      */

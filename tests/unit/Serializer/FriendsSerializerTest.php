@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterFriendsSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class FriendsSerializerTest extends \PHPUnit_Framework_TestCase {
+class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -62,4 +63,4 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals($friendsObj->friends, $friends->getFriends());
     }
-} 
+}

@@ -3,8 +3,8 @@ namespace Twitter\Object;
 
 use Twitter\TwitterMessage;
 
-abstract class AbstractMessage implements TwitterMessage {
-
+abstract class AbstractMessage implements TwitterMessage
+{
     /**
      * @var int
      */
@@ -39,15 +39,19 @@ abstract class AbstractMessage implements TwitterMessage {
      * @param TwitterEntities $entities
      * @param \DateTime       $date
      */
-    function __construct($id, TwitterUser $sender, $text, TwitterEntities $entities = null, \DateTime $date = null)
-    {
+    public function __construct(
+        $id,
+        TwitterUser $sender,
+        $text,
+        TwitterEntities $entities = null,
+        \DateTime $date = null
+    ) {
         $this->entities = $entities;
         $this->id = $id;
         $this->sender = $sender;
         $this->text = $text;
         $this->date = $date;
     }
-
 
     /**
      * @return int
@@ -85,7 +89,8 @@ abstract class AbstractMessage implements TwitterMessage {
     /**
      * @return \DateTime
      */
-    public function getDate() {
+    public function getDate()
+    {
         return $this->date;
     }
 

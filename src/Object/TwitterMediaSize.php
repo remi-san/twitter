@@ -5,7 +5,6 @@ use Twitter\TwitterSerializable;
 
 class TwitterMediaSize implements TwitterSerializable
 {
-
     /**
      * @var string
      */
@@ -34,7 +33,7 @@ class TwitterMediaSize implements TwitterSerializable
      * @param int     $height
      * @param boolean $resize
      */
-    function __construct($name, $width, $height, $resize)
+    public function __construct($name, $width, $height, $resize)
     {
         $this->height = $height;
         $this->name = $name;
@@ -73,4 +72,4 @@ class TwitterMediaSize implements TwitterSerializable
     {
         return $this->width;
     }
-} 
+}

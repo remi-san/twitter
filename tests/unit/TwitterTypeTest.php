@@ -4,8 +4,8 @@ namespace Twitter\Test\Object;
 use Doctrine\DBAL\Types\Type;
 use Twitter\Doctrine\TwitterType;
 
-class TwitterTypeTest extends \PHPUnit_Framework_TestCase {
-
+class TwitterTypeTest extends \PHPUnit_Framework_TestCase
+{
     public function tearDown()
     {
         \Mockery::close();
@@ -31,4 +31,4 @@ class TwitterTypeTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($serializedUser, $twitterType->convertToDatabaseValue($user, $platform));
         $this->assertEquals($user, $twitterType->convertToPHPValue($serializedUser, $platform));
     }
-} 
+}

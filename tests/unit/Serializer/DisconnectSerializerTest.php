@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterDisconnectSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase {
+class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -66,7 +67,8 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase {
         $disconnectObj->stream_name = 'stream';
         $disconnectObj->reason = 'reason';
 
-        $d = new \stdClass(); $d->disconnect = $disconnectObj;
+        $d = new \stdClass();
+        $d->disconnect = $disconnectObj;
 
         $disconnect = $this->serializer->unserialize($d);
 
@@ -74,4 +76,4 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($disconnectObj->stream_name, $disconnect->getStreamName());
         $this->assertEquals($disconnectObj->reason, $disconnect->getReason());
     }
-} 
+}

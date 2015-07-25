@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterDeleteSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array
@@ -25,9 +24,14 @@ class TwitterDeleteSerializer implements TwitterSerializer
         $obj = new \stdClass();
 
         switch ($object->getType()) {
-            case TwitterDelete::TWEET: $obj->status = $refObject; break;
-            case TwitterDelete::DM: $obj->direct_message = $refObject; break;
-            default: throw new \InvalidArgumentException('Invalid delete type');
+            case TwitterDelete::TWEET:
+                $obj->status = $refObject;
+                break;
+            case TwitterDelete::DM:
+                $obj->direct_message = $refObject;
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid delete type');
         }
 
         if ($object->getDate()) {
@@ -67,4 +71,4 @@ class TwitterDeleteSerializer implements TwitterSerializer
             isset($d->timestamp_ms) ? $date->setTimestamp(floor($d->timestamp_ms / 1000)) : null
         );
     }
-} 
+}

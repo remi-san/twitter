@@ -5,7 +5,8 @@ use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase {
+class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -71,4 +72,4 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($obj->coordinates[1], $coordinates->getLatitude());
         $this->assertEquals($obj->type, $coordinates->getType());
     }
-} 
+}

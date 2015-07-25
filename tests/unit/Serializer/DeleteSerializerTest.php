@@ -6,7 +6,8 @@ use Twitter\Serializer\TwitterDeleteSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class DeleteSerializerTest extends \PHPUnit_Framework_TestCase {
+class DeleteSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -146,4 +147,4 @@ class DeleteSerializerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($obj->delete->direct_message->user_id, $delete->getUserId());
         $this->assertEquals($date, $delete->getDate());
     }
-} 
+}

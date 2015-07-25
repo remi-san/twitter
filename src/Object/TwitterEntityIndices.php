@@ -5,7 +5,6 @@ use Twitter\TwitterSerializable;
 
 class TwitterEntityIndices implements TwitterSerializable
 {
-
     /**
      * @var int
      */
@@ -22,7 +21,7 @@ class TwitterEntityIndices implements TwitterSerializable
      * @param int $from
      * @param int $to
      */
-    function __construct($from, $to)
+    public function __construct($from, $to)
     {
         $this->from = $from;
         $this->to = $to;
@@ -43,4 +42,4 @@ class TwitterEntityIndices implements TwitterSerializable
     {
         return $this->to;
     }
-} 
+}

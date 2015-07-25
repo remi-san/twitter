@@ -3,8 +3,8 @@ namespace Twitter\Object;
 
 use Twitter\TwitterSerializable;
 
-class TwitterCoordinates implements TwitterSerializable {
-
+class TwitterCoordinates implements TwitterSerializable
+{
     /**
      * @var string
      */
@@ -27,13 +27,12 @@ class TwitterCoordinates implements TwitterSerializable {
      * @param float  $longitude
      * @param string $type
      */
-    function __construct($longitude, $latitude, $type)
+    public function __construct($longitude, $latitude, $type)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
         $this->type = $type;
     }
-
 
     /**
      * @return float
@@ -58,4 +57,4 @@ class TwitterCoordinates implements TwitterSerializable {
     {
         return $this->type;
     }
-} 
+}

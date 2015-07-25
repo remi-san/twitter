@@ -7,7 +7,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterDisconnectSerializer implements TwitterSerializer
 {
-
     /**
      * @param  TwitterSerializable $object
      * @return array
@@ -44,4 +43,4 @@ class TwitterDisconnectSerializer implements TwitterSerializer
             $d->reason
         );
     }
-} 
+}

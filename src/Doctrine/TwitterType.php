@@ -6,8 +6,8 @@ use Doctrine\DBAL\Types\Type;
 use Twitter\Serializer\TwitterJsonSerializer;
 use Twitter\TwitterObject;
 
-class TwitterType extends Type {
-
+class TwitterType extends Type
+{
     const TWITTER = 'twitter';
 
     /**

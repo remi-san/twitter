@@ -8,7 +8,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterDirectMessageSerializer implements TwitterSerializer
 {
-
     /**
      * @var TwitterUserSerializer
      */
@@ -23,8 +22,10 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
      * @param TwitterUserSerializer $userSerializer
      * @param TwitterEntitiesSerializer $twitterEntitiesSerializer
      */
-    function __construct(TwitterUserSerializer $userSerializer, TwitterEntitiesSerializer $twitterEntitiesSerializer)
-    {
+    public function __construct(
+        TwitterUserSerializer $userSerializer,
+        TwitterEntitiesSerializer $twitterEntitiesSerializer
+    ) {
         $this->userSerializer = $userSerializer;
         $this->twitterEntitiesSerializer = $twitterEntitiesSerializer;
     }
@@ -66,4 +67,4 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             $dm->entities?$this->twitterEntitiesSerializer->unserialize($dm->entities):null
         );
     }
-} 
+}

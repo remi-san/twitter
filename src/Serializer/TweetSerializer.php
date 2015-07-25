@@ -8,7 +8,6 @@ use Twitter\TwitterSerializer;
 
 class TweetSerializer implements TwitterSerializer
 {
-
     /**
      * @var TwitterUserSerializer
      */
@@ -35,7 +34,7 @@ class TweetSerializer implements TwitterSerializer
      * @param TwitterCoordinatesSerializer $coordinatesSerializer
      * @param TwitterPlaceSerializer       $placeSerializer
      */
-    function __construct(
+    public function __construct(
         TwitterUserSerializer $userSerializer,
         TwitterEntitiesSerializer $twitterEntitiesSerializer,
         TwitterCoordinatesSerializer $coordinatesSerializer,
@@ -63,8 +62,12 @@ class TweetSerializer implements TwitterSerializer
         $tweet->text = $object->getText();
         $tweet->lang = $object->getLang();
         $tweet->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
-        $tweet->entities = $object->getEntities()?$this->twitterEntitiesSerializer->serialize($object->getEntities()):array();
-        $tweet->coordinates = $object->getCoordinates()?$this->coordinatesSerializer->serialize($object->getCoordinates()):null;
+        $tweet->entities = $object->getEntities()?
+            $this->twitterEntitiesSerializer->serialize($object->getEntities()):
+            array();
+        $tweet->coordinates = $object->getCoordinates()?
+            $this->coordinatesSerializer->serialize($object->getCoordinates()):
+            null;
         $tweet->place = $object->getPlace()?$this->placeSerializer->serialize($object->getPlace()):null;
         $tweet->in_reply_to_status_id = $object->getInReplyToStatusId();
         $tweet->in_reply_to_user_id = $object->getInReplyToUserId();
@@ -111,4 +114,4 @@ class TweetSerializer implements TwitterSerializer
             (isset($obj->retweeted_status)) ? $this->unserialize($obj->retweeted_status) : null
         );
     }
-} 
+}

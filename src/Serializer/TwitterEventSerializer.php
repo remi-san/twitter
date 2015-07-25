@@ -8,7 +8,6 @@ use Twitter\TwitterSerializer;
 
 class TwitterEventSerializer implements TwitterSerializer
 {
-
     /**
      * @var TwitterUserSerializer
      */
@@ -23,7 +22,7 @@ class TwitterEventSerializer implements TwitterSerializer
      * @param TwitterUserSerializer $userSerializer
      * @param TwitterEventTargetSerializer $targetSerializer
      */
-    function __construct(TwitterUserSerializer $userSerializer, TwitterEventTargetSerializer $targetSerializer)
+    public function __construct(TwitterUserSerializer $userSerializer, TwitterEventTargetSerializer $targetSerializer)
     {
         $this->userSerializer = $userSerializer;
         $this->targetSerializer = $targetSerializer;
@@ -70,5 +69,4 @@ class TwitterEventSerializer implements TwitterSerializer
             new \DateTime($obj->created_at)
         );
     }
-
-} 
+}

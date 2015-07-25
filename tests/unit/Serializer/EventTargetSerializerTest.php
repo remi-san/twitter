@@ -1,7 +1,6 @@
 <?php
 namespace Twitter\Test\Serializer;
 
-use Mockery\Mock;
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TweetSerializer;
@@ -10,7 +9,8 @@ use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 
-class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase {
+class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
+{
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
@@ -105,4 +105,4 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertNull($eventTarget);
     }
-} 
+}
