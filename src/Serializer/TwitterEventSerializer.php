@@ -69,4 +69,15 @@ class TwitterEventSerializer implements TwitterSerializer
             new \DateTime($obj->created_at)
         );
     }
+
+    /**
+     * @return TwitterEventSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterUserSerializer::build(),
+            TwitterEventTargetSerializer::build()
+        );
+    }
 }

@@ -73,4 +73,14 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($variantMediaObj->bitrate, $variantMedia->getBitrate());
         $this->assertEquals($variantMediaObj->content_type, $variantMedia->getContentType());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterVariantMediaSerializer::build();
+
+        $this->assertInstanceOf(TwitterVariantMediaSerializer::class, $serializer);
+    }
 }

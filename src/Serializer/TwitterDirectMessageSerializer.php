@@ -67,4 +67,15 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             $dm->entities?$this->twitterEntitiesSerializer->unserialize($dm->entities):null
         );
     }
+
+    /**
+     * @return TwitterDirectMessageSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterUserSerializer::build(),
+            TwitterEntitiesSerializer::build()
+        );
+    }
 }

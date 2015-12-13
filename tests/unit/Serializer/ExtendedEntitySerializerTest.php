@@ -180,4 +180,14 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array($sizeName => $size), $extendedEntity->getSizes());
         $this->assertEquals(array($variant), $extendedEntity->getVariants());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterExtendedEntitySerializer::build();
+
+        $this->assertInstanceOf(TwitterExtendedEntitySerializer::class, $serializer);
+    }
 }

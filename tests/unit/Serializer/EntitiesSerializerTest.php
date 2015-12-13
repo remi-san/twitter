@@ -197,4 +197,14 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array($medium), $entity->getMedia());
         $this->assertEquals(array($extendedEntity), $entity->getExtendedEntities());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterEntitiesSerializer::build();
+
+        $this->assertInstanceOf(TwitterEntitiesSerializer::class, $serializer);
+    }
 }

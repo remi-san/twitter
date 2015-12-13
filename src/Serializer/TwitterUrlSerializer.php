@@ -55,4 +55,14 @@ class TwitterUrlSerializer implements TwitterSerializer
             $this->entityIndicesSerializer->unserialize($obj->indices)
         );
     }
+
+    /**
+     * @return TwitterUrlSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterEntityIndicesSerializer::build()
+        );
+    }
 }

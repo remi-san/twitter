@@ -264,4 +264,14 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
 
         return $tweet;
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TweetSerializer::build();
+
+        $this->assertInstanceOf(TweetSerializer::class, $serializer);
+    }
 }

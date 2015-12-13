@@ -29,4 +29,12 @@ class TwitterPlaceSerializer implements TwitterSerializer
     {
         return new TwitterPlace();
     }
+
+    /**
+     * @return TwitterPlaceSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

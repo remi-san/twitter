@@ -77,4 +77,14 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($mediaSizeObj->w, $mediaSize->getWidth());
         $this->assertEquals($mediaSizeObj->h, $mediaSize->getHeight());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterMediaSizeSerializer::build();
+
+        $this->assertInstanceOf(TwitterMediaSizeSerializer::class, $serializer);
+    }
 }

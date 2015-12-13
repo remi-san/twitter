@@ -105,4 +105,14 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($eventTarget);
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterEventTargetSerializer::build();
+
+        $this->assertInstanceOf(TwitterEventTargetSerializer::class, $serializer);
+    }
 }

@@ -55,4 +55,14 @@ class TwitterEventTargetSerializer implements TwitterSerializer
 
         return $object;
     }
+
+    /**
+     * @return TwitterEventTargetSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TweetSerializer::build()
+        );
+    }
 }

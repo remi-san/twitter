@@ -48,4 +48,14 @@ class TwitterHashtagSerializer implements TwitterSerializer
     {
         return new TwitterHashtag($obj->text, $this->entityIndicesSerializer->unserialize($obj->indices));
     }
+
+    /**
+     * @return TwitterHashtagSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterEntityIndicesSerializer::build()
+        );
+    }
 }

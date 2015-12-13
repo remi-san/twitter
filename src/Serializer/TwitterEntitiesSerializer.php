@@ -181,4 +181,19 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         return new TwitterEntities($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
     }
+
+    /**
+     * @return TwitterEntitiesSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterExtendedEntitySerializer::build(),
+            TwitterHashtagSerializer::build(),
+            TwitterMediaSerializer::build(),
+            TwitterSymbolSerializer::build(),
+            TwitterUrlSerializer::build(),
+            TwitterUserMentionSerializer::build()
+        );
+    }
 }

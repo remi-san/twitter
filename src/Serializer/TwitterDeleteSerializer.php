@@ -71,4 +71,12 @@ class TwitterDeleteSerializer implements TwitterSerializer
             isset($d->timestamp_ms) ? $date->setTimestamp(floor($d->timestamp_ms / 1000)) : null
         );
     }
+
+    /**
+     * @return TwitterDeleteSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

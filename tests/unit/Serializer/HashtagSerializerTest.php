@@ -81,4 +81,14 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($hashtagObj->text, $hashtag->getText());
         $this->assertEquals($indices, $hashtag->getIndices());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterHashtagSerializer::build();
+
+        $this->assertInstanceOf(TwitterHashtagSerializer::class, $serializer);
+    }
 }

@@ -267,4 +267,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($user, $return);
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterJsonSerializer::build();
+
+        $this->assertInstanceOf(TwitterJsonSerializer::class, $serializer);
+    }
 }

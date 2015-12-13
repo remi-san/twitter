@@ -82,4 +82,14 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($symbolObj->text, $symbol->getText());
         $this->assertEquals($indices, $symbol->getIndices());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterSymbolSerializer::build();
+
+        $this->assertInstanceOf(TwitterSymbolSerializer::class, $serializer);
+    }
 }

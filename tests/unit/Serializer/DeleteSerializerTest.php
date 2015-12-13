@@ -147,4 +147,14 @@ class DeleteSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->delete->direct_message->user_id, $delete->getUserId());
         $this->assertEquals($date, $delete->getDate());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterDeleteSerializer::build();
+
+        $this->assertInstanceOf(TwitterDeleteSerializer::class, $serializer);
+    }
 }

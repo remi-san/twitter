@@ -92,4 +92,14 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($urlObj->expanded_url, $url->getExpandedUrl());
         $this->assertEquals($indices, $url->getIndices());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterUrlSerializer::build();
+
+        $this->assertInstanceOf(TwitterUrlSerializer::class, $serializer);
+    }
 }

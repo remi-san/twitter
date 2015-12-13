@@ -35,4 +35,12 @@ class TwitterCoordinatesSerializer implements TwitterSerializer
 
         return new TwitterCoordinates($coords[0], $coords[1], $obj->type);
     }
+
+    /**
+     * @return TwitterCoordinatesSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

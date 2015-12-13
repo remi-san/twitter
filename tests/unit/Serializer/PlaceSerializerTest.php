@@ -60,4 +60,14 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($place instanceof TwitterPlace);
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterPlaceSerializer::build();
+
+        $this->assertInstanceOf(TwitterPlaceSerializer::class, $serializer);
+    }
 }

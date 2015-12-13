@@ -66,4 +66,14 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(42, $indices->getFrom());
         $this->assertEquals(666, $indices->getTo());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterEntityIndicesSerializer::build();
+
+        $this->assertInstanceOf(TwitterEntityIndicesSerializer::class, $serializer);
+    }
 }

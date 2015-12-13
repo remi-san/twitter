@@ -72,4 +72,14 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($obj->coordinates[1], $coordinates->getLatitude());
         $this->assertEquals($obj->type, $coordinates->getType());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterCoordinatesSerializer::build();
+
+        $this->assertInstanceOf(TwitterCoordinatesSerializer::class, $serializer);
+    }
 }

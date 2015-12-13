@@ -43,4 +43,12 @@ class TwitterDisconnectSerializer implements TwitterSerializer
             $d->reason
         );
     }
+
+    /**
+     * @return TwitterDisconnectSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

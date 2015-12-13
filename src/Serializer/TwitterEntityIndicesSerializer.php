@@ -29,4 +29,12 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
     {
         return new TwitterEntityIndices($array[0], $array[1]);
     }
+
+    /**
+     * @return TwitterEntityIndicesSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

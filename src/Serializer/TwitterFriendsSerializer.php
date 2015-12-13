@@ -32,4 +32,12 @@ class TwitterFriendsSerializer implements TwitterSerializer
     {
         return new TwitterFriends($obj->friends);
     }
+
+    /**
+     * @return TwitterFriendsSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

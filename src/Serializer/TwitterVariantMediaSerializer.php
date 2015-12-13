@@ -34,4 +34,12 @@ class TwitterVariantMediaSerializer implements TwitterSerializer
     {
         return new TwitterVariantMedia($obj->content_type, $obj->url, $obj->bitrate?:null);
     }
+
+    /**
+     * @return TwitterVariantMediaSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

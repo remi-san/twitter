@@ -50,4 +50,12 @@ class TwitterUserSerializer implements TwitterSerializer
             $obj->profile_background_image_url_https
         );
     }
+
+    /**
+     * @return TwitterUserSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

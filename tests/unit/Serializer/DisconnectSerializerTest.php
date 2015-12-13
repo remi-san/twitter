@@ -76,4 +76,14 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($disconnectObj->stream_name, $disconnect->getStreamName());
         $this->assertEquals($disconnectObj->reason, $disconnect->getReason());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterDisconnectSerializer::build();
+
+        $this->assertInstanceOf(TwitterDisconnectSerializer::class, $serializer);
+    }
 }

@@ -127,4 +127,20 @@ class TwitterJsonSerializer implements Serializer
 
         return $object;
     }
+
+    /**
+     * @return TwitterJsonSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterEventTargetSerializer::build(),
+            TwitterDirectMessageSerializer::build(),
+            TwitterEventSerializer::build(),
+            TwitterFriendsSerializer::build(),
+            TwitterDisconnectSerializer::build(),
+            TwitterDeleteSerializer::build(),
+            TwitterUserSerializer::build()
+        );
+    }
 }

@@ -82,4 +82,14 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userObj->profile_background_image_url, $user->getProfileImageUrl());
         $this->assertEquals($userObj->profile_background_image_url_https, $user->getProfileImageUrlHttps());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterUserSerializer::build();
+
+        $this->assertInstanceOf(TwitterUserSerializer::class, $serializer);
+    }
 }

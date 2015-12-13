@@ -89,4 +89,14 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userMentionObj->name, $userMention->getName());
         $this->assertEquals($indices, $userMention->getIndices());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterUserMentionSerializer::build();
+
+        $this->assertInstanceOf(TwitterUserMentionSerializer::class, $serializer);
+    }
 }

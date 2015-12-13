@@ -36,4 +36,12 @@ class TwitterMediaSizeSerializer implements TwitterSerializer
     {
         return new TwitterMediaSize($context[self::NAME_VAR], $obj->w, $obj->h, $obj->resize);
     }
+
+    /**
+     * @return TwitterMediaSizeSerializer
+     */
+    public static function build()
+    {
+        return new self();
+    }
 }

@@ -63,4 +63,14 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($friendsObj->friends, $friends->getFriends());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterFriendsSerializer::build();
+
+        $this->assertInstanceOf(TwitterFriendsSerializer::class, $serializer);
+    }
 }

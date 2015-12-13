@@ -128,4 +128,14 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new \DateTime($dmObj->created_at), $dm->getDate());
         $this->assertEquals($entities, $dm->getEntities());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterDirectMessageSerializer::build();
+
+        $this->assertInstanceOf(TwitterDirectMessageSerializer::class, $serializer);
+    }
 }

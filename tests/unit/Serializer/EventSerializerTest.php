@@ -127,4 +127,14 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($tweet, $event->getObject());
         $this->assertEquals(new \DateTime($eventObj->created_at), $event->getDate());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterEventSerializer::build();
+
+        $this->assertInstanceOf(TwitterEventSerializer::class, $serializer);
+    }
 }

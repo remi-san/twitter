@@ -51,4 +51,14 @@ class TwitterSymbolSerializer implements TwitterSerializer
             $this->entityIndicesSerializer->unserialize($obj->indices)
         );
     }
+
+    /**
+     * @return TwitterSymbolSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterEntityIndicesSerializer::build()
+        );
+    }
 }

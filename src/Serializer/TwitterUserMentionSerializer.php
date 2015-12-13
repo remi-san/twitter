@@ -55,4 +55,14 @@ class TwitterUserMentionSerializer implements TwitterSerializer
             $this->entityIndicesSerializer->unserialize($obj->indices)
         );
     }
+
+    /**
+     * @return TwitterUserMentionSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterEntityIndicesSerializer::build()
+        );
+    }
 }

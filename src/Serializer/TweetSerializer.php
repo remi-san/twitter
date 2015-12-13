@@ -114,4 +114,17 @@ class TweetSerializer implements TwitterSerializer
             (isset($obj->retweeted_status)) ? $this->unserialize($obj->retweeted_status) : null
         );
     }
+
+    /**
+     * @return TweetSerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterUserSerializer::build(),
+            TwitterEntitiesSerializer::build(),
+            TwitterCoordinatesSerializer::build(),
+            TwitterPlaceSerializer::build()
+        );
+    }
 }

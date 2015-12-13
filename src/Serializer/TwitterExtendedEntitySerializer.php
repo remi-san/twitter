@@ -113,4 +113,16 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
             $this->entityIndicesSerializer->unserialize($obj->indices)
         );
     }
+
+    /**
+     * @return TwitterExtendedEntitySerializer
+     */
+    public static function build()
+    {
+        return new self(
+            TwitterEntityIndicesSerializer::build(),
+            TwitterMediaSizeSerializer::build(),
+            TwitterVariantMediaSerializer::build()
+        );
+    }
 }

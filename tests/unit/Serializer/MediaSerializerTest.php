@@ -145,4 +145,14 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($indices, $media->getIndices());
         $this->assertEquals(array($sizeName => $size), $media->getSizes());
     }
+
+    /**
+     * @test
+     */
+    public function testStaticBuilder()
+    {
+        $serializer = TwitterMediaSerializer::build();
+
+        $this->assertInstanceOf(TwitterMediaSerializer::class, $serializer);
+    }
 }
