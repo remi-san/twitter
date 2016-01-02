@@ -4,7 +4,7 @@ namespace Twitter;
 interface TwitterDatedObject extends TwitterObject
 {
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getDate();
 }

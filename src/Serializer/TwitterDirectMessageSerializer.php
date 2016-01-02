@@ -64,7 +64,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             $this->userSerializer->unserialize($dm->sender),
             $this->userSerializer->unserialize($dm->recipient),
             $dm->text,
-            new \DateTime($dm->created_at),
+            new \DateTimeImmutable($dm->created_at),
             $dm->entities?$this->twitterEntitiesSerializer->unserialize($dm->entities):null
         );
     }

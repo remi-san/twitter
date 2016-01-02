@@ -14,19 +14,19 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
     /**
      * Constructor
      *
-     * @param TwitterMessageId $id
-     * @param TwitterUser      $recipient
-     * @param TwitterUser      $sender
-     * @param string           $text
-     * @param \DateTime        $createdAt
-     * @param TwitterEntities  $entities
+     * @param TwitterMessageId   $id
+     * @param TwitterUser        $recipient
+     * @param TwitterUser        $sender
+     * @param string             $text
+     * @param \DateTimeInterface $createdAt
+     * @param TwitterEntities    $entities
      */
     public function __construct(
         TwitterMessageId $id,
         TwitterUser $sender,
         TwitterUser $recipient,
         $text,
-        \DateTime $createdAt,
+        \DateTimeInterface $createdAt,
         TwitterEntities $entities = null
     ) {
         parent::__construct($id, $sender, $text, $entities, $createdAt);

@@ -24,19 +24,19 @@ class TwitterDelete implements TwitterDatedObject
     private $userId;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $date;
 
     /**
      * Constructor
      *
-     * @param string    $type
-     * @param int       $id
-     * @param int       $userId
-     * @param \DateTime $date
+     * @param string             $type
+     * @param int                $id
+     * @param int                $userId
+     * @param \DateTimeInterface $date
      */
-    public function __construct($type, $id, $userId, \DateTime $date)
+    public function __construct($type, $id, $userId, \DateTimeInterface $date)
     {
         $this->type = $type;
         $this->id = $id;
@@ -45,7 +45,7 @@ class TwitterDelete implements TwitterDatedObject
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getDate()
     {

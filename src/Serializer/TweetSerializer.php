@@ -99,7 +99,7 @@ class TweetSerializer implements TwitterSerializer
             $this->userSerializer->unserialize($obj->user),
             $obj->text,
             $obj->lang,
-            new \DateTime($obj->created_at),
+            new \DateTimeImmutable($obj->created_at),
             $obj->entities?$this->twitterEntitiesSerializer->unserialize($obj->entities):null,
             $obj->coordinates?$this->coordinatesSerializer->unserialize($obj->coordinates):null,
             $obj->place?$this->placeSerializer->unserialize($obj->place):null,

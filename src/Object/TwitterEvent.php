@@ -43,7 +43,7 @@ class TwitterEvent implements TwitterDatedObject
     private $object;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $date;
 
@@ -54,14 +54,14 @@ class TwitterEvent implements TwitterDatedObject
      * @param TwitterUser $source
      * @param TwitterUser $target
      * @param TwitterEventTarget $object
-     * @param \DateTime $date
+     * @param \DateTimeInterface $date
      */
     public function __construct(
         $type,
         TwitterUser $source,
         TwitterUser $target = null,
         TwitterEventTarget $object = null,
-        $date = null
+        \DateTimeInterface $date = null
     ) {
         $this->type = $type;
 
@@ -73,7 +73,7 @@ class TwitterEvent implements TwitterDatedObject
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getDate()
     {

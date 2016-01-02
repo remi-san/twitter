@@ -66,7 +66,7 @@ class TwitterEventSerializer implements TwitterSerializer
             $this->userSerializer->unserialize($obj->source),
             isset($obj->target) ? $this->userSerializer->unserialize($obj->target) : null,
             isset($obj->target_object) ? $this->targetSerializer->unserialize($obj->target_object) : null,
-            new \DateTime($obj->created_at)
+            new \DateTimeImmutable($obj->created_at)
         );
     }
 

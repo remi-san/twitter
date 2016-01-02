@@ -27,25 +27,25 @@ abstract class AbstractMessage implements TwitterMessage
     protected $entities;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     protected $date;
 
     /**
      * Constructor
      *
-     * @param TwitterMessageId $id
-     * @param TwitterUser      $sender
-     * @param string           $text
-     * @param TwitterEntities  $entities
-     * @param \DateTime        $date
+     * @param TwitterMessageId   $id
+     * @param TwitterUser        $sender
+     * @param string             $text
+     * @param TwitterEntities    $entities
+     * @param \DateTimeInterface $date
      */
     public function __construct(
         TwitterMessageId $id,
         TwitterUser $sender,
         $text,
         TwitterEntities $entities = null,
-        \DateTime $date = null
+        \DateTimeInterface $date = null
     ) {
         $this->entities = $entities;
         $this->id = $id;
@@ -88,7 +88,7 @@ abstract class AbstractMessage implements TwitterMessage
 
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getDate()
     {

@@ -79,7 +79,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
      * @param TwitterUser        $sender
      * @param string             $text
      * @param string             $lang
-     * @param \DateTime          $createdAt
+     * @param \DateTimeInterface $createdAt
      * @param TwitterEntities    $entities
      * @param TwitterCoordinates $coordinates
      * @param TwitterPlace       $place
@@ -99,7 +99,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
         TwitterUser $sender,
         $text,
         $lang,
-        \DateTime $createdAt,
+        \DateTimeInterface $createdAt,
         TwitterEntities $entities = null,
         TwitterCoordinates $coordinates = null,
         TwitterPlace $place = null,
