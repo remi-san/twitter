@@ -8,6 +8,7 @@ use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterMessageId;
 
 class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -85,7 +86,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $tweetObj->user = new \stdClass();
         $tweetObj->text = 'my tweet';
 
-        $tweet = new Tweet(1, new TwitterUser(), 'text', 'fr', new \DateTime());
+        $tweet = new Tweet(new TwitterMessageId(1), new TwitterUser(), 'text', 'fr', new \DateTime());
 
         $this->tweetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
 

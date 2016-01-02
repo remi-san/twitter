@@ -17,6 +17,7 @@ use Twitter\Serializer\TwitterPlaceSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterMessageId;
 
 class TweetSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -206,7 +207,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweet = $this->serializer->unserialize($tweetObj);
 
-        $this->assertEquals($tweetObj->id, $tweet->getId());
+        $this->assertEquals((string) $tweetObj->id, (string) $tweet->getId());
         $this->assertEquals($tweetObj->text, $tweet->getText());
         $this->assertEquals($user, $tweet->getSender());
         $this->assertEquals($tweetObj->lang, $tweet->getLang());

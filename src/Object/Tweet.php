@@ -3,6 +3,7 @@ namespace Twitter\Object;
 
 use Twitter\TwitterEventTarget;
 use Twitter\TwitterMessage;
+use Twitter\TwitterMessageId;
 
 class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessage
 {
@@ -74,7 +75,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
     /**
      * Constructor
      *
-     * @param int                $id
+     * @param TwitterMessageId   $id
      * @param TwitterUser        $sender
      * @param string             $text
      * @param string             $lang
@@ -94,7 +95,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
      * @param Tweet              $retweetedStatus
      */
     public function __construct(
-        $id,
+        TwitterMessageId $id,
         TwitterUser $sender,
         $text,
         $lang,

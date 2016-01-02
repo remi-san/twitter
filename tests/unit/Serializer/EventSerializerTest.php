@@ -9,6 +9,7 @@ use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterMessageId;
 
 class EventSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -73,7 +74,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweetObj = new \stdClass();
         $tweetObj->type = 'tweet';
-        $tweet = new Tweet(1, new TwitterUser(), 'text', 'fr', new \DateTime());
+        $tweet = new Tweet(new TwitterMessageId(1), new TwitterUser(), 'text', 'fr', new \DateTime());
         $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
 
         $obj = $this->getEvent();
@@ -109,7 +110,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweetObj = new \stdClass();
         $tweetObj->type = 'tweet';
-        $tweet = new Tweet(1, new TwitterUser(), 'text', 'fr', new \DateTime());
+        $tweet = new Tweet(new TwitterMessageId(1), new TwitterUser(), 'text', 'fr', new \DateTime());
         $this->eventTargetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
 
         $eventObj = new \stdClass();

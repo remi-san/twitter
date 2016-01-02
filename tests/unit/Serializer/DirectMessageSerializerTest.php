@@ -6,6 +6,7 @@ use Twitter\Serializer\TwitterEntitiesSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterMessageId;
 
 class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -121,7 +122,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
 
         $dm = $this->serializer->unserialize($dmObj);
 
-        $this->assertEquals($dmObj->id, $dm->getId());
+        $this->assertEquals((string) $dmObj->id, (string) $dm->getId());
         $this->assertEquals($sender, $dm->getSender());
         $this->assertEquals($recipient, $dm->getRecipient());
         $this->assertEquals($dmObj->text, $dm->getText());

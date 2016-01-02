@@ -5,6 +5,7 @@ use Twitter\Object\TwitterDirectMessage;
 use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterUser;
 use Twitter\Test\Mock\TwitterObjectMocker;
+use Twitter\TwitterMessageId;
 
 class DirectMessageTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +45,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
 
-        $id = 42;
+        $id = new TwitterMessageId(42);
         $text = 'Message';
         $date = new \DateTime();
 
@@ -70,7 +71,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
         $userName = 'roger';
         $userMention = $this->getUserMention($userName);
 
-        $id = 42;
+        $id = new TwitterMessageId(42);
         $coreText = 'message';
         $text = '@'.$userName.' '.$coreText.' #'.$hashtagText;
         $createdAt = new \DateTime();

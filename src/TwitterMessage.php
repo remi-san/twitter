@@ -7,7 +7,7 @@ use Twitter\Object\TwitterUser;
 interface TwitterMessage extends TwitterDatedObject
 {
     /**
-     * @return int
+     * @return TwitterMessageId
      */
     public function getId();
 

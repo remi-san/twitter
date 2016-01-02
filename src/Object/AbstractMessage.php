@@ -2,11 +2,12 @@
 namespace Twitter\Object;
 
 use Twitter\TwitterMessage;
+use Twitter\TwitterMessageId;
 
 abstract class AbstractMessage implements TwitterMessage
 {
     /**
-     * @var int
+     * @var TwitterMessageId
      */
     protected $id;
 
@@ -33,14 +34,14 @@ abstract class AbstractMessage implements TwitterMessage
     /**
      * Constructor
      *
-     * @param int             $id
-     * @param TwitterUser     $sender
-     * @param string          $text
-     * @param TwitterEntities $entities
-     * @param \DateTime       $date
+     * @param TwitterMessageId $id
+     * @param TwitterUser      $sender
+     * @param string           $text
+     * @param TwitterEntities  $entities
+     * @param \DateTime        $date
      */
     public function __construct(
-        $id,
+        TwitterMessageId $id,
         TwitterUser $sender,
         $text,
         TwitterEntities $entities = null,
@@ -54,7 +55,7 @@ abstract class AbstractMessage implements TwitterMessage
     }
 
     /**
-     * @return int
+     * @return TwitterMessageId
      */
     public function getId()
     {

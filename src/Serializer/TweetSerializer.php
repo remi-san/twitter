@@ -3,6 +3,7 @@ namespace Twitter\Serializer;
 
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterDate;
+use Twitter\TwitterMessageId;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
 
@@ -57,7 +58,7 @@ class TweetSerializer implements TwitterSerializer
         }
 
         $tweet = new \stdClass();
-        $tweet->id = $object->getId();
+        $tweet->id = (string) $object->getId();
         $tweet->user = $this->userSerializer->serialize($object->getSender());
         $tweet->text = $object->getText();
         $tweet->lang = $object->getLang();
@@ -94,7 +95,7 @@ class TweetSerializer implements TwitterSerializer
     public function unserialize($obj, array $context = array())
     {
         return new Tweet(
-            $obj->id,
+            new TwitterMessageId($obj->id),
             $this->userSerializer->unserialize($obj->user),
             $obj->text,
             $obj->lang,

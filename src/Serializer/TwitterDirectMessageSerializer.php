@@ -3,6 +3,7 @@ namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterDirectMessage;
+use Twitter\TwitterMessageId;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
 
@@ -41,7 +42,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
         }
 
         $dm = new \stdClass();
-        $dm->id = $object->getId();
+        $dm->id = (string)$object->getId();
         $dm->sender = $this->userSerializer->serialize($object->getSender());
         $dm->recipient = $this->userSerializer->serialize($object->getRecipient());
         $dm->text = $object->getText();
@@ -59,7 +60,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
     public function unserialize($dm, array $context = array())
     {
         return new TwitterDirectMessage(
-            $dm->id,
+            new TwitterMessageId($dm->id),
             $this->userSerializer->unserialize($dm->sender),
             $this->userSerializer->unserialize($dm->recipient),
             $dm->text,

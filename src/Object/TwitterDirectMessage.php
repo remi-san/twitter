@@ -2,6 +2,7 @@
 namespace Twitter\Object;
 
 use Twitter\TwitterMessage;
+use Twitter\TwitterMessageId;
 
 class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
 {
@@ -13,15 +14,15 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
     /**
      * Constructor
      *
-     * @param int             $id
-     * @param TwitterUser     $recipient
-     * @param TwitterUser     $sender
-     * @param string          $text
-     * @param \DateTime       $createdAt
-     * @param TwitterEntities $entities
+     * @param TwitterMessageId $id
+     * @param TwitterUser      $recipient
+     * @param TwitterUser      $sender
+     * @param string           $text
+     * @param \DateTime        $createdAt
+     * @param TwitterEntities  $entities
      */
     public function __construct(
-        $id,
+        TwitterMessageId $id,
         TwitterUser $sender,
         TwitterUser $recipient,
         $text,

@@ -5,6 +5,7 @@ use Twitter\Object\Tweet;
 use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterUser;
 use Twitter\Test\Mock\TwitterObjectMocker;
+use Twitter\TwitterMessageId;
 
 class TweetTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +44,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
      */
     public function testTweetConstructor()
     {
-        $id = 42;
+        $id = new TwitterMessageId(42);
         $text = 'Message';
         $lang = 'fr';
         $createdAt = new \DateTime();
@@ -113,7 +114,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
         $userName = 'roger';
         $userMention = $this->getUserMention($userName);
 
-        $id = 42;
+        $id = new TwitterMessageId(42);
         $coreText = 'message';
         $text = '@'.$userName.' '.$coreText.' #'.$hashtagText;
         $lang = 'fr';
