@@ -78,7 +78,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $entities = $this->getTwitterEntities();
         $this->entitiesSerializer->shouldReceive('serialize')->with($entities)->andReturn($entitiesObj);
 
-        $obj = $this->getDirectMessage($id, $text, $sender, $entities);
+        $obj = $this->getDirectMessage(new TwitterMessageId($id), $text, $sender, $entities);
         $obj->shouldReceive('getRecipient')->andReturn($recipient);
         $obj->shouldReceive('getDate')->andReturn($date);
 

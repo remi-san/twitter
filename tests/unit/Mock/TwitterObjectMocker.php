@@ -22,6 +22,7 @@ use Twitter\Object\TwitterUserMention;
 use Twitter\Object\TwitterVariantMedia;
 use Twitter\TwitterEventTarget;
 use Twitter\TwitterMessage;
+use Twitter\TwitterMessageId;
 use Twitter\TwitterObject;
 use TwitterStream\API\REST\TwitterRestApi;
 
@@ -44,15 +45,15 @@ trait TwitterObjectMocker
     }
 
     /**
-     * @param  int             $id
-     * @param  string          $text
-     * @param  TwitterUser     $sender
-     * @param  TwitterEntities $entities
-     * @param  \DateTime       $date
+     * @param  TwitterMessageId $id
+     * @param  string           $text
+     * @param  TwitterUser      $sender
+     * @param  TwitterEntities  $entities
+     * @param  \DateTime        $date
      * @return TwitterMessage
      */
     public function getTwitterMessage(
-        $id = null,
+        TwitterMessageId $id = null,
         $text = null,
         TwitterUser $sender = null,
         TwitterEntities $entities = null,
@@ -69,14 +70,14 @@ trait TwitterObjectMocker
     }
 
     /**
-     * @param  int             $id
-     * @param  string          $text
-     * @param  TwitterUser     $sender
-     * @param  TwitterEntities $entities
+     * @param  TwitterMessageId $id
+     * @param  string           $text
+     * @param  TwitterUser      $sender
+     * @param  TwitterEntities  $entities
      * @return Tweet
      */
     public function getTweet(
-        $id = null,
+        TwitterMessageId $id = null,
         $text = null,
         TwitterUser $sender = null,
         TwitterEntities $entities = null
@@ -97,14 +98,14 @@ trait TwitterObjectMocker
     }
 
     /**
-     * @param  int             $id
-     * @param  string          $text
-     * @param  TwitterUser     $sender
-     * @param  TwitterEntities $entities
+     * @param  TwitterMessageId $id
+     * @param  string           $text
+     * @param  TwitterUser      $sender
+     * @param  TwitterEntities  $entities
      * @return TwitterDirectMessage
      */
     public function getDirectMessage(
-        $id = null,
+        TwitterMessageId $id = null,
         $text = null,
         TwitterUser $sender = null,
         TwitterEntities $entities = null
