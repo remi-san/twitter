@@ -1,9 +1,10 @@
 <?php
 namespace Twitter\Object;
 
+use Twitter\TwitterBasicUser;
 use Twitter\TwitterEntity;
 
-class TwitterUserMention extends TwitterEntity
+class TwitterUserMention extends TwitterEntity implements TwitterBasicUser
 {
     /**
      * @var int

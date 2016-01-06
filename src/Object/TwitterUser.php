@@ -1,9 +1,10 @@
 <?php
 namespace Twitter\Object;
 
+use Twitter\TwitterBasicUser;
 use Twitter\TwitterSerializable;
 
-class TwitterUser implements TwitterSerializable
+class TwitterUser implements TwitterBasicUser, TwitterSerializable
 {
     /**
      * @var int
