@@ -44,7 +44,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
      */
     public function testTweetConstructor()
     {
-        $id = new TwitterMessageId(42);
+        $id = TwitterMessageId::create(42);
         $text = 'Message';
         $lang = 'fr';
         $createdAt = new \DateTime();
@@ -114,7 +114,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
         $userName = 'roger';
         $userMention = $this->getUserMention($userName);
 
-        $id = new TwitterMessageId(42);
+        $id = TwitterMessageId::create(42);
         $coreText = 'message';
         $text = '@'.$userName.' '.$coreText.' #'.$hashtagText;
         $lang = 'fr';

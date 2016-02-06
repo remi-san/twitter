@@ -45,7 +45,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
 
-        $id = new TwitterMessageId(42);
+        $id = TwitterMessageId::create(42);
         $text = 'Message';
         $date = new \DateTime();
 
@@ -71,7 +71,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
         $userName = 'roger';
         $userMention = $this->getUserMention($userName);
 
-        $id = new TwitterMessageId(42);
+        $id = TwitterMessageId::create(42);
         $coreText = 'message';
         $text = '@'.$userName.' '.$coreText.' #'.$hashtagText;
         $createdAt = new \DateTime();

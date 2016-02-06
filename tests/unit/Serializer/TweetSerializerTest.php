@@ -118,7 +118,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
 
         $retweet = $this->buildTweet(99, 'original', $user, null, 'en', new \DateTime());
 
-        $tweet = $this->getTweet(new TwitterMessageId($id), $text, $user, $entities);
+        $tweet = $this->getTweet(TwitterMessageId::create($id), $text, $user, $entities);
         $tweet->shouldReceive('getLang')->andReturn($lang);
         $tweet->shouldReceive('getDate')->andReturn($date);
         $tweet->shouldReceive('getCoordinates')->andReturn($coordinates);
@@ -247,7 +247,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         $source = null,
         Tweet $retweetedStatus = null
     ) {
-        $tweet = $this->getTweet(new TwitterMessageId($id), $text, $sender, $entities);
+        $tweet = $this->getTweet(TwitterMessageId::create($id), $text, $sender, $entities);
         $tweet->shouldReceive('getLang')->andReturn($lang);
         $tweet->shouldReceive('getDate')->andReturn($createdAt);
         $tweet->shouldReceive('getCoordinates')->andReturn($coordinates);

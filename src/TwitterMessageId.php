@@ -9,13 +9,10 @@ class TwitterMessageId
     private $id;
 
     /**
-     * Constructor
-     *
-     * @param string $id
+     * Constructor.
      */
-    public function __construct($id)
+    public function __construct()
     {
-        $this->id = $id;
     }
 
     /**
@@ -24,5 +21,21 @@ class TwitterMessageId
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param  mixed $id
+     *
+     * @return TwitterMessageId
+     */
+    public static function create($id)
+    {
+        $obj = new self();
+
+        $obj->id = $id;
+
+        return $obj;
     }
 }

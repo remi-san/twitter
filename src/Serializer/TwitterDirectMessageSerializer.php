@@ -60,7 +60,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
     public function unserialize($dm, array $context = array())
     {
         return new TwitterDirectMessage(
-            new TwitterMessageId($dm->id),
+            TwitterMessageId::create($dm->id),
             $this->userSerializer->unserialize($dm->sender),
             $this->userSerializer->unserialize($dm->recipient),
             $dm->text,

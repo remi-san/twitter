@@ -95,7 +95,7 @@ class TweetSerializer implements TwitterSerializer
     public function unserialize($obj, array $context = array())
     {
         return new Tweet(
-            new TwitterMessageId($obj->id),
+            TwitterMessageId::create($obj->id),
             $this->userSerializer->unserialize($obj->user),
             $obj->text,
             $obj->lang,
