@@ -61,7 +61,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
         $source = null;
         $retweetedStatus = $this->getTweet();
 
-        $tweet = new Tweet(
+        $tweet = Tweet::create(
             $id,
             $this->sender,
             $text,
@@ -123,7 +123,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
         $this->entities->shouldReceive('getHashtags')->withNoArgs()->andReturn(array($hashtag));
         $this->entities->shouldReceive('getUserMentions')->withNoArgs()->andReturn(array($userMention));
 
-        $tweet = new Tweet(
+        $tweet = Tweet::create(
             $id,
             $this->sender,
             $text,

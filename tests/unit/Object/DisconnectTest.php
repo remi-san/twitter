@@ -19,7 +19,7 @@ class DisconnectTest extends \PHPUnit_Framework_TestCase
         $streamName = 'stream';
         $reason = 'reason';
 
-        $disconnect = new TwitterDisconnect($code, $streamName, $reason);
+        $disconnect = TwitterDisconnect::create($code, $streamName, $reason);
 
         $this->assertEquals($code, $disconnect->getCode());
         $this->assertEquals($streamName, $disconnect->getStreamName());

@@ -42,36 +42,10 @@ class TwitterUser implements TwitterBasicUser, TwitterSerializable
     private $profileImageUrlHttps;
 
     /**
-     * Constructor
-     *
-     * @param int    $id
-     * @param string $screenName
-     * @param string $name
-     * @param string $lang
-     * @param string $location
-     * @param string $profileImageUrl
-     * @param string $profileImageUrlHttps
+     * Constructor.
      */
-    public function __construct(
-        $id = null,
-        $screenName = null,
-        $name = null,
-        $lang = 'en',
-        $location = null,
-        $profileImageUrl = null,
-        $profileImageUrlHttps = null
-    ) {
-        $this->id = $id;
-
-        $this->screenName = $screenName;
-        $this->name = $name;
-
-        $this->lang = $lang;
-        $this->location = $location;
-
-        $this->profileImageUrl = $profileImageUrl;
-        $this->profileImageUrlHttps = $profileImageUrlHttps;
-
+    public function __construct()
+    {
     }
 
     /**
@@ -136,5 +110,43 @@ class TwitterUser implements TwitterBasicUser, TwitterSerializable
     public function __toString()
     {
         return '@'.$this->screenName;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param int    $id
+     * @param string $screenName
+     * @param string $name
+     * @param string $lang
+     * @param string $location
+     * @param string $profileImageUrl
+     * @param string $profileImageUrlHttps
+     *
+     * @return TwitterUser
+     */
+    public static function create(
+        $id = null,
+        $screenName = null,
+        $name = null,
+        $lang = 'en',
+        $location = null,
+        $profileImageUrl = null,
+        $profileImageUrlHttps = null
+    ) {
+        $obj = new self();
+
+        $obj->id = $id;
+
+        $obj->screenName = $screenName;
+        $obj->name = $name;
+
+        $obj->lang = $lang;
+        $obj->location = $location;
+
+        $obj->profileImageUrl = $profileImageUrl;
+        $obj->profileImageUrlHttps = $profileImageUrlHttps;
+
+        return $obj;
     }
 }

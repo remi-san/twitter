@@ -82,7 +82,7 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
         $urlObj->expanded_url = 'http://expanded.url';
         $urlObj->indices = array(42, 666);
 
-        $indices = new TwitterEntityIndices(42, 666);
+        $indices = TwitterEntityIndices::create(42, 666);
         $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
 
         $url = $this->serializer->unserialize($urlObj);

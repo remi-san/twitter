@@ -11,11 +11,11 @@ abstract class TwitterEntity implements TwitterSerializable
     protected $indices;
 
     /**
-     * Constructor
+     * Init
      *
      * @param TwitterEntityIndices $indices
      */
-    public function __construct(TwitterEntityIndices $indices)
+    protected function initTwitterEntity(TwitterEntityIndices $indices)
     {
         $this->indices = $indices;
     }

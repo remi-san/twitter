@@ -21,7 +21,7 @@ class HashtagTest extends \PHPUnit_Framework_TestCase
         $text = 'hashtag';
         $indices = $this->getIndices();
 
-        $hashtag = new TwitterHashtag($text, $indices);
+        $hashtag = TwitterHashtag::create($text, $indices);
 
         $this->assertEquals($text, $hashtag->getText());
         $this->assertEquals($indices, $hashtag->getIndices());

@@ -48,28 +48,10 @@ class TwitterEvent implements TwitterDatedObject
     private $date;
 
     /**
-     * Constructor
-     *
-     * @param string $type
-     * @param TwitterUser $source
-     * @param TwitterUser $target
-     * @param TwitterEventTarget $object
-     * @param \DateTimeInterface $date
+     * Constructor.
      */
-    public function __construct(
-        $type,
-        TwitterUser $source,
-        TwitterUser $target = null,
-        TwitterEventTarget $object = null,
-        \DateTimeInterface $date = null
-    ) {
-        $this->type = $type;
-
-        $this->source = $source;
-        $this->target = $target;
-        $this->object = $object;
-
-        $this->date = $date;
+    public function __construct()
+    {
     }
 
     /**
@@ -118,5 +100,36 @@ class TwitterEvent implements TwitterDatedObject
     public function __toString()
     {
         return 'Event [' . $this->type . ']: ' . $this->object;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param string $type
+     * @param TwitterUser $source
+     * @param TwitterUser $target
+     * @param TwitterEventTarget $object
+     * @param \DateTimeInterface $date
+     *
+     * @return TwitterEvent
+     */
+    public static function create(
+        $type,
+        TwitterUser $source,
+        TwitterUser $target = null,
+        TwitterEventTarget $object = null,
+        \DateTimeInterface $date = null
+    ) {
+        $obj = new self();
+
+        $obj->type = $type;
+
+        $obj->source = $source;
+        $obj->target = $target;
+        $obj->object = $object;
+
+        $obj->date = $date;
+
+        return $obj;
     }
 }

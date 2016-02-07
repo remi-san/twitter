@@ -33,7 +33,7 @@ class TwitterCoordinatesSerializer implements TwitterSerializer
     {
         $coords = $obj->coordinates;
 
-        return new TwitterCoordinates($coords[0], $coords[1], $obj->type);
+        return TwitterCoordinates::create($coords[0], $coords[1], $obj->type);
     }
 
     /**

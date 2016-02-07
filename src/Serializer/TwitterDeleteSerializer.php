@@ -64,7 +64,7 @@ class TwitterDeleteSerializer implements TwitterSerializer
         }
 
         $date = new \DateTimeImmutable();
-        return new TwitterDelete(
+        return TwitterDelete::create(
             $type,
             $ref->id,
             $ref->user_id,

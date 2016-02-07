@@ -23,7 +23,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $expandedUrl = 'http://expanded.url';
         $indices = $this->getIndices();
 
-        $urlObject = new TwitterUrl($url, $displayUrl, $expandedUrl, $indices);
+        $urlObject = TwitterUrl::create($url, $displayUrl, $expandedUrl, $indices);
 
         $this->assertEquals($url, $urlObject->getUrl());
         $this->assertEquals($displayUrl, $urlObject->getDisplayUrl());

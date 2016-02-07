@@ -26,19 +26,10 @@ class TwitterMediaSize implements TwitterSerializable
     private $resize;
 
     /**
-     * Constructor
-     *
-     * @param string  $name
-     * @param int     $width
-     * @param int     $height
-     * @param boolean $resize
+     * Constructor.
      */
-    public function __construct($name, $width, $height, $resize)
+    public function __construct()
     {
-        $this->height = $height;
-        $this->name = $name;
-        $this->resize = $resize;
-        $this->width = $width;
     }
 
     /**
@@ -71,5 +62,27 @@ class TwitterMediaSize implements TwitterSerializable
     public function getWidth()
     {
         return $this->width;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param string  $name
+     * @param int     $width
+     * @param int     $height
+     * @param boolean $resize
+     *
+     * @return TwitterMediaSize
+     */
+    public static function create($name, $width, $height, $resize)
+    {
+        $obj = new self();
+
+        $obj->height = $height;
+        $obj->name = $name;
+        $obj->resize = $resize;
+        $obj->width = $width;
+
+        return $obj;
     }
 }

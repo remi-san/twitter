@@ -37,7 +37,7 @@ class TwitterDisconnectSerializer implements TwitterSerializer
     {
         $d = $obj->disconnect;
 
-        return new TwitterDisconnect(
+        return TwitterDisconnect::create(
             $d->code,
             $d->stream_name,
             $d->reason

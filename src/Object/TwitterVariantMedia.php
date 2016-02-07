@@ -21,17 +21,10 @@ class TwitterVariantMedia implements TwitterSerializable
     private $bitrate;
 
     /**
-     * Constructor
-     *
-     * @param string $contentType
-     * @param string $url
-     * @param int    $bitrate
+     * Constructor.
      */
-    public function __construct($contentType, $url, $bitrate)
+    public function __construct()
     {
-        $this->bitrate = $bitrate;
-        $this->contentType = $contentType;
-        $this->url = $url;
     }
 
     /**
@@ -56,5 +49,25 @@ class TwitterVariantMedia implements TwitterSerializable
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param string $contentType
+     * @param string $url
+     * @param int    $bitrate
+     *
+     * @return TwitterVariantMedia
+     */
+    public static function create($contentType, $url, $bitrate)
+    {
+        $obj = new self();
+
+        $obj->bitrate = $bitrate;
+        $obj->contentType = $contentType;
+        $obj->url = $url;
+
+        return $obj;
     }
 }

@@ -98,7 +98,7 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
             }
         }
 
-        return new TwitterExtendedEntity(
+        return TwitterExtendedEntity::create(
             $obj->id,
             $obj->media_url,
             $obj->media_url_https,

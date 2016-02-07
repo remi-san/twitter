@@ -32,7 +32,7 @@ abstract class AbstractMessage implements TwitterMessage
     protected $date;
 
     /**
-     * Constructor
+     * Init.
      *
      * @param TwitterMessageId   $id
      * @param TwitterUser        $sender
@@ -40,7 +40,7 @@ abstract class AbstractMessage implements TwitterMessage
      * @param TwitterEntities    $entities
      * @param \DateTimeInterface $date
      */
-    public function __construct(
+    public function init(
         TwitterMessageId $id,
         TwitterUser $sender,
         $text,

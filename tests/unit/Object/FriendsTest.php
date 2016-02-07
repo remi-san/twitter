@@ -17,7 +17,7 @@ class FriendsTest extends \PHPUnit_Framework_TestCase
     {
         $list = array('42');
 
-        $friends = new TwitterFriends($list);
+        $friends = TwitterFriends::create($list);
 
         $this->assertEquals($list, $friends->getFriends());
         $this->assertEquals('Friends List', $friends->__toString());

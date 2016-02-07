@@ -48,7 +48,7 @@ class TwitterUrlSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterUrl(
+        return TwitterUrl::create(
             $obj->url,
             $obj->display_url,
             $obj->expanded_url,

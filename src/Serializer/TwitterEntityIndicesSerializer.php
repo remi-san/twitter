@@ -27,7 +27,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
      */
     public function unserialize($array, array $context = array())
     {
-        return new TwitterEntityIndices($array[0], $array[1]);
+        return TwitterEntityIndices::create($array[0], $array[1]);
     }
 
     /**

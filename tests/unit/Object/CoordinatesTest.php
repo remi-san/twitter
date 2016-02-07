@@ -19,7 +19,7 @@ class CoordinatesTest extends \PHPUnit_Framework_TestCase
         $lat = 42;
         $type = 'point';
 
-        $coordinates = new TwitterCoordinates($long, $lat, $type);
+        $coordinates = TwitterCoordinates::create($long, $lat, $type);
 
         $this->assertEquals($long, $coordinates->getLongitude());
         $this->assertEquals($lat, $coordinates->getLatitude());

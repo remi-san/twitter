@@ -21,7 +21,7 @@ class SymbolTest extends \PHPUnit_Framework_TestCase
         $text = 'symbol';
         $indices = $this->getIndices();
 
-        $symbol = new TwitterSymbol($text, $indices);
+        $symbol = TwitterSymbol::create($text, $indices);
 
         $this->assertEquals($text, $symbol->getText());
         $this->assertEquals($indices, $symbol->getIndices());

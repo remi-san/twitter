@@ -27,7 +27,7 @@ class TwitterPlaceSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterPlace();
+        return TwitterPlace::create();
     }
 
     /**

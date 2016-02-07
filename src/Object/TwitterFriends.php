@@ -11,13 +11,10 @@ class TwitterFriends implements TwitterObject
     private $friends;
 
     /**
-     * Constructor
-     *
-     * @param int[] $friends
+     * Constructor.
      */
-    public function __construct(array $friends = array())
+    public function __construct()
     {
-        $this->friends = $friends;
     }
 
     /**
@@ -34,5 +31,21 @@ class TwitterFriends implements TwitterObject
     public function __toString()
     {
         return 'Friends List';
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param int[] $friends
+     *
+     * @return TwitterFriends
+     */
+    public static function create(array $friends = array())
+    {
+        $obj = new self();
+
+        $obj->friends = $friends;
+
+        return $obj;
     }
 }

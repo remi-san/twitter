@@ -23,7 +23,7 @@ class UserMentionTest extends \PHPUnit_Framework_TestCase
         $name = 'Douglas Adams';
         $indices = $this->getIndices();
 
-        $userMention = new TwitterUserMention($id, $screenName, $name, $indices);
+        $userMention = TwitterUserMention::create($id, $screenName, $name, $indices);
 
         $this->assertEquals($id, $userMention->getId());
         $this->assertEquals($screenName, $userMention->getScreenName());

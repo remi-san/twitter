@@ -46,7 +46,7 @@ class TwitterSymbolSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterSymbol(
+        return TwitterSymbol::create(
             $obj->text,
             $this->entityIndicesSerializer->unserialize($obj->indices)
         );

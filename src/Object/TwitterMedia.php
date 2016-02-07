@@ -1,52 +1,17 @@
 <?php
 namespace Twitter\Object;
 
-use Twitter\TwitterEntity;
-
-class TwitterMedia extends TwitterEntity
+class TwitterMedia extends AbstractTwitterMedia
 {
     /**
-     * @var int
+     * Constructor.
      */
-    private $id;
+    public function __construct()
+    {
+    }
 
     /**
-     * @var string
-     */
-    private $mediaUrl;
-
-    /**
-     * @var string
-     */
-    private $mediaUrlHttps;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var string
-     */
-    private $displayUrl;
-
-    /**
-     * @var string
-     */
-    private $expandedUrl;
-
-    /**
-     * @var TwitterMediaSize[]
-     */
-    private $sizes;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * Constructor
+     * Static constructor.
      *
      * @param int                  $id
      * @param string               $mediaUrl
@@ -57,8 +22,10 @@ class TwitterMedia extends TwitterEntity
      * @param TwitterMediaSize[]   $sizes
      * @param string               $type
      * @param TwitterEntityIndices $indices
+     *
+     * @return TwitterMedia
      */
-    public function __construct(
+    public static function create(
         $id = null,
         $mediaUrl = null,
         $mediaUrlHttps = null,
@@ -69,78 +36,20 @@ class TwitterMedia extends TwitterEntity
         $type = null,
         TwitterEntityIndices $indices = null
     ) {
-        parent::__construct($indices);
-        $this->displayUrl = $displayUrl;
-        $this->expandedUrl = $expandedUrl;
-        $this->id = $id;
-        $this->mediaUrl = $mediaUrl;
-        $this->mediaUrlHttps = $mediaUrlHttps;
-        $this->sizes = $sizes;
-        $this->type = $type;
-        $this->url = $url;
-    }
+        $obj = new self();
 
-    /**
-     * @return string
-     */
-    public function getDisplayUrl()
-    {
-        return $this->displayUrl;
-    }
+        $obj->initTwitterMedia(
+            $id,
+            $mediaUrl,
+            $mediaUrlHttps,
+            $url,
+            $displayUrl,
+            $expandedUrl,
+            $sizes,
+            $type,
+            $indices
+        );
 
-    /**
-     * @return string
-     */
-    public function getExpandedUrl()
-    {
-        return $this->expandedUrl;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMediaUrl()
-    {
-        return $this->mediaUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMediaUrlHttps()
-    {
-        return $this->mediaUrlHttps;
-    }
-
-    /**
-     * @return TwitterMediaSize[]
-     */
-    public function getSizes()
-    {
-        return $this->sizes;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
+        return $obj;
     }
 }

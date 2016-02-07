@@ -36,29 +36,10 @@ class TwitterEntities implements TwitterSerializable
     private $extendedEntities;
 
     /**
-     * Constructor
-     *
-     * @param TwitterHashtag[]        $hashtags
-     * @param TwitterUserMention[]    $userMentions
-     * @param TwitterUrl[]            $urls
-     * @param TwitterMedia[]          $media
-     * @param TwitterSymbol[]         $symbols
-     * @param TwitterExtendedEntity[] $extendedEntities
+     * Constructor.
      */
-    public function __construct(
-        array $hashtags = array(),
-        array $userMentions = array(),
-        array $urls = array(),
-        array $media = array(),
-        array $symbols = array(),
-        array $extendedEntities = array()
-    ) {
-        $this->extendedEntities = $extendedEntities;
-        $this->hashtags = $hashtags;
-        $this->media = $media;
-        $this->symbols = $symbols;
-        $this->urls = $urls;
-        $this->userMentions = $userMentions;
+    public function __construct()
+    {
     }
 
     /**
@@ -107,5 +88,37 @@ class TwitterEntities implements TwitterSerializable
     public function getUserMentions()
     {
         return $this->userMentions;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param TwitterHashtag[]        $hashtags
+     * @param TwitterUserMention[]    $userMentions
+     * @param TwitterUrl[]            $urls
+     * @param TwitterMedia[]          $media
+     * @param TwitterSymbol[]         $symbols
+     * @param TwitterExtendedEntity[] $extendedEntities
+     *
+     * @return TwitterEntities
+     */
+    public static function create(
+        array $hashtags = array(),
+        array $userMentions = array(),
+        array $urls = array(),
+        array $media = array(),
+        array $symbols = array(),
+        array $extendedEntities = array()
+    ) {
+        $obj = new self();
+
+        $obj->extendedEntities = $extendedEntities;
+        $obj->hashtags = $hashtags;
+        $obj->media = $media;
+        $obj->symbols = $symbols;
+        $obj->urls = $urls;
+        $obj->userMentions = $userMentions;
+
+        return $obj;
     }
 }

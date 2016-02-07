@@ -20,7 +20,7 @@ class MediaSizeTest extends \PHPUnit_Framework_TestCase
         $height = 600;
         $resize = 'no';
 
-        $mediaSize = new TwitterMediaSize($name, $width, $height, $resize);
+        $mediaSize = TwitterMediaSize::create($name, $width, $height, $resize);
 
         $this->assertEquals($name, $mediaSize->getName());
         $this->assertEquals($width, $mediaSize->getWidth());

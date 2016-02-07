@@ -73,7 +73,7 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
         $hashtagObj->text = 'text';
         $hashtagObj->indices = array(42, 666);
 
-        $indices = new TwitterEntityIndices(42, 666);
+        $indices = TwitterEntityIndices::create(42, 666);
         $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
 
         $hashtag = $this->serializer->unserialize($hashtagObj);

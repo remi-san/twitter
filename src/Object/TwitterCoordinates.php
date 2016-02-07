@@ -21,17 +21,10 @@ class TwitterCoordinates implements TwitterSerializable
     private $latitude;
 
     /**
-     * Constructor
-     *
-     * @param float  $latitude
-     * @param float  $longitude
-     * @param string $type
+     * Constructor.
      */
-    public function __construct($longitude, $latitude, $type)
+    public function __construct()
     {
-        $this->latitude = $latitude;
-        $this->longitude = $longitude;
-        $this->type = $type;
     }
 
     /**
@@ -56,5 +49,25 @@ class TwitterCoordinates implements TwitterSerializable
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param float  $latitude
+     * @param float  $longitude
+     * @param string $type
+     *
+     * @return TwitterCoordinates
+     */
+    public static function create($longitude, $latitude, $type)
+    {
+        $obj = new self();
+
+        $obj->latitude = $latitude;
+        $obj->longitude = $longitude;
+        $obj->type = $type;
+
+        return $obj;
     }
 }

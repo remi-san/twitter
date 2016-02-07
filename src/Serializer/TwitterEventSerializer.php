@@ -61,7 +61,7 @@ class TwitterEventSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterEvent(
+        return TwitterEvent::create(
             $obj->event,
             $this->userSerializer->unserialize($obj->source),
             isset($obj->target) ? $this->userSerializer->unserialize($obj->target) : null,

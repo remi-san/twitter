@@ -34,7 +34,7 @@ class TwitterMediaSizeSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterMediaSize($context[self::NAME_VAR], $obj->w, $obj->h, $obj->resize);
+        return TwitterMediaSize::create($context[self::NAME_VAR], $obj->w, $obj->h, $obj->resize);
     }
 
     /**

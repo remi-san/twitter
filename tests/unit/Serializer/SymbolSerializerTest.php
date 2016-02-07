@@ -74,7 +74,7 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
         $symbolObj->text = 'text';
         $symbolObj->indices = array(42, 666);
 
-        $indices = new TwitterEntityIndices(42, 666);
+        $indices = TwitterEntityIndices::create(42, 666);
         $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
 
         $symbol = $this->serializer->unserialize($symbolObj);

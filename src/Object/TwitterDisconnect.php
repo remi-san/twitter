@@ -21,17 +21,10 @@ class TwitterDisconnect implements TwitterObject
     private $reason;
 
     /**
-     * Constructor
-     *
-     * @param string $code
-     * @param string $reason
-     * @param string $streamName
+     * Constructor.
      */
-    public function __construct($code, $streamName, $reason)
+    public function __construct()
     {
-        $this->code = $code;
-        $this->reason = $reason;
-        $this->streamName = $streamName;
     }
 
     /**
@@ -64,5 +57,25 @@ class TwitterDisconnect implements TwitterObject
     public function __toString()
     {
         return 'Disconnect ['.$this->streamName.']';
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param string $code
+     * @param string $reason
+     * @param string $streamName
+     *
+     * @return TwitterDisconnect
+     */
+    public static function create($code, $streamName, $reason)
+    {
+        $obj = new self();
+
+        $obj->code = $code;
+        $obj->reason = $reason;
+        $obj->streamName = $streamName;
+
+        return $obj;
     }
 }

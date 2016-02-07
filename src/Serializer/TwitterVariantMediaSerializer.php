@@ -32,7 +32,7 @@ class TwitterVariantMediaSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterVariantMedia($obj->content_type, $obj->url, $obj->bitrate?:null);
+        return TwitterVariantMedia::create($obj->content_type, $obj->url, $obj->bitrate?:null);
     }
 
     /**

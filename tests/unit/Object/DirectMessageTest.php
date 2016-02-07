@@ -49,7 +49,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
         $text = 'Message';
         $date = new \DateTime();
 
-        $dm = new TwitterDirectMessage($id, $this->sender, $this->recipient, $text, $date, $this->entities);
+        $dm = TwitterDirectMessage::create($id, $this->sender, $this->recipient, $text, $date, $this->entities);
 
         $this->assertEquals($id, $dm->getId());
         $this->assertEquals($this->sender, $dm->getSender());
@@ -79,7 +79,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
         $this->entities->shouldReceive('getHashtags')->withNoArgs()->andReturn(array($hashtag));
         $this->entities->shouldReceive('getUserMentions')->withNoArgs()->andReturn(array($userMention));
 
-        $tweet = new TwitterDirectMessage(
+        $tweet = TwitterDirectMessage::create(
             $id,
             $this->sender,
             $this->recipient,

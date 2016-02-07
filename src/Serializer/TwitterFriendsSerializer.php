@@ -30,7 +30,7 @@ class TwitterFriendsSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterFriends($obj->friends);
+        return TwitterFriends::create($obj->friends);
     }
 
     /**

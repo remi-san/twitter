@@ -19,7 +19,7 @@ class VariantMediaTest extends \PHPUnit_Framework_TestCase
         $url = 'http://med.ia/video.mpg';
         $bitrate = 12.4;
 
-        $variantMedia = new TwitterVariantMedia($contentType, $url, $bitrate);
+        $variantMedia = TwitterVariantMedia::create($contentType, $url, $bitrate);
 
         $this->assertEquals($contentType, $variantMedia->getContentType());
         $this->assertEquals($url, $variantMedia->getUrl());

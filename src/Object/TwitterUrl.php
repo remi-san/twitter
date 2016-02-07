@@ -21,19 +21,10 @@ class TwitterUrl extends TwitterEntity
     private $expandedUrl;
 
     /**
-     * Constructor
-     *
-     * @param string               $url
-     * @param string               $displayUrl
-     * @param string               $expandedUrl
-     * @param TwitterEntityIndices $indices
+     * Constructor.
      */
-    public function __construct($url, $displayUrl, $expandedUrl, TwitterEntityIndices $indices)
+    public function __construct()
     {
-        parent::__construct($indices);
-        $this->displayUrl = $displayUrl;
-        $this->expandedUrl = $expandedUrl;
-        $this->url = $url;
     }
 
     /**
@@ -58,5 +49,28 @@ class TwitterUrl extends TwitterEntity
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param string               $url
+     * @param string               $displayUrl
+     * @param string               $expandedUrl
+     * @param TwitterEntityIndices $indices
+     *
+     * @return TwitterUrl
+     */
+    public static function create($url, $displayUrl, $expandedUrl, TwitterEntityIndices $indices)
+    {
+        $obj = new self();
+
+        $obj->initTwitterEntity($indices);
+
+        $obj->displayUrl = $displayUrl;
+        $obj->expandedUrl = $expandedUrl;
+        $obj->url = $url;
+
+        return $obj;
     }
 }

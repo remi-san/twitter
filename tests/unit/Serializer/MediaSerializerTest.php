@@ -78,7 +78,7 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
         $indicesObj = new \stdClass();
         $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
 
-        $obj = $this->getExtendedEntity();
+        $obj = $this->getMedia();
         $obj->shouldReceive('getId')->andReturn($id);
         $obj->shouldReceive('getMediaUrl')->andReturn($mediaUrl);
         $obj->shouldReceive('getMediaUrlHttps')->andReturn($mediaUrlHttps);
@@ -114,7 +114,7 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
         $sizeObj->resize = true;
         $sizeObjs = array( $sizeName => $sizeObj);
 
-        $size = new TwitterMediaSize($sizeName, $sizeObj->w, $sizeObj->h, $sizeObj->resize);
+        $size = TwitterMediaSize::create($sizeName, $sizeObj->w, $sizeObj->h, $sizeObj->resize);
         $this->mediaSizeSerializer->shouldReceive('unserialize')->andReturn($size);
 
         $mediaObj = new \stdClass();
@@ -129,7 +129,7 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
         $mediaObj->indices = array(42, 666);
         $mediaObj->sizes = $sizeObjs;
 
-        $indices = new TwitterEntityIndices(42, 666);
+        $indices = TwitterEntityIndices::create(42, 666);
         $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
 
         $media = $this->serializer->unserialize($mediaObj);

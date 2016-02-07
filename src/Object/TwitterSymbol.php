@@ -11,15 +11,10 @@ class TwitterSymbol extends TwitterEntity
     private $text;
 
     /**
-     * Constructor
-     *
-     * @param string               $text
-     * @param TwitterEntityIndices $indices
+     * Constructor.
      */
-    public function __construct($text, TwitterEntityIndices $indices)
+    public function __construct()
     {
-        parent::__construct($indices);
-        $this->text = $text;
     }
 
     /**
@@ -28,5 +23,24 @@ class TwitterSymbol extends TwitterEntity
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param string               $text
+     * @param TwitterEntityIndices $indices
+     *
+     * @return TwitterSymbol
+     */
+    public static function create($text, TwitterEntityIndices $indices)
+    {
+        $obj = new self();
+
+        $obj->initTwitterEntity($indices);
+
+        $obj->text = $text;
+
+        return $obj;
     }
 }

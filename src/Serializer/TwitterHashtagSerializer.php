@@ -46,7 +46,7 @@ class TwitterHashtagSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterHashtag($obj->text, $this->entityIndicesSerializer->unserialize($obj->indices));
+        return TwitterHashtag::create($obj->text, $this->entityIndicesSerializer->unserialize($obj->indices));
     }
 
     /**

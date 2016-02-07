@@ -73,63 +73,10 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
     private $retweetedStatus;
 
     /**
-     * Constructor
-     *
-     * @param TwitterMessageId   $id
-     * @param TwitterUser        $sender
-     * @param string             $text
-     * @param string             $lang
-     * @param \DateTimeInterface $createdAt
-     * @param TwitterEntities    $entities
-     * @param TwitterCoordinates $coordinates
-     * @param TwitterPlace       $place
-     * @param int                $inReplyToStatusId
-     * @param int                $inReplyToUserId
-     * @param string             $inReplyToScreenName
-     * @param bool               $retweeted
-     * @param int                $retweetCount
-     * @param bool               $favorited
-     * @param bool               $favoriteCount
-     * @param bool               $truncated
-     * @param null               $source
-     * @param Tweet              $retweetedStatus
+     * Constructor.
      */
-    public function __construct(
-        TwitterMessageId $id,
-        TwitterUser $sender,
-        $text,
-        $lang,
-        \DateTimeInterface $createdAt,
-        TwitterEntities $entities = null,
-        TwitterCoordinates $coordinates = null,
-        TwitterPlace $place = null,
-        $inReplyToStatusId = null,
-        $inReplyToUserId = null,
-        $inReplyToScreenName = null,
-        $retweeted = false,
-        $retweetCount = 0,
-        $favorited = false,
-        $favoriteCount = false,
-        $truncated = false,
-        $source = null,
-        Tweet $retweetedStatus = null
-    ) {
-
-        parent::__construct($id, $sender, $text, $entities, $createdAt);
-
-        $this->lang = $lang;
-        $this->coordinates = $coordinates;
-        $this->place = $place;
-        $this->inReplyToStatusId = $inReplyToStatusId;
-        $this->inReplyToUserId = $inReplyToUserId;
-        $this->inReplyToScreenName = $inReplyToScreenName;
-        $this->retweeted = $retweeted;
-        $this->retweetCount = $retweetCount;
-        $this->favorited = $favorited;
-        $this->favoriteCount = $favoriteCount;
-        $this->truncated = $truncated;
-        $this->source = $source;
-        $this->retweetedStatus = $retweetedStatus;
+    public function __construct()
+    {
     }
 
     /**
@@ -242,5 +189,70 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
     public function __toString()
     {
         return 'Tweet ['.$this->id.']';
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param TwitterMessageId   $id
+     * @param TwitterUser        $sender
+     * @param string             $text
+     * @param string             $lang
+     * @param \DateTimeInterface $createdAt
+     * @param TwitterEntities    $entities
+     * @param TwitterCoordinates $coordinates
+     * @param TwitterPlace       $place
+     * @param int                $inReplyToStatusId
+     * @param int                $inReplyToUserId
+     * @param string             $inReplyToScreenName
+     * @param bool               $retweeted
+     * @param int                $retweetCount
+     * @param bool               $favorited
+     * @param bool               $favoriteCount
+     * @param bool               $truncated
+     * @param null               $source
+     * @param Tweet              $retweetedStatus
+     *
+     * @return Tweet
+     */
+    public static function create(
+        TwitterMessageId $id,
+        TwitterUser $sender,
+        $text,
+        $lang,
+        \DateTimeInterface $createdAt,
+        TwitterEntities $entities = null,
+        TwitterCoordinates $coordinates = null,
+        TwitterPlace $place = null,
+        $inReplyToStatusId = null,
+        $inReplyToUserId = null,
+        $inReplyToScreenName = null,
+        $retweeted = false,
+        $retweetCount = 0,
+        $favorited = false,
+        $favoriteCount = false,
+        $truncated = false,
+        $source = null,
+        Tweet $retweetedStatus = null
+    ) {
+        $obj = new self();
+
+        $obj->init($id, $sender, $text, $entities, $createdAt);
+
+        $obj->lang = $lang;
+        $obj->coordinates = $coordinates;
+        $obj->place = $place;
+        $obj->inReplyToStatusId = $inReplyToStatusId;
+        $obj->inReplyToUserId = $inReplyToUserId;
+        $obj->inReplyToScreenName = $inReplyToScreenName;
+        $obj->retweeted = $retweeted;
+        $obj->retweetCount = $retweetCount;
+        $obj->favorited = $favorited;
+        $obj->favoriteCount = $favoriteCount;
+        $obj->truncated = $truncated;
+        $obj->source = $source;
+        $obj->retweetedStatus = $retweetedStatus;
+
+        return $obj;
     }
 }

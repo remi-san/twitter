@@ -135,7 +135,7 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
         $sizeObj->resize = true;
         $sizeObjs = array( $sizeName => $sizeObj);
 
-        $size = new TwitterMediaSize($sizeName, $sizeObj->w, $sizeObj->h, $sizeObj->resize);
+        $size = TwitterMediaSize::create($sizeName, $sizeObj->w, $sizeObj->h, $sizeObj->resize);
         $this->mediaSizeSerializer->shouldReceive('unserialize')->andReturn($size);
 
         $variantObj = new \stdClass();
@@ -143,10 +143,10 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
         $variantObj->url = 'http://video.url';
         $variantObj->bitrate = 320;
 
-        $variant = new TwitterVariantMedia($variantObj->content_type, $variantObj->url, $variantObj->bitrate);
+        $variant = TwitterVariantMedia::create($variantObj->content_type, $variantObj->url, $variantObj->bitrate);
         $this->variantMediaSerializer->shouldReceive('unserialize')->andReturn($variant);
 
-        $indices = new TwitterEntityIndices(42, 666);
+        $indices = TwitterEntityIndices::create(42, 666);
         $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
 
         $extendedEntityObj = new \stdClass();

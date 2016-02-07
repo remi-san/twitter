@@ -31,7 +31,7 @@ class ExtendedEntityTest extends \PHPUnit_Framework_TestCase
         $durationMillis = 1000;
         $variants = array('variant'=>$this->getVariantMedia());
 
-        $media = new TwitterExtendedEntity(
+        $media = TwitterExtendedEntity::create(
             $id,
             $mediaUrl,
             $mediaUrlHttps,

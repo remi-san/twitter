@@ -76,7 +76,7 @@ class TwitterMediaSerializer implements TwitterSerializer
             }
         }
 
-        return new TwitterMedia(
+        return TwitterMedia::create(
             $obj->id,
             $obj->media_url,
             $obj->media_url_https,

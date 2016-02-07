@@ -40,7 +40,7 @@ class TwitterUserSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterUser(
+        return TwitterUser::create(
             $obj->id,
             $obj->screen_name,
             $obj->name,

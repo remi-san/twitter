@@ -79,7 +79,7 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
         $userMentionObj->name = 'Douglas Adams';
         $userMentionObj->indices = array(42, 666);
 
-        $indices = new TwitterEntityIndices(42, 666);
+        $indices = TwitterEntityIndices::create(42, 666);
         $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
 
         $userMention = $this->serializer->unserialize($userMentionObj);

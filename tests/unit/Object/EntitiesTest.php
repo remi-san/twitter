@@ -25,7 +25,7 @@ class EntitiesTest extends \PHPUnit_Framework_TestCase
         $media = array($this->getMedia());
         $extendedEntities = array($this->getExtendedEntity());
 
-        $entities = new TwitterEntities($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
+        $entities = TwitterEntities::create($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
 
         $this->assertEquals($hashtags, $entities->getHashtags());
         $this->assertEquals($symbols, $entities->getSymbols());

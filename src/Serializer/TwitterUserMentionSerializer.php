@@ -48,7 +48,7 @@ class TwitterUserMentionSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = array())
     {
-        return new TwitterUserMention(
+        return TwitterUserMention::create(
             $obj->id,
             $obj->screen_name,
             $obj->name,

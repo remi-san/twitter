@@ -28,7 +28,7 @@ class MediaTest extends \PHPUnit_Framework_TestCase
         $type = 'type';
         $indices = $this->getTwitterEntityIndices();
 
-        $media = new TwitterMedia(
+        $media = TwitterMedia::create(
             $id,
             $mediaUrl,
             $mediaUrlHttps,

@@ -74,7 +74,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweetObj = new \stdClass();
         $tweetObj->type = 'tweet';
-        $tweet = new Tweet(TwitterMessageId::create(1), new TwitterUser(), 'text', 'fr', new \DateTime());
+        $tweet = Tweet::create(TwitterMessageId::create(1), TwitterUser::create(), 'text', 'fr', new \DateTime());
         $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
 
         $obj = $this->getEvent();
@@ -110,7 +110,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweetObj = new \stdClass();
         $tweetObj->type = 'tweet';
-        $tweet = new Tweet(TwitterMessageId::create(1), new TwitterUser(), 'text', 'fr', new \DateTime());
+        $tweet = Tweet::create(TwitterMessageId::create(1), TwitterUser::create(), 'text', 'fr', new \DateTime());
         $this->eventTargetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
 
         $eventObj = new \stdClass();

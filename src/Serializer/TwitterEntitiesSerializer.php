@@ -179,7 +179,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
             }
         }
 
-        return new TwitterEntities($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
+        return TwitterEntities::create($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
     }
 
     /**

@@ -22,17 +22,10 @@ class TwitterUserMention extends TwitterEntity implements TwitterBasicUser
     private $name;
 
     /**
-     * @param int                  $id
-     * @param string               $screenName
-     * @param string               $name
-     * @param TwitterEntityIndices $indices
+     * Construct.
      */
-    public function __construct($id, $screenName, $name, TwitterEntityIndices $indices)
+    public function __construct()
     {
-        parent::__construct($indices);
-        $this->id = $id;
-        $this->name = $name;
-        $this->screenName = $screenName;
     }
 
     /**
@@ -65,5 +58,28 @@ class TwitterUserMention extends TwitterEntity implements TwitterBasicUser
     public function __toString()
     {
         return '@'.$this->screenName;
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param int                  $id
+     * @param string               $screenName
+     * @param string               $name
+     * @param TwitterEntityIndices $indices
+     *
+     * @return TwitterUserMention
+     */
+    public static function create($id, $screenName, $name, TwitterEntityIndices $indices)
+    {
+        $obj = new self();
+
+        $obj->initTwitterEntity($indices);
+
+        $obj->id = $id;
+        $obj->name = $name;
+        $obj->screenName = $screenName;
+
+        return $obj;
     }
 }

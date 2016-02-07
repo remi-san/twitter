@@ -12,26 +12,10 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
     private $recipient;
 
     /**
-     * Constructor
-     *
-     * @param TwitterMessageId   $id
-     * @param TwitterUser        $recipient
-     * @param TwitterUser        $sender
-     * @param string             $text
-     * @param \DateTimeInterface $createdAt
-     * @param TwitterEntities    $entities
+     * Constructor.
      */
-    public function __construct(
-        TwitterMessageId $id,
-        TwitterUser $sender,
-        TwitterUser $recipient,
-        $text,
-        \DateTimeInterface $createdAt,
-        TwitterEntities $entities = null
-    ) {
-        parent::__construct($id, $sender, $text, $entities, $createdAt);
-
-        $this->recipient = $recipient;
+    public function __construct()
+    {
     }
 
     /**
@@ -48,5 +32,34 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
     public function __toString()
     {
         return 'DM ['.$this->id.']';
+    }
+
+    /**
+     * Static constructor.
+     *
+     * @param TwitterMessageId   $id
+     * @param TwitterUser        $recipient
+     * @param TwitterUser        $sender
+     * @param string             $text
+     * @param \DateTimeInterface $createdAt
+     * @param TwitterEntities    $entities
+     *
+     * @return TwitterDirectMessage
+     */
+    public static function create(
+        TwitterMessageId $id,
+        TwitterUser $sender,
+        TwitterUser $recipient,
+        $text,
+        \DateTimeInterface $createdAt,
+        TwitterEntities $entities = null
+    ) {
+        $obj = new self();
+
+        $obj->init($id, $sender, $text, $entities, $createdAt);
+
+        $obj->recipient = $recipient;
+
+        return $obj;
     }
 }

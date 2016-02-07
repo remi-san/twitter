@@ -18,7 +18,7 @@ class EntityIndicesTest extends \PHPUnit_Framework_TestCase
         $from = 0;
         $to = 42;
 
-        $entityIndices = new TwitterEntityIndices($from, $to);
+        $entityIndices = TwitterEntityIndices::create($from, $to);
 
         $this->assertEquals($from, $entityIndices->getFrom());
         $this->assertEquals($to, $entityIndices->getTo());
