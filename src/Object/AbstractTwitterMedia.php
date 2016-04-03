@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterEntity;
@@ -65,7 +66,7 @@ abstract class AbstractTwitterMedia extends TwitterEntity
         $url = null,
         $displayUrl = null,
         $expandedUrl = null,
-        array $sizes = array(),
+        array $sizes = [],
         $type = null,
         TwitterEntityIndices $indices = null
     ) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterBasicUser;
@@ -57,7 +58,7 @@ class TwitterUserMention extends TwitterEntity implements TwitterBasicUser
      */
     public function __toString()
     {
-        return '@'.$this->screenName;
+        return '@' . $this->screenName;
     }
 
     /**

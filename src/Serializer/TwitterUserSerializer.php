@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterUser;
@@ -38,7 +39,7 @@ class TwitterUserSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterUser
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterUser::create(
             $obj->id,

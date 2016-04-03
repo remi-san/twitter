@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 class TwitterMedia extends AbstractTwitterMedia
@@ -32,7 +33,7 @@ class TwitterMedia extends AbstractTwitterMedia
         $url = null,
         $displayUrl = null,
         $expandedUrl = null,
-        array $sizes = array(),
+        array $sizes = [],
         $type = null,
         TwitterEntityIndices $indices = null
     ) {

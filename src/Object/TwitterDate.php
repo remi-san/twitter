@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 class TwitterDate

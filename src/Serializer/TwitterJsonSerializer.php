@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\Tweet;

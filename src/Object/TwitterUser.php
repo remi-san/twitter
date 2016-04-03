@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterBasicUser;
@@ -109,7 +110,7 @@ class TwitterUser implements TwitterBasicUser, TwitterSerializable
      */
     public function __toString()
     {
-        return '@'.$this->screenName;
+        return '@' . $this->screenName;
     }
 
     /**

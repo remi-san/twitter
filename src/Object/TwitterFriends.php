@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterObject;
@@ -40,7 +41,7 @@ class TwitterFriends implements TwitterObject
      *
      * @return TwitterFriends
      */
-    public static function create(array $friends = array())
+    public static function create(array $friends = [])
     {
         $obj = new self();
 

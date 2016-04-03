@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterEntities;
@@ -75,7 +76,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         // Hashtags
         if ($object->getHashtags()) {
-            $entities->hashtags = array();
+            $entities->hashtags = [];
             foreach ($object->getHashtags() as $hashtag) {
                 $entities->hashtags[] = $this->hashtagSerializer->serialize($hashtag);
             }
@@ -83,7 +84,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         // Symbols
         if ($object->getSymbols()) {
-            $entities->symbols = array();
+            $entities->symbols = [];
             foreach ($object->getSymbols() as $symbol) {
                 $entities->symbols[] = $this->symbolSerializer->serialize($symbol);
             }
@@ -91,7 +92,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         // Urls
         if ($object->getUrls()) {
-            $entities->urls = array();
+            $entities->urls = [];
             foreach ($object->getUrls() as $url) {
                 $entities->urls[] = $this->urlSerializer->serialize($url);
             }
@@ -99,7 +100,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         // User mentions
         if ($object->getUserMentions()) {
-            $entities->user_mentions = array();
+            $entities->user_mentions = [];
             foreach ($object->getUserMentions() as $userMention) {
                 $entities->user_mentions[] = $this->userMentionSerializer->serialize($userMention);
             }
@@ -107,7 +108,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         // Media
         if ($object->getMedia()) {
-            $entities->media = array();
+            $entities->media = [];
             foreach ($object->getMedia() as $media) {
                 $entities->media[] = $this->mediaSerializer->serialize($media);
             }
@@ -115,7 +116,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
 
         // Extended entities
         if ($object->getExtendedEntities()) {
-            $entities->extended_entities = array();
+            $entities->extended_entities = [];
             foreach ($object->getExtendedEntities() as $extendedEntity) {
                 $entities->extended_entities[] = $this->extendedEntitySerializer->serialize($extendedEntity);
             }
@@ -129,10 +130,10 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterEntities
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         // Hashtags
-        $hashtags = array();
+        $hashtags = [];
         if (isset($obj->hashtags)) {
             foreach ($obj->hashtags as $hashtag) {
                 $hashtags[] = $this->hashtagSerializer->unserialize($hashtag);
@@ -140,7 +141,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
         }
 
         // Symbols
-        $symbols = array();
+        $symbols = [];
         if (isset($obj->symbols)) {
             foreach ($obj->symbols as $symbol) {
                 $symbols[] = $this->symbolSerializer->unserialize($symbol);
@@ -148,7 +149,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
         }
 
         // URLs
-        $urls = array();
+        $urls = [];
         if (isset($obj->urls)) {
             foreach ($obj->urls as $url) {
                 $urls[] = $this->urlSerializer->unserialize($url);
@@ -156,7 +157,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
         }
 
         // User mentions
-        $userMentions = array();
+        $userMentions = [];
         if (isset($obj->user_mentions)) {
             foreach ($obj->user_mentions as $userMention) {
                 $userMentions[] = $this->userMentionSerializer->unserialize($userMention);
@@ -164,7 +165,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
         }
 
         // Media
-        $media = array();
+        $media = [];
         if (isset($obj->media)) {
             foreach ($obj->media as $medium) {
                 $media[] = $this->mediaSerializer->unserialize($medium);
@@ -172,7 +173,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
         }
 
         // Extended entities
-        $extendedEntities = array();
+        $extendedEntities = [];
         if (isset($obj->extended_entities)) {
             foreach ($obj->extended_entities as $extendedEntity) {
                 $extendedEntities[] = $this->extendedEntitySerializer->unserialize($extendedEntity);

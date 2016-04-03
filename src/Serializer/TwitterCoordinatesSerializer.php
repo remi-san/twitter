@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterCoordinates;
@@ -18,7 +19,7 @@ class TwitterCoordinatesSerializer implements TwitterSerializer
         }
 
         $coords = new \stdClass();
-        $coords->coordinates = array($object->getLongitude(), $object->getLatitude());
+        $coords->coordinates = [$object->getLongitude(), $object->getLatitude()];
         $coords->type = $object->getType();
 
         return $coords;
@@ -29,7 +30,7 @@ class TwitterCoordinatesSerializer implements TwitterSerializer
      * @param  array $context
      * @return TwitterCoordinates
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         $coords = $obj->coordinates;
 

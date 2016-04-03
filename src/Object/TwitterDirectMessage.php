@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterMessage;
@@ -31,7 +32,7 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
      */
     public function __toString()
     {
-        return 'DM ['.$this->id.']';
+        return 'DM [' . $this->id . ']';
     }
 
     /**

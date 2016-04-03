@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterDatedObject;
@@ -72,7 +73,7 @@ class TwitterDelete implements TwitterDatedObject
      */
     public function __toString()
     {
-        return 'Delete ['.$this->type.']['.$this->id.']';
+        return 'Delete [' . $this->type . '][' . $this->id . ']';
     }
 
     /**

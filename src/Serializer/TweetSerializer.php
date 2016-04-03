@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\Tweet;
@@ -65,7 +66,7 @@ class TweetSerializer implements TwitterSerializer
         $tweet->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
         $tweet->entities = $object->getEntities()?
             $this->twitterEntitiesSerializer->serialize($object->getEntities()):
-            array();
+            [];
         $tweet->coordinates = $object->getCoordinates()?
             $this->coordinatesSerializer->serialize($object->getCoordinates()):
             null;
@@ -92,7 +93,7 @@ class TweetSerializer implements TwitterSerializer
      * @param  array     $context
      * @return \Twitter\Object\Tweet
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return Tweet::create(
             TwitterMessageId::create($obj->id),

@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterDisconnect;
@@ -33,7 +34,7 @@ class TwitterDisconnectSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterDisconnect
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         $d = $obj->disconnect;
 

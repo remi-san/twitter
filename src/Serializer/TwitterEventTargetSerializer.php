@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\Tweet;
@@ -43,7 +44,7 @@ class TwitterEventTargetSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterEventTarget
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         $object = null;
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterMessage;
@@ -100,7 +101,7 @@ abstract class AbstractMessage implements TwitterMessage
      */
     public function getFormattedHashtags()
     {
-        $formattedHashtags = array();
+        $formattedHashtags = [];
         if ($this->entities && $this->entities->getHashtags()) {
             foreach ($this->entities->getHashtags() as $hashtag) {
                 $formattedHashtags[] = $hashtag->__toString();
@@ -114,7 +115,7 @@ abstract class AbstractMessage implements TwitterMessage
      */
     public function getFormattedUserMentions()
     {
-        $formattedUserMentions = array();
+        $formattedUserMentions = [];
         if ($this->entities && $this->entities->getUserMentions()) {
             foreach ($this->entities->getUserMentions() as $userMention) {
                 $formattedUserMentions[] = $userMention->__toString();

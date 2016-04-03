@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter;
 
 interface TwitterSerializer
@@ -14,5 +15,5 @@ interface TwitterSerializer
      * @param  array     $context
      * @return TwitterSerializable
      */
-    public function unserialize($obj, array $context = array());
+    public function unserialize($obj, array $context = []);
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;

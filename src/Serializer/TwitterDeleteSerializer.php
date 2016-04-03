@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterDelete;
@@ -49,7 +50,7 @@ class TwitterDeleteSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterDelete
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         $d = $obj->delete;
         $ref = null;

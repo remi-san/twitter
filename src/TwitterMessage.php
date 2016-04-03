@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter;
 
 use Twitter\Object\TwitterEntities;

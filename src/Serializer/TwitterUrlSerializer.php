@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterUrl;
@@ -46,7 +47,7 @@ class TwitterUrlSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterUrl
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterUrl::create(
             $obj->url,

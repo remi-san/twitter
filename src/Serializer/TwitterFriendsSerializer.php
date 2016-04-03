@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterFriends;
@@ -28,7 +29,7 @@ class TwitterFriendsSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterFriends
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterFriends::create($obj->friends);
     }

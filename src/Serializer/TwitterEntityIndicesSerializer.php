@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterEntityIndices;
@@ -17,7 +18,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterEntityIndices');
         }
 
-        return array($object->getFrom(), $object->getTo());
+        return [$object->getFrom(), $object->getTo()];
     }
 
     /**
@@ -25,7 +26,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
      * @param  array $context
      * @return TwitterEntityIndices
      */
-    public function unserialize($array, array $context = array())
+    public function unserialize($array, array $context = [])
     {
         return TwitterEntityIndices::create($array[0], $array[1]);
     }

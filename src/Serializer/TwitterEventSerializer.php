@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterDate;
@@ -59,7 +60,7 @@ class TwitterEventSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterEvent
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterEvent::create(
             $obj->event,

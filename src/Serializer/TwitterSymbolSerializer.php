@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterSymbol;
@@ -44,7 +45,7 @@ class TwitterSymbolSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterSymbol
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterSymbol::create(
             $obj->text,

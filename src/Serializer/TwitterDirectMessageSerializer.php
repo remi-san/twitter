@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterDate;
@@ -57,7 +58,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterDirectMessage
      */
-    public function unserialize($dm, array $context = array())
+    public function unserialize($dm, array $context = [])
     {
         return TwitterDirectMessage::create(
             TwitterMessageId::create($dm->id),

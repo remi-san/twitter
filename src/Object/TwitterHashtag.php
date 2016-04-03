@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterEntity;
@@ -27,7 +28,7 @@ class TwitterHashtag extends TwitterEntity
 
     public function __toString()
     {
-        return '#'.$this->getText();
+        return '#' . $this->getText();
     }
 
     /**

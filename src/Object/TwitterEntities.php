@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterSerializable;
@@ -103,12 +104,12 @@ class TwitterEntities implements TwitterSerializable
      * @return TwitterEntities
      */
     public static function create(
-        array $hashtags = array(),
-        array $userMentions = array(),
-        array $urls = array(),
-        array $media = array(),
-        array $symbols = array(),
-        array $extendedEntities = array()
+        array $hashtags = [],
+        array $userMentions = [],
+        array $urls = [],
+        array $media = [],
+        array $symbols = [],
+        array $extendedEntities = []
     ) {
         $obj = new self();
 

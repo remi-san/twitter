@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 class TwitterExtendedEntity extends AbstractTwitterMedia
@@ -74,11 +75,11 @@ class TwitterExtendedEntity extends AbstractTwitterMedia
         $url = null,
         $displayUrl = null,
         $expandedUrl = null,
-        array $sizes = array(),
+        array $sizes = [],
         $type = null,
         $videoInfo = null,
         $durationMillis = null,
-        array $variants = array(),
+        array $variants = [],
         TwitterEntityIndices $indices = null
     ) {
         $obj = new self();

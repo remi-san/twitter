@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterEventTarget;
@@ -188,7 +189,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
      */
     public function __toString()
     {
-        return 'Tweet ['.$this->id.']';
+        return 'Tweet [' . $this->id . ']';
     }
 
     /**

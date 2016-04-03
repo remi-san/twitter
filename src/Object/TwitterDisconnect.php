@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Object;
 
 use Twitter\TwitterObject;
@@ -56,7 +57,7 @@ class TwitterDisconnect implements TwitterObject
      */
     public function __toString()
     {
-        return 'Disconnect ['.$this->streamName.']';
+        return 'Disconnect [' . $this->streamName . ']';
     }
 
     /**

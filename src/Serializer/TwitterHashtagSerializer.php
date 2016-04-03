@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterHashtag;
@@ -44,7 +45,7 @@ class TwitterHashtagSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterHashtag
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterHashtag::create($obj->text, $this->entityIndicesSerializer->unserialize($obj->indices));
     }

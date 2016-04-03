@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterUserMention;
@@ -46,7 +47,7 @@ class TwitterUserMentionSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterUserMention
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
         return TwitterUserMention::create(
             $obj->id,

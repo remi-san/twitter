@@ -1,4 +1,5 @@
 <?php
+
 namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterMedia;
@@ -51,7 +52,7 @@ class TwitterMediaSerializer implements TwitterSerializer
         $media->type = $object->getType();
         $media->indices = $this->entityIndicesSerializer->serialize($object->getIndices());
 
-        $media->sizes = array();
+        $media->sizes = [];
         foreach ($object->getSizes() as $size) {
             $media->sizes[$size->getName()] = $this->mediaSizeSerializer->serialize($size);
         }
@@ -64,14 +65,14 @@ class TwitterMediaSerializer implements TwitterSerializer
      * @param  array     $context
      * @return TwitterMedia
      */
-    public function unserialize($obj, array $context = array())
+    public function unserialize($obj, array $context = [])
     {
-        $sizesObjects = array();
+        $sizesObjects = [];
         if ($obj->sizes) {
             foreach ($obj->sizes as $sizeName => $sizeObj) {
                 $sizesObjects[$sizeName] = $this->mediaSizeSerializer->unserialize(
                     $sizeObj,
-                    array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName)
+                    [TwitterMediaSizeSerializer::NAME_VAR => $sizeName]
                 );
             }
         }
