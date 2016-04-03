@@ -209,7 +209,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
      * @param bool               $retweeted
      * @param int                $retweetCount
      * @param bool               $favorited
-     * @param bool               $favoriteCount
+     * @param int                $favoriteCount
      * @param bool               $truncated
      * @param null               $source
      * @param Tweet              $retweetedStatus
@@ -231,7 +231,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
         $retweeted = false,
         $retweetCount = 0,
         $favorited = false,
-        $favoriteCount = false,
+        $favoriteCount = 0,
         $truncated = false,
         $source = null,
         Tweet $retweetedStatus = null

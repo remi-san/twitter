@@ -10,7 +10,7 @@ class TwitterDeleteSerializer implements TwitterSerializer
 {
     /**
      * @param  TwitterSerializable $object
-     * @return array
+     * @return \stdClass
      */
     public function serialize(TwitterSerializable $object)
     {
@@ -63,13 +63,12 @@ class TwitterDeleteSerializer implements TwitterSerializer
             $ref = $d->direct_message;
             $type = TwitterDelete::DM;
         }
-
-        $date = new \DateTimeImmutable();
+        
         return TwitterDelete::create(
             $type,
             $ref->id,
             $ref->user_id,
-            isset($d->timestamp_ms) ? $date->setTimestamp(floor($d->timestamp_ms / 1000)) : null
+            (new \DateTimeImmutable())->setTimestamp(floor($d->timestamp_ms / 1000))
         );
     }
 

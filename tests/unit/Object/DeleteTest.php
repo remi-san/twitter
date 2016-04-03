@@ -26,6 +26,6 @@ class DeleteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($id, $delete->getId());
         $this->assertEquals($userId, $delete->getUserId());
         $this->assertEquals($date, $delete->getDate());
-        $this->assertEquals('Delete ['.$type.']['.$id.']', $delete->__toString());
+        $this->assertEquals('Deleted ['.$type.']['.$id.']', $delete->__toString());
     }
 }

@@ -12,7 +12,7 @@ class TwitterUserSerializer implements TwitterSerializer
      * Serialize a twitter user
      *
      * @param  TwitterSerializable $object
-     * @return array|object
+     * @return \stdClass
      */
     public function serialize(TwitterSerializable $object)
     {

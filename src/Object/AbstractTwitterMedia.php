@@ -70,7 +70,7 @@ abstract class AbstractTwitterMedia extends TwitterEntity
         $type = null,
         TwitterEntityIndices $indices = null
     ) {
-        parent::initTwitterEntity($indices);
+        $this->initTwitterEntity($indices);
 
         $this->displayUrl = $displayUrl;
         $this->expandedUrl = $expandedUrl;

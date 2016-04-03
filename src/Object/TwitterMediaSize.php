@@ -22,7 +22,7 @@ class TwitterMediaSize implements TwitterSerializable
     private $height;
 
     /**
-     * @var string
+     * @var boolean
      */
     private $resize;
 

@@ -42,7 +42,7 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
 
     /**
      * @param  TwitterSerializable $object
-     * @return array
+     * @return \stdClass
      */
     public function serialize(TwitterSerializable $object)
     {

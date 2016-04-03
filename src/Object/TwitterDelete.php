@@ -73,7 +73,7 @@ class TwitterDelete implements TwitterDatedObject
      */
     public function __toString()
     {
-        return 'Delete [' . $this->type . '][' . $this->id . ']';
+        return 'Deleted [' . $this->type . '][' . $this->id . ']';
     }
 
     /**
