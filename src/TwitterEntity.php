@@ -16,7 +16,7 @@ abstract class TwitterEntity implements TwitterSerializable
      *
      * @param TwitterEntityIndices $indices
      */
-    protected function initTwitterEntity(TwitterEntityIndices $indices)
+    protected function initTwitterEntity(TwitterEntityIndices $indices = null)
     {
         $this->indices = $indices;
     }

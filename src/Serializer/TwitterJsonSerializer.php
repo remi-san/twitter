@@ -84,8 +84,6 @@ class TwitterJsonSerializer implements Serializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterSerializable');
         }
 
-        $serializedObject = null;
-
         if ($object instanceof TwitterUser) {
             $serializedObject = $this->twitterUserSerializer->serialize($object);
         } elseif ($object instanceof Tweet) { // or list

@@ -6,7 +6,7 @@ interface TwitterSerializer
 {
     /**
      * @param  TwitterSerializable $object
-     * @return \stdClass
+     * @return \stdClass|array
      */
     public function serialize(TwitterSerializable $object);
 

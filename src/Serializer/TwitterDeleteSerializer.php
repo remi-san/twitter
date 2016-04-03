@@ -53,8 +53,6 @@ class TwitterDeleteSerializer implements TwitterSerializer
     public function unserialize($obj, array $context = [])
     {
         $d = $obj->delete;
-        $ref = null;
-        $type = null;
 
         if (isset($d->status)) {
             $ref = $d->status;
@@ -63,12 +61,12 @@ class TwitterDeleteSerializer implements TwitterSerializer
             $ref = $d->direct_message;
             $type = TwitterDelete::DM;
         }
-        
+
         return TwitterDelete::create(
             $type,
             $ref->id,
             $ref->user_id,
-            (new \DateTimeImmutable())->setTimestamp(floor($d->timestamp_ms / 1000))
+            (new \DateTimeImmutable())->setTimestamp((int) floor($d->timestamp_ms / 1000))?:new \DateTimeImmutable()
         );
     }
 
