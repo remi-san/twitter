@@ -27,6 +27,11 @@
     "autoload": {
         "psr-4": {
             "Twitter\\": "src/",
+            "Twitter\\Test\\Mock\\" : "tests/unit/Mock/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Twitter\\Test\\" : "tests/unit/"
         }
     },
