@@ -8,4 +8,4 @@
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/remi-san/twitter.svg?style=flat-square)](https://scrutinizer-ci.com/g/remi-san/twitter/code-structure)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d39de3ac-90a6-4007-8529-68fe14774989/small.png)](https://insight.sensiolabs.com/projects/d39de3ac-90a6-4007-8529-68fe14774989)
 
-A lib aiming at manipulating twitter objetcs
+A lib aiming at manipulating twitter objects
