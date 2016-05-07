@@ -56,7 +56,7 @@ class TwitterType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return $this->twitterSerializer->unserialize($value);
+        return $this->getSerializer()->unserialize($value);
     }
 
     /**
@@ -70,6 +70,14 @@ class TwitterType extends Type
             throw new \InvalidArgumentException('Value is not serializable!');
         }
 
-        return $this->twitterSerializer->serialize($value);
+        return $this->getSerializer()->serialize($value);
+    }
+
+    /**
+     * @return TwitterJsonSerializer
+     */
+    private function getSerializer()
+    {
+        return $this->twitterSerializer;
     }
 }

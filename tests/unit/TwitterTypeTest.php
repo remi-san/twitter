@@ -23,7 +23,10 @@ class TwitterTypeTest extends \PHPUnit_Framework_TestCase
         $twitterJsonSerializer->shouldReceive('unserialize')->with($serializedUser)->andReturn($user)->once();
         $twitterJsonSerializer->shouldReceive('serialize')->with($user)->andReturn($serializedUser)->once();
 
-        Type::addType(TwitterType::TWITTER, 'Twitter\Doctrine\TwitterType');
+        if (!Type::hasType(TwitterType::TWITTER)) {
+            Type::addType(TwitterType::TWITTER, 'Twitter\Doctrine\TwitterType');
+        }
+
         $twitterType = Type::getType(TwitterType::TWITTER);
         $twitterType->setSerializer($twitterJsonSerializer);
 
@@ -31,5 +34,20 @@ class TwitterTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('TEXT', $twitterType->getSQLDeclaration(array(), $platform));
         $this->assertEquals($serializedUser, $twitterType->convertToDatabaseValue($user, $platform));
         $this->assertEquals($user, $twitterType->convertToPHPValue($serializedUser, $platform));
+    }
+
+    public function testInvalidMessage()
+    {
+        $platform = \Mockery::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
+        $user = new \stdClass();
+
+        if (!Type::hasType(TwitterType::TWITTER)) {
+            Type::addType(TwitterType::TWITTER, 'Twitter\Doctrine\TwitterType');
+        }
+
+        $twitterType = Type::getType(TwitterType::TWITTER);
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $twitterType->convertToDatabaseValue($user, $platform);
     }
 }
