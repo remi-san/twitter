@@ -6,6 +6,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Twitter\Serializer\TwitterJsonSerializer;
 use Twitter\TwitterObject;
+use Twitter\TwitterSerializable;
 
 class TwitterType extends Type
 {
@@ -52,7 +53,7 @@ class TwitterType extends Type
     /**
      * @param  string           $value
      * @param  AbstractPlatform $platform
-     * @return TwitterObject
+     * @return TwitterSerializable
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -60,12 +61,16 @@ class TwitterType extends Type
     }
 
     /**
-     * @param  TwitterObject    $value
-     * @param  AbstractPlatform $platform
+     * @param  TwitterSerializable $value
+     * @param  AbstractPlatform    $platform
      * @return string
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if (!$value instanceof TwitterSerializable) {
+            throw new \InvalidArgumentException('Value is not serializable!');
+        }
+
         return $this->twitterSerializer->serialize($value);
     }
 }

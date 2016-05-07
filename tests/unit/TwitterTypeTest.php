@@ -3,6 +3,7 @@ namespace Twitter\Test\Object;
 
 use Doctrine\DBAL\Types\Type;
 use Twitter\Doctrine\TwitterType;
+use Twitter\Object\TwitterUser;
 
 class TwitterTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +17,7 @@ class TwitterTypeTest extends \PHPUnit_Framework_TestCase
         $platform = \Mockery::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
 
         $serializedUser = '{}';
-        $user = new \stdClass();
+        $user = new TwitterUser();
 
         $twitterJsonSerializer = \Mockery::mock('Twitter\Serializer\TwitterJsonSerializer');
         $twitterJsonSerializer->shouldReceive('unserialize')->with($serializedUser)->andReturn($user)->once();

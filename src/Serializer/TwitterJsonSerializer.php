@@ -75,15 +75,11 @@ class TwitterJsonSerializer implements Serializer
     }
 
     /**
-     * @param  object $object
+     * @param  TwitterSerializable $object
      * @return string
      */
-    public function serialize($object)
+    public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterSerializable)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterSerializable');
-        }
-
         if ($object instanceof TwitterUser) {
             $serializedObject = $this->twitterUserSerializer->serialize($object);
         } elseif ($object instanceof Tweet) { // or list
@@ -100,7 +96,7 @@ class TwitterJsonSerializer implements Serializer
 
     /**
      * @param  string $string
-     * @return object
+     * @return TwitterSerializable
      */
     public function unserialize($string)
     {

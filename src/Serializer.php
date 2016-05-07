@@ -5,14 +5,14 @@ namespace Twitter;
 interface Serializer
 {
     /**
-     * @param  object $object
+     * @param  TwitterSerializable $object
      * @return string
      */
-    public function serialize($object);
+    public function serialize(TwitterSerializable $object);
 
     /**
      * @param  string $string
-     * @return object
+     * @return TwitterSerializable
      */
     public function unserialize($string);
 }

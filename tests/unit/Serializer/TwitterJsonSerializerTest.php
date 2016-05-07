@@ -85,18 +85,6 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
-    {
-        $obj = new \stdClass();
-
-        $this->setExpectedException('\\InvalidArgumentException');
-
-        $this->serializer->serialize($obj);
-    }
-
-    /**
-     * @test
-     */
     public function testSerializeWithUnsupportedObject()
     {
         $obj = $this->getUserMention('user');
