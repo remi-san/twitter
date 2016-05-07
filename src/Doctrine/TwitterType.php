@@ -5,7 +5,6 @@ namespace Twitter\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Twitter\Serializer\TwitterJsonSerializer;
-use Twitter\TwitterObject;
 use Twitter\TwitterSerializable;
 
 class TwitterType extends Type
