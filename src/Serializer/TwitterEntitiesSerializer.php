@@ -202,7 +202,8 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      */
     public function canUnserialize($object)
     {
-        return isset($object->hashtags) ||  isset($object->symbols) ||  isset($object->urls) || isset($object->user_mentions) || isset($object->media) || isset($object->extended_entities);
+        return isset($object->hashtags) ||  isset($object->symbols) ||  isset($object->urls) ||
+            isset($object->user_mentions) || isset($object->media) || isset($object->extended_entities);
     }
 
     /**
