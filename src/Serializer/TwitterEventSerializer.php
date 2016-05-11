@@ -35,7 +35,7 @@ class TwitterEventSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterEvent)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterEvent');
         }
 
@@ -62,6 +62,10 @@ class TwitterEventSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         return TwitterEvent::create(
             $obj->event,
             $this->userSerializer->unserialize($obj->source),
@@ -69,6 +73,24 @@ class TwitterEventSerializer implements TwitterSerializer
             isset($obj->target_object) ? $this->targetSerializer->unserialize($obj->target_object) : null,
             new \DateTimeImmutable($obj->created_at)
         );
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterEvent;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return isset($object->event);
     }
 
     /**

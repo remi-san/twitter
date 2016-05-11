@@ -93,6 +93,18 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function testIllegalUnserialize()
+    {
+        $obj = new \stdClass();
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->serializer->unserialize($obj);
+    }
+
+    /**
+     * @test
+     */
     public function testStaticBuilder()
     {
         $serializer = TwitterUserMentionSerializer::build();

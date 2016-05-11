@@ -14,7 +14,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterEntityIndices)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterEntityIndices');
         }
 
@@ -28,7 +28,29 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
      */
     public function unserialize($array, array $context = [])
     {
+        if (!$this->canUnserialize($array)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         return TwitterEntityIndices::create($array[0], $array[1]);
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterEntityIndices;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return is_array($object) && count($object) === 2;
     }
 
     /**

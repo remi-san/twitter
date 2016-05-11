@@ -38,7 +38,7 @@ class TwitterMediaSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterMedia)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterMedia');
         }
 
@@ -67,6 +67,10 @@ class TwitterMediaSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         $sizesObjects = [];
         if ($obj->sizes) {
             foreach ($obj->sizes as $sizeName => $sizeObj) {
@@ -88,6 +92,24 @@ class TwitterMediaSerializer implements TwitterSerializer
             $obj->type,
             $this->entityIndicesSerializer->unserialize($obj->indices)
         );
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterMedia;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return isset($object->media_url) && !isset($object->duration_millis);
     }
 
     /**

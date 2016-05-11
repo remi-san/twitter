@@ -11,6 +11,7 @@ use Twitter\Serializer\TwitterJsonSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterSerializable;
 
 class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -103,6 +104,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->userSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
 
+        $this->eventTargetSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->eventSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->userSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(true);
+
         $serialized = $this->serializer->serialize($obj);
 
         $this->assertEquals('{}', $serialized);
@@ -116,6 +125,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
         $obj = $this->getTweet();
 
         $this->eventTargetSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
+
+        $this->eventTargetSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(true);
+        $this->directMessageSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->eventSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->userSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
 
         $serialized = $this->serializer->serialize($obj);
 
@@ -131,9 +148,37 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->directMessageSerializer->shouldReceive('serialize')->with($obj)->andReturn(new \stdClass());
 
+        $this->eventTargetSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(true);
+        $this->eventSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->userSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+
         $serialized = $this->serializer->serialize($obj);
 
-        $this->assertEquals('{"direct_message":{}}', $serialized);
+        $this->assertEquals('{}', $serialized);
+    }
+
+    /**
+     * @test
+     */
+    public function testIllegalSerialize()
+    {
+        $obj = \Mockery::mock(TwitterSerializable::class);
+
+        $this->eventTargetSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->eventSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+        $this->userSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(false);
+
+        $this->setExpectedException(\BadMethodCallException::class);
+
+        $this->serializer->serialize($obj);
     }
 
     /**
@@ -148,6 +193,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
         $tweet = $this->getTweet();
 
         $this->eventTargetSerializer->shouldReceive('unserialize')->andReturn($tweet)->once();
+
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(true);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
 
         $return = $this->serializer->unserialize(json_encode($obj));
 
@@ -166,6 +219,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->directMessageSerializer->shouldReceive('unserialize')->andReturn($dm)->once();
 
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(true);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
+
         $return = $this->serializer->unserialize(json_encode($obj));
 
         $this->assertEquals($dm, $return);
@@ -182,6 +243,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
         $event = $this->getEvent();
 
         $this->eventSerializer->shouldReceive('unserialize')->andReturn($event)->once();
+
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(true);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
 
         $return = $this->serializer->unserialize(json_encode($obj));
 
@@ -200,6 +269,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->friendsSerializer->shouldReceive('unserialize')->andReturn($friends)->once();
 
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(true);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
+
         $return = $this->serializer->unserialize(json_encode($obj));
 
         $this->assertEquals($friends, $return);
@@ -216,6 +293,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
         $disconnect = $this->getDisconnect();
 
         $this->disconnectSerializer->shouldReceive('unserialize')->andReturn($disconnect)->once();
+
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(true);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
 
         $return = $this->serializer->unserialize(json_encode($obj));
 
@@ -234,6 +319,14 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->deleteSerializer->shouldReceive('unserialize')->andReturn($delete)->once();
 
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(true);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
+
         $return = $this->serializer->unserialize(json_encode($obj));
 
         $this->assertEquals($delete, $return);
@@ -251,9 +344,35 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->userSerializer->shouldReceive('unserialize')->andReturn($user)->once();
 
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(true);
+
         $return = $this->serializer->unserialize(json_encode($obj));
 
         $this->assertEquals($user, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function testIllegalUnserialize()
+    {
+        $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->eventSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->friendsSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->disconnectSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->deleteSerializer->shouldReceive('canUnserialize')->andReturn(false);
+        $this->userSerializer->shouldReceive('canUnserialize')->andReturn(false);
+
+        $this->setExpectedException(\BadMethodCallException::class);
+
+        $this->serializer->unserialize('');
     }
 
     /**

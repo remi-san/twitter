@@ -68,7 +68,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterEntities)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterEntities');
         }
 
@@ -132,6 +132,10 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         // Hashtags
         $hashtags = [];
         if (isset($obj->hashtags)) {
@@ -181,6 +185,24 @@ class TwitterEntitiesSerializer implements TwitterSerializer
         }
 
         return TwitterEntities::create($hashtags, $userMentions, $urls, $media, $symbols, $extendedEntities);
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterEntities;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return isset($object->hashtags) ||  isset($object->symbols) ||  isset($object->urls) || isset($object->user_mentions) || isset($object->media) || isset($object->extended_entities);
     }
 
     /**

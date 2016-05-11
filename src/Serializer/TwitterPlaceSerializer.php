@@ -14,7 +14,7 @@ class TwitterPlaceSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterPlace)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterPlace');
         }
 
@@ -28,7 +28,29 @@ class TwitterPlaceSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         return TwitterPlace::create();
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterPlace;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return $object !== null;
     }
 
     /**

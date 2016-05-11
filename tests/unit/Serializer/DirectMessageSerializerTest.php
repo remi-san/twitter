@@ -82,7 +82,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $obj->shouldReceive('getRecipient')->andReturn($recipient);
         $obj->shouldReceive('getDate')->andReturn($date);
 
-        $serialized = $this->serializer->serialize($obj);
+        $serialized = $this->serializer->serialize($obj)->direct_message;
 
         $this->assertEquals($id, $serialized->id);
         $this->assertEquals($senderObj, $serialized->sender);
@@ -120,7 +120,10 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $dmObj->created_at = '2015-01-01 12:00:00';
         $dmObj->entities = $entitiesObj;
 
-        $dm = $this->serializer->unserialize($dmObj);
+        $superDmObject = new \stdClass();
+        $superDmObject->direct_message = $dmObj;
+
+        $dm = $this->serializer->unserialize($superDmObject);
 
         $this->assertEquals((string) $dmObj->id, (string) $dm->getId());
         $this->assertEquals($sender, $dm->getSender());
@@ -128,6 +131,18 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($dmObj->text, $dm->getText());
         $this->assertEquals(new \DateTime($dmObj->created_at), $dm->getDate());
         $this->assertEquals($entities, $dm->getEntities());
+    }
+
+    /**
+     * @test
+     */
+    public function testIllegalUnserialize()
+    {
+        $obj = new \stdClass();
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->serializer->unserialize($obj);
     }
 
     /**

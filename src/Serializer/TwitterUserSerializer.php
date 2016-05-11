@@ -16,7 +16,7 @@ class TwitterUserSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterUser)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterUser');
         }
 
@@ -41,6 +41,10 @@ class TwitterUserSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         return TwitterUser::create(
             $obj->id,
             $obj->screen_name,
@@ -50,6 +54,27 @@ class TwitterUserSerializer implements TwitterSerializer
             $obj->profile_background_image_url,
             $obj->profile_background_image_url_https
         );
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterUser;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return isset($object->id) &&
+            isset($object->screen_name) &&
+            isset($object->name) &&
+            isset($object->lang);
     }
 
     /**

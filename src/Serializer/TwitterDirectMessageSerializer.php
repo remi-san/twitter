@@ -38,7 +38,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterDirectMessage)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterDirectMessage');
         }
 
@@ -50,16 +50,24 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
         $dm->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
         $dm->entities = $object->getEntities()?$this->twitterEntitiesSerializer->serialize($object->getEntities()):null;
 
-        return $dm;
+        $dmObject = new \stdClass();
+        $dmObject->direct_message = $dm;
+
+        return $dmObject;
     }
 
     /**
-     * @param  \stdClass $dm
+     * @param  \stdClass $directMessage
      * @param  array     $context
      * @return TwitterDirectMessage
      */
-    public function unserialize($dm, array $context = [])
+    public function unserialize($directMessage, array $context = [])
     {
+        if (!$this->canUnserialize($directMessage)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
+        $dm = $directMessage->direct_message;
         return TwitterDirectMessage::create(
             TwitterMessageId::create($dm->id),
             $this->userSerializer->unserialize($dm->sender),
@@ -68,6 +76,24 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             new \DateTimeImmutable($dm->created_at),
             $dm->entities?$this->twitterEntitiesSerializer->unserialize($dm->entities):null
         );
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterDirectMessage;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return (isset($object->direct_message));
     }
 
     /**

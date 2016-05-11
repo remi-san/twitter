@@ -4,7 +4,6 @@ namespace Twitter\Test\Serializer;
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TweetSerializer;
-use Twitter\Serializer\TwitterCoordinatesSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
@@ -15,7 +14,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     use TwitterObjectMocker, TwitterSerializerMocker;
 
     /**
-     * @var TwitterCoordinatesSerializer
+     * @var TwitterEventTargetSerializer
      */
     private $serializer;
 
@@ -43,6 +42,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $user = $this->getTwitterUser(42, 'douglas');
 
         $this->setExpectedException('\\InvalidArgumentException');
+        $this->tweetSerializer->shouldReceive('canSerialize')->with($user)->andReturn(false);
 
         $this->serializer->serialize($user);
     }
@@ -60,6 +60,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $tweet = $this->getTweet();
 
         $this->tweetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj)->once();
+        $this->tweetSerializer->shouldReceive('canSerialize')->with($tweet)->andReturn(true);
 
         $this->serializer->serialize($tweet);
     }
@@ -72,6 +73,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\\BadMethodCallException');
 
         $obj = \Mockery::mock('\\Twitter\\TwitterEventTarget');
+        $this->tweetSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(true);
 
         $this->serializer->serialize($obj);
     }
@@ -89,6 +91,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $tweet = Tweet::create(TwitterMessageId::create(1), TwitterUser::create(), 'text', 'fr', new \DateTime());
 
         $this->tweetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
+        $this->tweetSerializer->shouldReceive('canUnserialize')->with($tweetObj)->andReturn(true);
 
         $eventTarget = $this->serializer->unserialize($tweetObj);
 
@@ -101,6 +104,8 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     public function testUnserializeNull()
     {
         $obj = new \stdClass();
+
+        $this->tweetSerializer->shouldReceive('canUnserialize')->with($obj)->andReturn(false);
 
         $eventTarget = $this->serializer->unserialize($obj);
 

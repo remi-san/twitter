@@ -54,7 +54,7 @@ class TweetSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof Tweet)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of Tweet');
         }
 
@@ -95,6 +95,10 @@ class TweetSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
+
         return Tweet::create(
             TwitterMessageId::create($obj->id),
             $this->userSerializer->unserialize($obj->user),
@@ -115,6 +119,25 @@ class TweetSerializer implements TwitterSerializer
             $obj->source,
             (isset($obj->retweeted_status)) ? $this->unserialize($obj->retweeted_status) : null
         );
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof Tweet;
+    }
+
+    /**
+     * @param  \stdClass $obj
+     * @param  array $context
+     * @return boolean
+     */
+    public function canUnserialize($obj, array $context = [])
+    {
+        return isset($obj->text) && isset($obj->user);
     }
 
     /**

@@ -14,7 +14,7 @@ class TwitterDeleteSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!($object instanceof TwitterDelete)) {
+        if (!$this->canSerialize($object)) {
             throw new \InvalidArgumentException('$object must be an instance of TwitterDelete');
         }
 
@@ -52,8 +52,11 @@ class TwitterDeleteSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        $d = $obj->delete;
+        if (!$this->canUnserialize($obj)) {
+            throw new \InvalidArgumentException('$object is not unserializable');
+        }
 
+        $d = $obj->delete;
         if (isset($d->status)) {
             $ref = $d->status;
             $type = TwitterDelete::TWEET;
@@ -68,6 +71,24 @@ class TwitterDeleteSerializer implements TwitterSerializer
             $ref->user_id,
             (new \DateTimeImmutable())->setTimestamp((int) floor($d->timestamp_ms / 1000))?:new \DateTimeImmutable()
         );
+    }
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object)
+    {
+        return $object instanceof TwitterDelete;
+    }
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object)
+    {
+        return isset($object->delete);
     }
 
     /**

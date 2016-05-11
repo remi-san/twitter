@@ -64,6 +64,16 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function testIllegalUnserialize()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->serializer->unserialize(null);
+    }
+
+    /**
+     * @test
+     */
     public function testStaticBuilder()
     {
         $serializer = TwitterPlaceSerializer::build();

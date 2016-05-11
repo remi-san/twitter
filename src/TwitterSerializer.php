@@ -16,4 +16,16 @@ interface TwitterSerializer
      * @return TwitterSerializable
      */
     public function unserialize($obj, array $context = []);
+
+    /**
+     * @param  TwitterSerializable $object
+     * @return boolean
+     */
+    public function canSerialize(TwitterSerializable $object);
+
+    /**
+     * @param  \stdClass $object
+     * @return boolean
+     */
+    public function canUnserialize($object);
 }
