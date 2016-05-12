@@ -24,7 +24,7 @@ interface TwitterSerializer
     public function canSerialize(TwitterSerializable $object);
 
     /**
-     * @param  \stdClass $object
+     * @param  \stdClass|array $object
      * @return boolean
      */
     public function canUnserialize($object);

@@ -46,7 +46,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
     }
 
     /**
-     * @param  \stdClass $object
+     * @param  array $object
      * @return boolean
      */
     public function canUnserialize($object)
