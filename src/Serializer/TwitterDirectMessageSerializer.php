@@ -42,6 +42,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterDirectMessage');
         }
 
+        /* @var TwitterDirectMessage $object */
         $dm = new \stdClass();
         $dm->id = (string)$object->getId();
         $dm->sender = $this->userSerializer->serialize($object->getSender());

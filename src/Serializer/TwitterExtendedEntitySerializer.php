@@ -50,6 +50,7 @@ class TwitterExtendedEntitySerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterExtendedEntity');
         }
 
+        /* @var TwitterExtendedEntity $object */
         $extendedEntity = new \stdClass();
         $extendedEntity->id = $object->getId();
         $extendedEntity->media_url = $object->getMediaUrl();

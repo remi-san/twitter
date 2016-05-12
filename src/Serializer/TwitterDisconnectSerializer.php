@@ -18,6 +18,7 @@ class TwitterDisconnectSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterDisconnect');
         }
 
+        /* @var TwitterDisconnect $object */
         $obj = new \stdClass();
         $obj->code = $object->getCode();
         $obj->stream_name = $object->getStreamName();

@@ -33,6 +33,7 @@ class TwitterUrlSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterUrl');
         }
 
+        /* @var TwitterUrl $object */
         $url = new \stdClass();
         $url->url = $object->getUrl();
         $url->display_url = $object->getDisplayUrl();

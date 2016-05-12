@@ -18,6 +18,7 @@ class TwitterDeleteSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterDelete');
         }
 
+        /* @var TwitterDelete $object */
         $refObject = new \stdClass();
         $refObject->id = $object->getId();
         $refObject->user_id = $object->getUserId();

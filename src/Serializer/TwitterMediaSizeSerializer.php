@@ -20,6 +20,7 @@ class TwitterMediaSizeSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterMediaSize');
         }
 
+        /* @var TwitterMediaSize $object */
         $size = new \stdClass();
         $size->w = $object->getWidth();
         $size->h = $object->getHeight();

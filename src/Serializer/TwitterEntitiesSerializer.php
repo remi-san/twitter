@@ -72,6 +72,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterEntities');
         }
 
+        /* @var TwitterEntities $object */
         $entities = new \stdClass();
 
         // Hashtags

@@ -42,6 +42,7 @@ class TwitterMediaSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterMedia');
         }
 
+        /* @var TwitterMedia $object */
         $media = new \stdClass();
         $media->id = $object->getId();
         $media->media_url = $object->getMediaUrl();

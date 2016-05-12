@@ -18,6 +18,7 @@ class TwitterFriendsSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterFriends');
         }
 
+        /* @var TwitterFriends $object */
         $friends = new \stdClass();
         $friends->friends = $object->getFriends();
 

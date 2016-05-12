@@ -50,7 +50,7 @@ class TweetSerializer implements TwitterSerializer
 
     /**
      * @param  TwitterSerializable $object
-     * @return array
+     * @return \stdClass
      */
     public function serialize(TwitterSerializable $object)
     {
@@ -58,6 +58,7 @@ class TweetSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of Tweet');
         }
 
+        /* @var Tweet $object */
         $tweet = new \stdClass();
         $tweet->id = (string) $object->getId();
         $tweet->user = $this->userSerializer->serialize($object->getSender());

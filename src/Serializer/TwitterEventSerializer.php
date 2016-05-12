@@ -39,6 +39,7 @@ class TwitterEventSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterEvent');
         }
 
+        /* @var TwitterEvent $object */
         $event = new \stdClass();
         $event->event = $object->getType();
         $event->source = $this->userSerializer->serialize($object->getSource());

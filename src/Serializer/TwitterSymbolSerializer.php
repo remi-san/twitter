@@ -33,6 +33,7 @@ class TwitterSymbolSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterSymbol');
         }
 
+        /* @var TwitterSymbol $object */
         $symbol = new \stdClass();
         $symbol->text = $object->getText();
         $symbol->indices = $this->entityIndicesSerializer->serialize($object->getIndices());

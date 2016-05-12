@@ -20,6 +20,7 @@ class TwitterUserSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterUser');
         }
 
+        /* @var TwitterUser $object */
         $user = new \stdClass();
         $user->id = $object->getId();
         $user->screen_name = $object->getScreenName();

@@ -18,6 +18,7 @@ class TwitterPlaceSerializer implements TwitterSerializer
             throw new \InvalidArgumentException('$object must be an instance of TwitterPlace');
         }
 
+        /* @var TwitterPlace $object */
         return new \stdClass();
     }
 
