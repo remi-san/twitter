@@ -10,7 +10,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
 {
     /**
      * @param  TwitterSerializable $object
-     * @return array
+     * @return integer[]
      */
     public function serialize(TwitterSerializable $object)
     {
