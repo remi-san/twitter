@@ -110,6 +110,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $entitiesObj = new \stdClass();
         $entitiesObj->type = 'entities';
         $entities = $this->getTwitterEntities();
+        $this->entitiesSerializer->shouldReceive('canUnserialize')->with($entitiesObj)->andReturn(true);
         $this->entitiesSerializer->shouldReceive('unserialize')->with($entitiesObj)->andReturn($entities);
 
         $dmObj = new \stdClass();
