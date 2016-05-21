@@ -88,7 +88,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializeWithUnsupportedObject()
     {
-        $obj = $this->getUserMention('user');
+        $obj = $this->getUserMention(null, 'user');
 
         $this->setExpectedException('\\BadMethodCallException');
 

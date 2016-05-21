@@ -21,7 +21,7 @@ class EntitiesTest extends \PHPUnit_Framework_TestCase
         $hashtags = array($this->getHashTag('ht'));
         $symbols = array($this->getSymbol());
         $urls = array($this->getUrl());
-        $userMentions = array($this->getUserMention('um'));
+        $userMentions = array($this->getUserMention(null, 'um'));
         $media = array($this->getMedia());
         $extendedEntities = array($this->getExtendedEntity());
 

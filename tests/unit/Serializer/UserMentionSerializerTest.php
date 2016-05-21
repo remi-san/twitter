@@ -56,8 +56,7 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
         $indicesObj = new \stdClass();
         $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
 
-        $obj = $this->getUserMention($name);
-        $obj->shouldReceive('getId')->andReturn($id);
+        $obj = $this->getUserMention(42, $name);
         $obj->shouldReceive('getIndices')->andReturn($indices);
 
         $serialized = $this->serializer->serialize($obj);

@@ -159,12 +159,14 @@ trait TwitterObjectMocker
     }
 
     /**
-     * @param  string $userName
+     * @param string $id
+     * @param string $userName
      * @return TwitterUserMention
      */
-    public function getUserMention($userName = null)
+    public function getUserMention($id = null, $userName = null)
     {
         $twitterUserMention = \Mockery::mock('\\Twitter\\Object\\TwitterUserMention');
+        $twitterUserMention->shouldReceive('getId')->andReturn($id);
         $twitterUserMention->shouldReceive('getName')->andReturn($userName);
         $twitterUserMention->shouldReceive('getScreenName')->andReturn($userName);
         $twitterUserMention->shouldReceive('__toString')->andReturn('@'.$userName);

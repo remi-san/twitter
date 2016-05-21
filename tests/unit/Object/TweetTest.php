@@ -112,7 +112,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
         $hashtag = $this->getHashTag($hashtagText);
 
         $userName = 'roger';
-        $userMention = $this->getUserMention($userName);
+        $userMention = $this->getUserMention(null, $userName);
 
         $id = TwitterMessageId::create(42);
         $coreText = 'message';
