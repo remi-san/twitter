@@ -4,6 +4,7 @@ namespace Twitter\Serializer;
 
 use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterDirectMessage;
+use Twitter\Object\TwitterEntities;
 use Twitter\TwitterMessageId;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -76,7 +77,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
             $dm->text,
             new \DateTimeImmutable($dm->created_at),
             $this->twitterEntitiesSerializer->canUnserialize($dm->entities) ?
-            $this->twitterEntitiesSerializer->unserialize($dm->entities) : null
+            $this->twitterEntitiesSerializer->unserialize($dm->entities) : TwitterEntities::create()
         );
     }
 

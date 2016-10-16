@@ -4,6 +4,7 @@ namespace Twitter\Serializer;
 
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterDate;
+use Twitter\Object\TwitterEntities;
 use Twitter\TwitterMessageId;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -106,7 +107,7 @@ class TweetSerializer implements TwitterSerializer
             $obj->text,
             $obj->lang,
             new \DateTimeImmutable($obj->created_at),
-            $obj->entities?$this->twitterEntitiesSerializer->unserialize($obj->entities):null,
+            $obj->entities?$this->twitterEntitiesSerializer->unserialize($obj->entities):TwitterEntities::create(),
             $obj->coordinates?$this->coordinatesSerializer->unserialize($obj->coordinates):null,
             $obj->place?$this->placeSerializer->unserialize($obj->place):null,
             $obj->in_reply_to_status_id,
