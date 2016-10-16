@@ -66,6 +66,10 @@ class TwitterType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if ($value === null) {
+            return null;
+        }
+
         if (!$value instanceof TwitterSerializable) {
             throw new \InvalidArgumentException('Value is not serializable!');
         }
