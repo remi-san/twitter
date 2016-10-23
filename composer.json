@@ -19,7 +19,8 @@
         "Mockery/Mockery": "~0.9",
         "friendsofphp/php-cs-fixer": "^1.10",
         "squizlabs/php_codesniffer": "~2.0",
-        "doctrine/orm": "~2.4"
+        "doctrine/orm": "~2.4",
+        "fzaninotto/faker": "^1.6"
     },
     "suggest": {
         "doctrine/orm": "Use the twitter types in doctrine"

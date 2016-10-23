@@ -1,10 +1,29 @@
 <?php
-namespace Twitter\Test\Object;
+namespace Twitter\Test\Object\Doctrine;
 
+use Faker\Factory;
 use Twitter\Object\TwitterCoordinates;
 
 class CoordinatesTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var float */
+    private $long;
+
+    /** @var float */
+    private $lat;
+
+    /** @var string */
+    private $type;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->long = $faker->longitude;
+        $this->lat = $faker->latitude;
+        $this->type = $faker->word;
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,14 +34,10 @@ class CoordinatesTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $long = 3.14;
-        $lat = 42;
-        $type = 'point';
+        $coordinates = TwitterCoordinates::create($this->long, $this->lat, $this->type);
 
-        $coordinates = TwitterCoordinates::create($long, $lat, $type);
-
-        $this->assertEquals($long, $coordinates->getLongitude());
-        $this->assertEquals($lat, $coordinates->getLatitude());
-        $this->assertEquals($type, $coordinates->getType());
+        $this->assertEquals($this->long, $coordinates->getLongitude());
+        $this->assertEquals($this->lat, $coordinates->getLatitude());
+        $this->assertEquals($this->type, $coordinates->getType());
     }
 }

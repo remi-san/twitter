@@ -56,6 +56,10 @@ class TwitterType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
+        if ($value === null) {
+            return null;
+        }
+
         return $this->getSerializer()->unserialize($value);
     }
 
