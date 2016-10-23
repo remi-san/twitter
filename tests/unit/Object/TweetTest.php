@@ -1,37 +1,126 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
+use Faker\Generator;
+use Mockery\Mock;
 use Twitter\Object\Tweet;
+use Twitter\Object\TwitterCoordinates;
 use Twitter\Object\TwitterEntities;
+use Twitter\Object\TwitterHashtag;
+use Twitter\Object\TwitterPlace;
 use Twitter\Object\TwitterUser;
-use Twitter\Test\Mock\TwitterObjectMocker;
+use Twitter\Object\TwitterUserMention;
 use Twitter\TwitterMessageId;
 
 class TweetTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker;
+    /** @var Generator */
+    private $faker;
 
-    /**
-     * @var TwitterUser
-     */
+    /** @var TwitterMessageId */
+    private $id;
+
+    /** @var string */
+    private $lang;
+
+    /** @var string */
+    private $userName;
+
+    /** @var string */
+    private $hashtagText;
+
+    /** @var string */
+    private $text;
+
+    /** @var string */
+    private $complexText;
+
+    /** @var \DateTimeImmutable */
+    private $date;
+
+    /** @var TwitterCoordinates */
+    private $coordinates;
+
+    /** @var TwitterPlace */
+    private $place;
+
+    /** @var int */
+    private $inReplyToStatusId;
+
+    /** @var int */
+    private $inReplyToUserId;
+
+    /** @var string */
+    private $inReplyToScreenName;
+
+    /** @var bool */
+    private $retweeted;
+
+    /** @var int */
+    private $retweetCount;
+
+    /** @var bool */
+    private $favorited;
+
+    /** @var int */
+    private $favoriteCount;
+
+    /** @var bool */
+    private $truncated;
+
+    /** @var string */
+    private $source;
+
+    /** @var Tweet */
+    private $retweetedStatus;
+
+    /** @var TwitterUser */
     private $sender;
 
-    /**
-     * @var TwitterUser
-     */
+    /** @var TwitterUser */
     private $recipient;
 
-    /**
-     * @var TwitterEntities
-     */
-    private $entities;
+    /** @var TwitterHashtag | Mock */
+    private $hashtag;
 
+    /** @var TwitterUserMention | Mock */
+    private $userMention;
+
+    /** @var TwitterEntities | Mock */
+    private $entities;
 
     public function setUp()
     {
-        $this->sender    = $this->getTwitterUser(42, 'Douglas');
-        $this->recipient = $this->getTwitterUser(666, 'Satan');
-        $this->entities  = $this->getTwitterEntities();
+        $this->faker = Factory::create();
+
+        $this->id = TwitterMessageId::create($this->faker->uuid);
+        $this->lang = $this->faker->countryISOAlpha3;
+        $this->userName = $this->faker->userName;
+        $this->hashtagText = $this->faker->word;
+        $this->text = $this->faker->text();
+        $this->complexText = '@' . $this->userName . ' ' . $this->text . ' #' . $this->hashtagText;
+        $this->date = new \DateTimeImmutable();
+
+        $this->coordinates = \Mockery::mock(TwitterCoordinates::class);
+        $this->place = \Mockery::mock(TwitterPlace::class);
+        $this->inReplyToStatusId = $this->faker->randomNumber();
+        $this->inReplyToUserId = $this->faker->randomNumber();
+        $this->inReplyToScreenName = $this->faker->userName;
+        $this->retweeted = $this->faker->boolean();
+        $this->retweetCount = $this->faker->randomNumber();
+        $this->favorited = $this->faker->boolean();
+        $this->favoriteCount = $this->faker->randomNumber();
+        $this->truncated = $this->faker->boolean();
+        $this->source = null;
+        $this->retweetedStatus = \Mockery::mock(Tweet::class);
+
+        $this->hashtag = \Mockery::mock(TwitterHashtag::class);
+        $this->userMention = \Mockery::mock(TwitterUserMention::class);
+
+        $this->sender = \Mockery::mock(TwitterUser::class);
+        $this->recipient = \Mockery::mock(TwitterUser::class);
+        $this->entities = \Mockery::mock(TwitterEntities::class);
     }
 
     public function tearDown()
@@ -42,64 +131,47 @@ class TweetTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testTweetConstructor()
+    public function testConstructor()
     {
-        $id = TwitterMessageId::create(42);
-        $text = 'Message';
-        $lang = 'fr';
-        $createdAt = new \DateTime();
-        $coordinates = null;
-        $place = null;
-        $inReplyToStatusId = 314;
-        $inReplyToUserId = $this->recipient->getId();
-        $inReplyToScreenName = $this->recipient->getScreenName();
-        $retweeted = false;
-        $retweetCount = 0;
-        $favorited = false;
-        $favoriteCount = false;
-        $truncated = false;
-        $source = null;
-        $retweetedStatus = $this->getTweet();
-
         $tweet = Tweet::create(
-            $id,
+            $this->id,
             $this->sender,
-            $text,
-            $lang,
-            $createdAt,
+            $this->text,
+            $this->lang,
+            $this->date,
             $this->entities,
-            $coordinates,
-            $place,
-            $inReplyToStatusId,
-            $inReplyToUserId,
-            $inReplyToScreenName,
-            $retweeted,
-            $retweetCount,
-            $favorited,
-            $favoriteCount,
-            $truncated,
-            $source,
-            $retweetedStatus
+            $this->coordinates,
+            $this->place,
+            $this->inReplyToStatusId,
+            $this->inReplyToUserId,
+            $this->inReplyToScreenName,
+            $this->retweeted,
+            $this->retweetCount,
+            $this->favorited,
+            $this->favoriteCount,
+            $this->truncated,
+            $this->source,
+            $this->retweetedStatus
         );
 
-        $this->assertEquals($id, $tweet->getId());
+        $this->assertEquals($this->id, $tweet->getId());
         $this->assertEquals($this->sender, $tweet->getSender());
-        $this->assertEquals($text, $tweet->getText());
-        $this->assertEquals($lang, $tweet->getLang());
+        $this->assertEquals($this->text, $tweet->getText());
+        $this->assertEquals($this->lang, $tweet->getLang());
         $this->assertEquals($this->entities, $tweet->getEntities());
-        $this->assertEquals($coordinates, $tweet->getCoordinates());
-        $this->assertEquals($place, $tweet->getPlace());
-        $this->assertEquals($inReplyToStatusId, $tweet->getInReplyToStatusId());
-        $this->assertEquals($inReplyToUserId, $tweet->getInReplyToUserId());
-        $this->assertEquals($inReplyToScreenName, $tweet->getInReplyToScreenName());
-        $this->assertEquals($retweeted, $tweet->isRetweeted());
-        $this->assertEquals($retweetCount, $tweet->getRetweetCount());
-        $this->assertEquals($favorited, $tweet->isFavorited());
-        $this->assertEquals($favoriteCount, $tweet->getFavoriteCount());
-        $this->assertEquals($truncated, $tweet->isTruncated());
-        $this->assertEquals($source, $tweet->getSource());
-        $this->assertEquals($createdAt, $tweet->getDate());
-        $this->assertEquals($retweetedStatus, $tweet->getRetweetedStatus());
+        $this->assertEquals($this->coordinates, $tweet->getCoordinates());
+        $this->assertEquals($this->place, $tweet->getPlace());
+        $this->assertEquals($this->inReplyToStatusId, $tweet->getInReplyToStatusId());
+        $this->assertEquals($this->inReplyToUserId, $tweet->getInReplyToUserId());
+        $this->assertEquals($this->inReplyToScreenName, $tweet->getInReplyToScreenName());
+        $this->assertEquals($this->retweeted, $tweet->isRetweeted());
+        $this->assertEquals($this->retweetCount, $tweet->getRetweetCount());
+        $this->assertEquals($this->favorited, $tweet->isFavorited());
+        $this->assertEquals($this->favoriteCount, $tweet->getFavoriteCount());
+        $this->assertEquals($this->truncated, $tweet->isTruncated());
+        $this->assertEquals($this->source, $tweet->getSource());
+        $this->assertEquals($this->date, $tweet->getDate());
+        $this->assertEquals($this->retweetedStatus, $tweet->getRetweetedStatus());
         $this->assertEquals('Tweet ['.$tweet->getId().']', $tweet->__toString());
     }
 
@@ -108,34 +180,35 @@ class TweetTest extends \PHPUnit_Framework_TestCase
      */
     public function testEntities()
     {
-        $hashtagText = 'plop';
-        $hashtag = $this->getHashTag($hashtagText);
-
-        $userName = 'roger';
-        $userMention = $this->getUserMention(null, $userName);
-
-        $id = TwitterMessageId::create(42);
-        $coreText = 'message';
-        $text = '@'.$userName.' '.$coreText.' #'.$hashtagText;
-        $lang = 'fr';
-        $createdAt = new \DateTime();
-
-        $this->entities->shouldReceive('getHashtags')->withNoArgs()->andReturn(array($hashtag));
-        $this->entities->shouldReceive('getUserMentions')->withNoArgs()->andReturn(array($userMention));
+        $this->messageContainsHashtag();
+        $this->messageContainsUserMention();
 
         $tweet = Tweet::create(
-            $id,
+            $this->id,
             $this->sender,
-            $text,
-            $lang,
-            $createdAt,
+            $this->complexText,
+            $this->lang,
+            $this->date,
             $this->entities
         );
 
-        $this->assertEquals(array('#'.$hashtagText), $tweet->getFormattedHashtags());
-        $this->assertEquals(array('@'.$userName), $tweet->getFormattedUserMentions());
-        $this->assertEquals($coreText, $tweet->getStrippedText());
-        $this->assertTrue($tweet->containsHashtag($hashtagText));
-        $this->assertFalse($tweet->containsHashtag('dummy'));
+        $this->assertEquals(array('#'.$this->hashtagText), $tweet->getFormattedHashtags());
+        $this->assertEquals(array('@'.$this->userName), $tweet->getFormattedUserMentions());
+        $this->assertEquals($this->text, $tweet->getStrippedText());
+        $this->assertTrue($tweet->containsHashtag($this->hashtagText));
+        $this->assertFalse($tweet->containsHashtag($this->faker->word));
+    }
+
+    private function messageContainsHashtag()
+    {
+        $this->hashtag->shouldReceive('getText')->andReturn($this->hashtagText);
+        $this->hashtag->shouldReceive('__toString')->andReturn('#' . $this->hashtagText);
+        $this->entities->shouldReceive('getHashtags')->withNoArgs()->andReturn(array($this->hashtag));
+    }
+
+    private function messageContainsUserMention()
+    {
+        $this->userMention->shouldReceive('__toString')->andReturn('@' . $this->userName);
+        $this->entities->shouldReceive('getUserMentions')->withNoArgs()->andReturn(array($this->userMention));
     }
 }
