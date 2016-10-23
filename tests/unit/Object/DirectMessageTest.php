@@ -93,7 +93,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->text, $dm->getText());
         $this->assertEquals($this->date, $dm->getDate());
         $this->assertEquals($this->entities, $dm->getEntities());
-        $this->assertEquals('DM ['.$this->id.']', $dm->__toString());
+        $this->assertEquals('DM ['.$this->id.']', (string) $dm);
     }
 
     /**

@@ -1,10 +1,33 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
 use Twitter\Object\TwitterMediaSize;
 
 class MediaSizeTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var string */
+    private $name;
+
+    /** @var int */
+    private $width;
+
+    /** @var int */
+    private $height;
+
+    /** @var string */
+    private $resize;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->name = $faker->word;
+        $this->width = $faker->randomNumber();
+        $this->height = $faker->randomNumber();
+        $this->resize = $faker->boolean() ? 'yes' : 'no';
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,16 +38,11 @@ class MediaSizeTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $name = 'video';
-        $width = 800;
-        $height = 600;
-        $resize = 'no';
+        $mediaSize = TwitterMediaSize::create($this->name, $this->width, $this->height, $this->resize);
 
-        $mediaSize = TwitterMediaSize::create($name, $width, $height, $resize);
-
-        $this->assertEquals($name, $mediaSize->getName());
-        $this->assertEquals($width, $mediaSize->getWidth());
-        $this->assertEquals($height, $mediaSize->getHeight());
-        $this->assertEquals($resize, $mediaSize->getResize());
+        $this->assertEquals($this->name, $mediaSize->getName());
+        $this->assertEquals($this->width, $mediaSize->getWidth());
+        $this->assertEquals($this->height, $mediaSize->getHeight());
+        $this->assertEquals($this->resize, $mediaSize->getResize());
     }
 }

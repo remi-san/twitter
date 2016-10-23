@@ -1,10 +1,29 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
 use Twitter\Object\TwitterVariantMedia;
 
 class VariantMediaTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var string */
+    private $contentType;
+
+    /** @var string */
+    private $url;
+
+    /** @var float */
+    private $bitrate;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->contentType = $faker->mimeType;
+        $this->url = $faker->url;
+        $this->bitrate = $faker->randomFloat();
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,14 +34,14 @@ class VariantMediaTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $contentType = 'media/mpeg';
-        $url = 'http://med.ia/video.mpg';
-        $bitrate = 12.4;
+        $variantMedia = TwitterVariantMedia::create(
+            $this->contentType,
+            $this->url,
+            $this->bitrate
+        );
 
-        $variantMedia = TwitterVariantMedia::create($contentType, $url, $bitrate);
-
-        $this->assertEquals($contentType, $variantMedia->getContentType());
-        $this->assertEquals($url, $variantMedia->getUrl());
-        $this->assertEquals($bitrate, $variantMedia->getBitrate());
+        $this->assertEquals($this->contentType, $variantMedia->getContentType());
+        $this->assertEquals($this->url, $variantMedia->getUrl());
+        $this->assertEquals($this->bitrate, $variantMedia->getBitrate());
     }
 }

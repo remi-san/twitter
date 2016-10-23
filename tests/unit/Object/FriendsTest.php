@@ -1,10 +1,21 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
 use Twitter\Object\TwitterFriends;
 
 class FriendsTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var int[] */
+    private $list;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->list = [$faker->randomNumber()];
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,11 +26,9 @@ class FriendsTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $list = array('42');
+        $friends = TwitterFriends::create($this->list);
 
-        $friends = TwitterFriends::create($list);
-
-        $this->assertEquals($list, $friends->getFriends());
-        $this->assertEquals('Friends List', $friends->__toString());
+        $this->assertEquals($this->list, $friends->getFriends());
+        $this->assertEquals('Friends List', (string) $friends);
     }
 }

@@ -1,10 +1,25 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
 use Twitter\Object\TwitterEntityIndices;
 
 class EntityIndicesTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var int */
+    private $from;
+
+    /** @var int */
+    private $to;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->from = $faker->randomNumber();
+        $this->to = $faker->numberBetween($this->from);
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,12 +30,9 @@ class EntityIndicesTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $from = 0;
-        $to = 42;
+        $entityIndices = TwitterEntityIndices::create($this->from, $this->to);
 
-        $entityIndices = TwitterEntityIndices::create($from, $to);
-
-        $this->assertEquals($from, $entityIndices->getFrom());
-        $this->assertEquals($to, $entityIndices->getTo());
+        $this->assertEquals($this->from, $entityIndices->getFrom());
+        $this->assertEquals($this->to, $entityIndices->getTo());
     }
 }

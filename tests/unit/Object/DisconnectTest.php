@@ -1,10 +1,29 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
 use Twitter\Object\TwitterDisconnect;
 
 class DisconnectTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var string */
+    private $code;
+
+    /** @var string */
+    private $streamName;
+
+    /** @var string */
+    private $reason;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->code = $faker->word;
+        $this->streamName = $faker->word;
+        $this->reason = $faker->text();
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,15 +34,11 @@ class DisconnectTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $code = 'code';
-        $streamName = 'stream';
-        $reason = 'reason';
+        $disconnect = TwitterDisconnect::create($this->code, $this->streamName, $this->reason);
 
-        $disconnect = TwitterDisconnect::create($code, $streamName, $reason);
-
-        $this->assertEquals($code, $disconnect->getCode());
-        $this->assertEquals($streamName, $disconnect->getStreamName());
-        $this->assertEquals($reason, $disconnect->getReason());
-        $this->assertEquals('Disconnect ['.$streamName.']', $disconnect->__toString());
+        $this->assertEquals($this->code, $disconnect->getCode());
+        $this->assertEquals($this->streamName, $disconnect->getStreamName());
+        $this->assertEquals($this->reason, $disconnect->getReason());
+        $this->assertEquals('Disconnect ['.$this->streamName.']', (string) $disconnect);
     }
 }

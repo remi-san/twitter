@@ -1,12 +1,44 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
+use Mockery\Mock;
 use Twitter\Object\TwitterEvent;
-use Twitter\Test\Mock\TwitterObjectMocker;
+use Twitter\Object\TwitterUser;
+use Twitter\TwitterEventTarget;
 
 class EventTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker;
+    /** @var string */
+    private $type;
+
+    /** @var TwitterUser */
+    private $source;
+
+    /** @var TwitterUser */
+    private $target;
+
+    /** @var TwitterEventTarget | Mock */
+    private $object;
+
+    /** @var \DateTimeInterface */
+    private $date;
+
+    /** @var string */
+    private $stringifiedTargetObject;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->type = TwitterEvent::ACCESS_REVOKED;
+        $this->source = \Mockery::mock(TwitterUser::class);
+        $this->target = \Mockery::mock(TwitterUser::class);
+        $this->object = \Mockery::mock(TwitterEventTarget::class);
+        $this->date = new \DateTimeImmutable();
+
+        $this->stringifiedTargetObject = $faker->word;
+    }
 
     public function tearDown()
     {
@@ -18,20 +50,26 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $type = TwitterEvent::ACCESS_REVOKED;
-        $source = $this->getTwitterUser(42, 'douglas');
-        $target = $this->getTwitterUser(314, 'pi');
-        $object = $this->getTwitterEventTarget();
-        $object->shouldReceive('__toString')->andReturn('target');
-        $date = new \DateTime();
+        $event = TwitterEvent::create(
+            $this->type,
+            $this->source,
+            $this->target,
+            $this->object,
+            $this->date
+        );
 
-        $event = TwitterEvent::create($type, $source, $target, $object, $date);
+        $this->targetObjectWillStringify();
 
-        $this->assertEquals($type, $event->getType());
-        $this->assertEquals($source, $event->getSource());
-        $this->assertEquals($target, $event->getTarget());
-        $this->assertEquals($object, $event->getObject());
-        $this->assertEquals($date, $event->getDate());
-        $this->assertEquals('Event ['.$type.']: target', $event->__toString());
+        $this->assertEquals($this->type, $event->getType());
+        $this->assertEquals($this->source, $event->getSource());
+        $this->assertEquals($this->target, $event->getTarget());
+        $this->assertEquals($this->object, $event->getObject());
+        $this->assertEquals($this->date, $event->getDate());
+        $this->assertEquals('Event ['.$this->type.']: '.$this->stringifiedTargetObject, (string) $event);
+    }
+
+    private function targetObjectWillStringify()
+    {
+        $this->object->shouldReceive('__toString')->andReturn($this->stringifiedTargetObject);
     }
 }

@@ -1,12 +1,25 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
+use Twitter\Object\TwitterEntityIndices;
 use Twitter\Object\TwitterSymbol;
-use Twitter\Test\Mock\TwitterObjectMocker;
 
 class SymbolTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker;
+    /** @var string */
+    private $text;
+
+    /** @var TwitterEntityIndices */
+    private $indices;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->text = $faker->word;
+        $this->indices = \Mockery::mock(TwitterEntityIndices::class);
+    }
 
     public function tearDown()
     {
@@ -18,12 +31,9 @@ class SymbolTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $text = 'symbol';
-        $indices = $this->getIndices();
+        $symbol = TwitterSymbol::create($this->text, $this->indices);
 
-        $symbol = TwitterSymbol::create($text, $indices);
-
-        $this->assertEquals($text, $symbol->getText());
-        $this->assertEquals($indices, $symbol->getIndices());
+        $this->assertEquals($this->text, $symbol->getText());
+        $this->assertEquals($this->indices, $symbol->getIndices());
     }
 }

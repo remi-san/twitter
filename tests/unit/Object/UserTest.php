@@ -1,10 +1,45 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
 use Twitter\Object\TwitterUser;
 
 class UserTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var int */
+    private $id;
+
+    /** @var  */
+    private $name;
+
+    /** @var string */
+    private $screenName;
+
+    /** @var string */
+    private $lang;
+
+    /** @var string */
+    private $location;
+
+    /** @var string */
+    private $profileHttpUrl;
+
+    /** @var string */
+    private $profileHttpsUrl;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->id = $faker->randomNumber();
+        $this->name = $faker->userName;
+        $this->screenName = $faker->name;
+        $this->lang = $faker->countryISOAlpha3;
+        $this->location = $faker->country;
+        $this->profileHttpUrl = $faker->url;
+        $this->profileHttpsUrl = $faker->url;
+    }
+
     public function tearDown()
     {
         \Mockery::close();
@@ -15,23 +50,23 @@ class UserTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $id = 42;
-        $name = 'marcel';
-        $screenName = 'Duchamp';
-        $lang = 'fr';
-        $location = 'Paris';
-        $profileHttpUrl = 'http://my.profile.url';
-        $profileHttpsUrl = 'https://my.profile.url';
+        $user = TwitterUser::create(
+            $this->id,
+            $this->screenName,
+            $this->name,
+            $this->lang,
+            $this->location,
+            $this->profileHttpUrl,
+            $this->profileHttpsUrl
+        );
 
-        $user = TwitterUser::create($id, $screenName, $name, $lang, $location, $profileHttpUrl, $profileHttpsUrl);
-
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals($name, $user->getName());
-        $this->assertEquals($screenName, $user->getScreenName());
-        $this->assertEquals($lang, $user->getLang());
-        $this->assertEquals($location, $user->getLocation());
-        $this->assertEquals($profileHttpUrl, $user->getProfileImageUrl());
-        $this->assertEquals($profileHttpsUrl, $user->getProfileImageUrlHttps());
-        $this->assertEquals('@'.$screenName, $user->__toString());
+        $this->assertEquals($this->id, $user->getId());
+        $this->assertEquals($this->name, $user->getName());
+        $this->assertEquals($this->screenName, $user->getScreenName());
+        $this->assertEquals($this->lang, $user->getLang());
+        $this->assertEquals($this->location, $user->getLocation());
+        $this->assertEquals($this->profileHttpUrl, $user->getProfileImageUrl());
+        $this->assertEquals($this->profileHttpsUrl, $user->getProfileImageUrlHttps());
+        $this->assertEquals('@'.$this->screenName, (string) $user);
     }
 }

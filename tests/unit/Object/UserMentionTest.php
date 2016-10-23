@@ -1,12 +1,33 @@
 <?php
 namespace Twitter\Test\Object;
 
+use Faker\Factory;
+use Twitter\Object\TwitterEntityIndices;
 use Twitter\Object\TwitterUserMention;
-use Twitter\Test\Mock\TwitterObjectMocker;
 
 class UserMentionTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker;
+    /** @var int */
+    private $id;
+
+    /** @var string */
+    private $screenName;
+
+    /** @var string */
+    private $name;
+
+    /** @var TwitterEntityIndices */
+    private $indices;
+
+    public function setUp()
+    {
+        $faker = Factory::create();
+
+        $this->id = $faker->randomNumber();
+        $this->screenName = $faker->userName;
+        $this->name = $faker->name;
+        $this->indices = \Mockery::mock(TwitterEntityIndices::class);
+    }
 
     public function tearDown()
     {
@@ -18,17 +39,12 @@ class UserMentionTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $id = 42;
-        $screenName = 'douglas';
-        $name = 'Douglas Adams';
-        $indices = $this->getIndices();
+        $userMention = TwitterUserMention::create($this->id, $this->screenName, $this->name, $this->indices);
 
-        $userMention = TwitterUserMention::create($id, $screenName, $name, $indices);
-
-        $this->assertEquals($id, $userMention->getId());
-        $this->assertEquals($screenName, $userMention->getScreenName());
-        $this->assertEquals($name, $userMention->getName());
-        $this->assertEquals($indices, $userMention->getIndices());
-        $this->assertEquals('@'.$screenName, $userMention->__toString());
+        $this->assertEquals($this->id, $userMention->getId());
+        $this->assertEquals($this->screenName, $userMention->getScreenName());
+        $this->assertEquals($this->name, $userMention->getName());
+        $this->assertEquals($this->indices, $userMention->getIndices());
+        $this->assertEquals('@'.$this->screenName, (string) $userMention);
     }
 }

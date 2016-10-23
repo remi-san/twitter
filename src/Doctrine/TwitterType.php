@@ -10,6 +10,7 @@ use Twitter\TwitterSerializable;
 class TwitterType extends Type
 {
     const TWITTER = 'twitter';
+    const SQL_TYPE = 'TEXT';
 
     /**
      * @var TwitterJsonSerializer
@@ -36,7 +37,7 @@ class TwitterType extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return 'TEXT';
+        return self::SQL_TYPE;
     }
 
     /**
@@ -64,8 +65,8 @@ class TwitterType extends Type
     }
 
     /**
-     * @param  TwitterSerializable $value
-     * @param  AbstractPlatform    $platform
+     * @param  mixed            $value
+     * @param  AbstractPlatform $platform
      * @return string
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
