@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Twitter\Object\TwitterDate;
 use Twitter\Serializer\TwitterDirectMessageSerializer;
 use Twitter\Serializer\TwitterEntitiesSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
@@ -61,7 +62,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $id = 666;
         $text = 'dm';
-        $date = new \DateTime();
+        $date = new \DateTimeImmutable();
 
         $senderObj = new \stdClass();
         $senderObj->type = 'sender';
@@ -88,7 +89,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($senderObj, $serialized->sender);
         $this->assertEquals($recipientObj, $serialized->recipient);
         $this->assertEquals($text, $serialized->text);
-        $this->assertEquals($date, new \DateTime($serialized->created_at));
+        $this->assertEquals($date->getTimestamp(), (new \DateTimeImmutable($serialized->created_at))->getTimestamp());
         $this->assertEquals($entitiesObj, $serialized->entities);
     }
 
@@ -130,7 +131,7 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($sender, $dm->getSender());
         $this->assertEquals($recipient, $dm->getRecipient());
         $this->assertEquals($dmObj->text, $dm->getText());
-        $this->assertEquals(new \DateTime($dmObj->created_at), $dm->getDate());
+        $this->assertEquals(new \DateTimeImmutable($dmObj->created_at), $dm->getDate());
         $this->assertEquals($entities, $dm->getEntities());
     }
 

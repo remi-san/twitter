@@ -31,7 +31,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
     /** @var string */
     private $complexText;
 
-    /** @var \DateTimeImmutable */
+    /** @var \DateTimeInterface */
     private $date;
 
     /** @var TwitterUser */

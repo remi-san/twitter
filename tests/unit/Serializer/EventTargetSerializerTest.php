@@ -88,7 +88,13 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $tweetObj->user = new \stdClass();
         $tweetObj->text = 'my tweet';
 
-        $tweet = Tweet::create(TwitterMessageId::create(1), TwitterUser::create(), 'text', 'fr', new \DateTime());
+        $tweet = Tweet::create(
+            TwitterMessageId::create(1),
+            TwitterUser::create(),
+            'text',
+            'fr',
+            new \DateTimeImmutable()
+        );
 
         $this->tweetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
         $this->tweetSerializer->shouldReceive('canUnserialize')->with($tweetObj)->andReturn(true);

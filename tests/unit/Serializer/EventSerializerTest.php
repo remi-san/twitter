@@ -60,7 +60,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
     public function testSerializeWithLegalObject()
     {
         $type = TwitterEvent::FAVORITE;
-        $date = new \DateTime();
+        $date = new \DateTimeImmutable();
 
         $sourceObj = new \stdClass();
         $sourceObj->type = 'source';
@@ -74,7 +74,13 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweetObj = new \stdClass();
         $tweetObj->type = 'tweet';
-        $tweet = Tweet::create(TwitterMessageId::create(1), TwitterUser::create(), 'text', 'fr', new \DateTime());
+        $tweet = Tweet::create(
+            TwitterMessageId::create(1),
+            TwitterUser::create(),
+            'text',
+            'fr',
+            new \DateTimeImmutable()
+        );
         $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
 
         $obj = $this->getEvent();
@@ -87,7 +93,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $serialized = $this->serializer->serialize($obj);
 
         $this->assertEquals($type, $serialized->event);
-        $this->assertEquals($date, new \DateTime($serialized->created_at));
+        $this->assertEquals($date->getTimestamp(), (new \DateTimeImmutable($serialized->created_at))->getTimestamp());
         $this->assertEquals($sourceObj, $serialized->source);
         $this->assertEquals($userObj, $serialized->target);
         $this->assertEquals($tweetObj, $serialized->target_object);
@@ -110,7 +116,13 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $tweetObj = new \stdClass();
         $tweetObj->type = 'tweet';
-        $tweet = Tweet::create(TwitterMessageId::create(1), TwitterUser::create(), 'text', 'fr', new \DateTime());
+        $tweet = Tweet::create(
+            TwitterMessageId::create(1),
+            TwitterUser::create(),
+            'text',
+            'fr',
+            new \DateTimeImmutable()
+        );
         $this->eventTargetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
 
         $eventObj = new \stdClass();
@@ -126,7 +138,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($source, $event->getSource());
         $this->assertEquals($user, $event->getTarget());
         $this->assertEquals($tweet, $event->getObject());
-        $this->assertEquals(new \DateTime($eventObj->created_at), $event->getDate());
+        $this->assertEquals(new \DateTimeImmutable($eventObj->created_at), $event->getDate());
     }
 
     /**

@@ -32,8 +32,6 @@ class TwitterDeleteSerializer implements TwitterSerializer
             case TwitterDelete::DM:
                 $obj->direct_message = $refObject;
                 break;
-            default:
-                throw new \InvalidArgumentException('Invalid delete type');
         }
 
         if ($object->getDate()) {

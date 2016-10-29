@@ -3,6 +3,7 @@ namespace Twitter\Test\Object;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Mockery\Mock;
 use Twitter\Doctrine\TwitterType;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterJsonSerializer;
@@ -18,7 +19,7 @@ class TwitterTypeTest extends \PHPUnit_Framework_TestCase
     /** @var TwitterUser */
     private $user;
 
-    /** @var TwitterJsonSerializer */
+    /** @var TwitterJsonSerializer | Mock */
     private $twitterJsonSerializer;
 
     /** @var TwitterType */

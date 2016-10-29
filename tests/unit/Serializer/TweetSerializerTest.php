@@ -88,7 +88,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         $id = 666;
         $text = 'text';
         $lang = 'en';
-        $date = new \DateTime('2010-01-01 12:00:00 +00:00');
+        $date = new \DateTimeImmutable('2010-01-01 12:00:00 +00:00');
         $replyStatusId = 12;
         $replyUserId = 2048;
         $replyUserScreenName = 'gc';
@@ -116,7 +116,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         $place = $this->getPlace();
         $this->placeSerializer->shouldReceive('serialize')->with($place)->andReturn($placeObj);
 
-        $retweet = $this->buildTweet(99, 'original', $user, null, 'en', new \DateTime());
+        $retweet = $this->buildTweet(99, 'original', $user, null, 'en', new \DateTimeImmutable());
 
         $tweet = $this->getTweet(TwitterMessageId::create($id), $text, $user, $entities);
         $tweet->shouldReceive('getLang')->andReturn($lang);
@@ -211,7 +211,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($tweetObj->text, $tweet->getText());
         $this->assertEquals($user, $tweet->getSender());
         $this->assertEquals($tweetObj->lang, $tweet->getLang());
-        $this->assertEquals(new \DateTime($tweetObj->created_at), $tweet->getDate());
+        $this->assertEquals(new \DateTimeImmutable($tweetObj->created_at), $tweet->getDate());
         $this->assertEquals($entities, $tweet->getEntities());
         $this->assertEquals($coordinates, $tweet->getCoordinates());
         $this->assertEquals($place, $tweet->getPlace());
@@ -233,7 +233,7 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         TwitterUser $sender = null,
         TwitterEntities $entities = null,
         $lang = null,
-        \DateTime $createdAt = null,
+        \DateTimeInterface $createdAt = null,
         TwitterCoordinates $coordinates = null,
         TwitterPlace $place = null,
         $inReplyToStatusId = null,

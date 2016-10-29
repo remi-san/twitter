@@ -1,23 +1,43 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Faker\Factory;
 use Twitter\Object\TwitterDelete;
 use Twitter\Serializer\TwitterDeleteSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterSerializable;
 
 class DeleteSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var int */
+    private $id;
 
-    /**
-     * @var TwitterDeleteSerializer
-     */
-    private $serializer;
+    /** @var int */
+    private $userId;
+
+    /** @var \DateTimeInterface */
+    private $date;
+
+    /** @var TwitterDelete */
+    private $deleteDirectMessage;
+
+    /** @var TwitterDelete */
+    private $twitterMessage;
+
+    /** @var TwitterDeleteSerializer */
+    private $serviceUnderTest;
 
     public function setUp()
     {
-        $this->serializer = new TwitterDeleteSerializer();
+        $faker = Factory::create();
+
+        $this->id = $faker->randomNumber();
+        $this->userId = $faker->randomNumber();
+        $this->date = new \DateTimeImmutable();
+
+        $this->deleteDirectMessage = TwitterDelete::create(TwitterDelete::DM, $this->id, $this->userId, $this->date);
+        $this->twitterMessage = TwitterDelete::create(TwitterDelete::TWEET, $this->id, $this->userId, $this->date);
+
+        $this->serviceUnderTest = new TwitterDeleteSerializer();
     }
 
     public function tearDown()
@@ -28,145 +48,116 @@ class DeleteSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
-        $user = $this->getTwitterUser(42, 'douglas');
-
         $this->setExpectedException('\\InvalidArgumentException');
 
-        $this->serializer->serialize($user);
+        $this->serviceUnderTest->serialize(\Mockery::mock(TwitterSerializable::class));
     }
 
     /**
      * @test
      */
-    public function testSerializeWithLegalDM()
+    public function itShouldSerializeWithLegalDeleteDirectMessage()
     {
-        $id = 42;
-        $userId = 666;
-        $type = TwitterDelete::DM;
-        $date = new \DateTime();
+        $serialized = $this->serviceUnderTest->serialize($this->deleteDirectMessage);
 
-        $obj = $this->getDelete();
-        $obj->shouldReceive('getId')->andReturn($id);
-        $obj->shouldReceive('getUserId')->andReturn($userId);
-        $obj->shouldReceive('getType')->andReturn($type);
-        $obj->shouldReceive('getDate')->andReturn($date);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($id, $serialized->delete->direct_message->id);
-        $this->assertEquals($userId, $serialized->delete->direct_message->user_id);
-        $this->assertEquals($date->getTimestamp()*1000, $serialized->delete->timestamp_ms);
+        $this->assertEquals($this->id, $serialized->delete->direct_message->id);
+        $this->assertEquals($this->userId, $serialized->delete->direct_message->user_id);
+        $this->assertEquals($this->date->getTimestamp()*1000, $serialized->delete->timestamp_ms);
     }
 
     /**
      * @test
      */
-    public function testSerializeWithLegalTweet()
+    public function itShouldSerializeWithLegalDirectTweet()
     {
-        $id = 42;
-        $userId = 666;
-        $type = TwitterDelete::TWEET;
-        $date = new \DateTime();
+        $serialized = $this->serviceUnderTest->serialize($this->twitterMessage);
 
-        $obj = $this->getDelete();
-        $obj->shouldReceive('getId')->andReturn($id);
-        $obj->shouldReceive('getUserId')->andReturn($userId);
-        $obj->shouldReceive('getType')->andReturn($type);
-        $obj->shouldReceive('getDate')->andReturn($date);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($id, $serialized->delete->status->id);
-        $this->assertEquals($userId, $serialized->delete->status->user_id);
-        $this->assertEquals($date->getTimestamp()*1000, $serialized->delete->timestamp_ms);
+        $this->assertEquals($this->id, $serialized->delete->status->id);
+        $this->assertEquals($this->userId, $serialized->delete->status->user_id);
+        $this->assertEquals($this->date->getTimestamp()*1000, $serialized->delete->timestamp_ms);
     }
 
     /**
      * @test
      */
-    public function testSerializeWithIllegalType()
+    public function itShouldUnserializeDeleteTweet()
     {
-        $id = 42;
-        $userId = 666;
-        $type = null;
-        $date = new \DateTime();
-
-        $obj = $this->getDelete();
-        $obj->shouldReceive('getId')->andReturn($id);
-        $obj->shouldReceive('getUserId')->andReturn($userId);
-        $obj->shouldReceive('getType')->andReturn($type);
-        $obj->shouldReceive('getDate')->andReturn($date);
-
-        $this->setExpectedException('\InvalidArgumentException');
-
-        $this->serializer->serialize($obj);
-    }
-
-    /**
-     * @test
-     */
-    public function testUnserializeDeleteTweet()
-    {
-        $date = new \DateTime();
-
-        $obj = new \stdClass();
-        $obj->delete = new \stdClass();
-        $obj->delete->status = new \stdClass();
-        $obj->delete->status->id = 42;
-        $obj->delete->status->user_id = 666;
-        $obj->delete->timestamp_ms = $date->getTimestamp()*1000;
-
-        $delete = $this->serializer->unserialize($obj);
+        $delete = $this->serviceUnderTest->unserialize($this->getSerializedTweetDelete());
 
         $this->assertEquals(TwitterDelete::TWEET, $delete->getType());
-        $this->assertEquals($obj->delete->status->id, $delete->getId());
-        $this->assertEquals($obj->delete->status->user_id, $delete->getUserId());
-        $this->assertEquals($date, $delete->getDate());
+        $this->assertEquals($this->id, $delete->getId());
+        $this->assertEquals($this->userId, $delete->getUserId());
+        $this->assertEquals($this->date, $delete->getDate());
     }
 
     /**
      * @test
      */
-    public function testUnserializeDeleteDM()
+    public function itShouldUnserializeDeleteDM()
     {
-        $date = new \DateTime();
-
-        $obj = new \stdClass();
-        $obj->delete = new \stdClass();
-        $obj->delete->direct_message = new \stdClass();
-        $obj->delete->direct_message->id = 42;
-        $obj->delete->direct_message->user_id = 666;
-        $obj->delete->timestamp_ms = $date->getTimestamp()*1000;
-
-        $delete = $this->serializer->unserialize($obj);
+        $delete = $this->serviceUnderTest->unserialize($this->getSerializedDirectMessageDelete());
 
         $this->assertEquals(TwitterDelete::DM, $delete->getType());
-        $this->assertEquals($obj->delete->direct_message->id, $delete->getId());
-        $this->assertEquals($obj->delete->direct_message->user_id, $delete->getUserId());
-        $this->assertEquals($date, $delete->getDate());
+        $this->assertEquals($this->id, $delete->getId());
+        $this->assertEquals($this->userId, $delete->getUserId());
+        $this->assertEquals($this->date, $delete->getDate());
     }
 
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->unserialize($this->getIllegalSerializedObject());
     }
 
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterDeleteSerializer::build();
 
         $this->assertInstanceOf(TwitterDeleteSerializer::class, $serializer);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getSerializedTweetDelete()
+    {
+        $serializedTweetDelete = new \stdClass();
+        $serializedTweetDelete->delete = new \stdClass();
+        $serializedTweetDelete->delete->status = new \stdClass();
+        $serializedTweetDelete->delete->status->id = $this->id;
+        $serializedTweetDelete->delete->status->user_id = $this->userId;
+        $serializedTweetDelete->delete->timestamp_ms = $this->date->getTimestamp() * 1000;
+        return $serializedTweetDelete;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getSerializedDirectMessageDelete()
+    {
+        $serializedTweetDelete = new \stdClass();
+        $serializedTweetDelete->delete = new \stdClass();
+        $serializedTweetDelete->delete->direct_message = new \stdClass();
+        $serializedTweetDelete->delete->direct_message->id = $this->id;
+        $serializedTweetDelete->delete->direct_message->user_id = $this->userId;
+        $serializedTweetDelete->delete->timestamp_ms = $this->date->getTimestamp() * 1000;
+        return $serializedTweetDelete;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getIllegalSerializedObject()
+    {
+        return new \stdClass();
     }
 }

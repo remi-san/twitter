@@ -45,11 +45,11 @@ trait TwitterObjectMocker
     }
 
     /**
-     * @param  TwitterMessageId $id
-     * @param  string           $text
-     * @param  TwitterUser      $sender
-     * @param  TwitterEntities  $entities
-     * @param  \DateTime        $date
+     * @param  TwitterMessageId   $id
+     * @param  string             $text
+     * @param  TwitterUser        $sender
+     * @param  TwitterEntities    $entities
+     * @param  \DateTimeInterface $date
      * @return TwitterMessage
      */
     public function getTwitterMessage(
@@ -57,7 +57,7 @@ trait TwitterObjectMocker
         $text = null,
         TwitterUser $sender = null,
         TwitterEntities $entities = null,
-        \DateTime $date = null
+        \DateTimeInterface $date = null
     ) {
         $twitterMessage = \Mockery::mock('\\Twitter\\TwitterMessage');
         $twitterMessage->shouldReceive('getId')->andReturn($id);

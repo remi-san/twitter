@@ -6,6 +6,8 @@ use Twitter\TwitterSerializable;
 
 class TwitterCoordinates implements TwitterSerializable
 {
+    const TYPE_POINT = 'point';
+
     /**
      * @var string
      */

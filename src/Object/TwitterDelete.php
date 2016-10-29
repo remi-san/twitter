@@ -2,6 +2,7 @@
 
 namespace Twitter\Object;
 
+use Assert\Assertion;
 use Twitter\TwitterDatedObject;
 
 class TwitterDelete implements TwitterDatedObject
@@ -89,6 +90,8 @@ class TwitterDelete implements TwitterDatedObject
     public static function create($type, $id, $userId, \DateTimeInterface $date)
     {
         $obj = new self();
+
+        Assertion::inArray($type, [ self::TWEET, self::DM ]);
 
         $obj->type = $type;
         $obj->id = $id;

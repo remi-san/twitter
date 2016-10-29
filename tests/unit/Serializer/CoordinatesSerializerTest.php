@@ -1,22 +1,39 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Faker\Factory;
+use Twitter\Object\TwitterCoordinates;
 use Twitter\Serializer\TwitterCoordinatesSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterSerializable;
 
 class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var float */
+    private $longitude;
 
-    /**
-     * @var TwitterCoordinatesSerializer
-     */
-    private $serializer;
+    /** @var float */
+    private $latitude;
+
+    /** @var string */
+    private $type;
+
+    /** @var TwitterCoordinates */
+    private $coordinates;
+
+    /** @var TwitterCoordinatesSerializer */
+    private $serviceUnderTest;
 
     public function setUp()
     {
-        $this->serializer = new TwitterCoordinatesSerializer();
+        $faker = Factory::create();
+
+        $this->longitude = $faker->longitude;
+        $this->latitude = $faker->latitude;
+        $this->type = TwitterCoordinates::TYPE_POINT;
+
+        $this->coordinates = TwitterCoordinates::create($this->longitude, $this->latitude, $this->type);
+
+        $this->serviceUnderTest = new TwitterCoordinatesSerializer();
     }
 
     public function tearDown()
@@ -27,34 +44,33 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
-        $user = $this->getTwitterUser(42, 'douglas');
+        $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->setExpectedException('\\InvalidArgumentException');
-
-        $this->serializer->serialize($user);
+        $this->serviceUnderTest->serialize(\Mockery::mock(TwitterSerializable::class));
     }
 
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
-        $long = 24;
-        $lat = 42;
-        $type = 'point';
+        $serialized = $this->serviceUnderTest->serialize($this->coordinates);
 
-        $obj = $this->getCoordinates();
-        $obj->shouldReceive('getLongitude')->andReturn($long);
-        $obj->shouldReceive('getLatitude')->andReturn($lat);
-        $obj->shouldReceive('getType')->andReturn($type);
+        $this->assertEquals($this->longitude, $serialized->coordinates[0]);
+        $this->assertEquals($this->latitude, $serialized->coordinates[1]);
+        $this->assertEquals($this->type, $serialized->type);
+    }
 
-        $serialized = $this->serializer->serialize($obj);
+    /**
+     * @test
+     */
+    public function itShouldNotUnserializeIllegalObject()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->assertEquals($long, $serialized->coordinates[0]);
-        $this->assertEquals($lat, $serialized->coordinates[1]);
-        $this->assertEquals($type, $serialized->type);
+        $this->serviceUnderTest->unserialize($this->buildIllegalSerializedObject());
     }
 
     /**
@@ -62,36 +78,40 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize()
     {
-        $obj = new \stdClass();
-        $obj->coordinates = array(24, 42);
-        $obj->type = 'point';
+        $coordinates = $this->serviceUnderTest->unserialize($this->buildSerializedCoordinates());
 
-        $coordinates = $this->serializer->unserialize($obj);
-
-        $this->assertEquals($obj->coordinates[0], $coordinates->getLongitude());
-        $this->assertEquals($obj->coordinates[1], $coordinates->getLatitude());
-        $this->assertEquals($obj->type, $coordinates->getType());
+        $this->assertEquals($this->longitude, $coordinates->getLongitude());
+        $this->assertEquals($this->latitude, $coordinates->getLatitude());
+        $this->assertEquals($this->type, $coordinates->getType());
     }
 
     /**
      * @test
      */
-    public function testIllegalUnserialize()
-    {
-        $obj = new \stdClass();
-
-        $this->setExpectedException(\InvalidArgumentException::class);
-
-        $this->serializer->unserialize($obj);
-    }
-
-    /**
-     * @test
-     */
-    public function testStaticBuilder()
+    public function itShouldBuildSerializerThroughStaticBuilder()
     {
         $serializer = TwitterCoordinatesSerializer::build();
 
         $this->assertInstanceOf(TwitterCoordinatesSerializer::class, $serializer);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function buildSerializedCoordinates()
+    {
+        $serializedObject = new \stdClass();
+        $serializedObject->coordinates = array($this->longitude, $this->latitude);
+        $serializedObject->type = $this->type;
+
+        return $serializedObject;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function buildIllegalSerializedObject()
+    {
+        return new \stdClass();
     }
 }
