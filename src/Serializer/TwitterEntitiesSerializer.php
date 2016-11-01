@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterEntities;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -68,11 +69,9 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterEntities');
-        }
-
         /* @var TwitterEntities $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterEntities');
+
         $entities = new \stdClass();
 
         // Hashtags
@@ -133,9 +132,7 @@ class TwitterEntitiesSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        if (!$this->canUnserialize($obj)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($obj), 'object is not unserializable');
 
         // Hashtags
         $hashtags = [];

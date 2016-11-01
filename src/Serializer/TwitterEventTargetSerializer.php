@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\Tweet;
 use Twitter\TwitterEventTarget;
 use Twitter\TwitterSerializable;
@@ -28,9 +29,7 @@ class TwitterEventTargetSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterEventTarget');
-        }
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterEventTarget');
 
         if ($object instanceof Tweet) {
             return $this->tweetSerializer->serialize($object);

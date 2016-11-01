@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterMedia;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -38,11 +39,9 @@ class TwitterMediaSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterMedia');
-        }
-
         /* @var TwitterMedia $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterMedia');
+
         $media = new \stdClass();
         $media->id = $object->getId();
         $media->media_url = $object->getMediaUrl();
@@ -68,9 +67,7 @@ class TwitterMediaSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        if (!$this->canUnserialize($obj)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($obj), 'object is not unserializable');
 
         $sizesObjects = [];
         if ($obj->sizes) {

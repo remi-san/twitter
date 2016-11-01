@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterEvent;
 use Twitter\TwitterSerializable;
@@ -35,15 +36,14 @@ class TwitterEventSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterEvent');
-        }
-
         /* @var TwitterEvent $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterEvent');
+        Assertion::eq(new \DateTimeZone('UTC'), $object->getDate()->getTimezone());
+
         $event = new \stdClass();
         $event->event = $object->getType();
         $event->source = $this->userSerializer->serialize($object->getSource());
-        $event->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
+        $event->created_at = $object->getDate()->format(TwitterDate::FORMAT);
 
         if ($object->getTarget()) {
             $event->target = $this->userSerializer->serialize($object->getTarget());
@@ -63,16 +63,17 @@ class TwitterEventSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        if (!$this->canUnserialize($obj)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($obj), 'object is not unserializable');
+
+        $createdAt = new \DateTimeImmutable($obj->created_at);
+        Assertion::eq(new \DateTimeZone('UTC'), $createdAt->getTimezone());
 
         return TwitterEvent::create(
             $obj->event,
             $this->userSerializer->unserialize($obj->source),
             isset($obj->target) ? $this->userSerializer->unserialize($obj->target) : null,
             isset($obj->target_object) ? $this->targetSerializer->unserialize($obj->target_object) : null,
-            new \DateTimeImmutable($obj->created_at)
+            $createdAt
         );
     }
 

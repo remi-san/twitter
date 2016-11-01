@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterDirectMessage;
 use Twitter\Object\TwitterEntities;
@@ -39,17 +40,16 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterDirectMessage');
-        }
-
         /* @var TwitterDirectMessage $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterDirectMessage');
+        Assertion::eq(new \DateTimeZone('UTC'), $object->getDate()->getTimezone());
+
         $dm = new \stdClass();
         $dm->id = (string)$object->getId();
         $dm->sender = $this->userSerializer->serialize($object->getSender());
         $dm->recipient = $this->userSerializer->serialize($object->getRecipient());
         $dm->text = $object->getText();
-        $dm->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
+        $dm->created_at = $object->getDate()->format(TwitterDate::FORMAT);
         $dm->entities = $object->getEntities()?$this->twitterEntitiesSerializer->serialize($object->getEntities()):null;
 
         $dmObject = new \stdClass();
@@ -65,17 +65,19 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
      */
     public function unserialize($directMessage, array $context = [])
     {
-        if (!$this->canUnserialize($directMessage)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($directMessage), 'object is not unserializable');
 
         $dm = $directMessage->direct_message;
+
+        $createdAt = new \DateTimeImmutable($dm->created_at);
+        Assertion::eq(new \DateTimeZone('UTC'), $createdAt->getTimezone());
+
         return TwitterDirectMessage::create(
             TwitterMessageId::create($dm->id),
             $this->userSerializer->unserialize($dm->sender),
             $this->userSerializer->unserialize($dm->recipient),
             $dm->text,
-            new \DateTimeImmutable($dm->created_at),
+            $createdAt,
             $this->twitterEntitiesSerializer->canUnserialize($dm->entities) ?
             $this->twitterEntitiesSerializer->unserialize($dm->entities) : TwitterEntities::create()
         );

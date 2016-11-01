@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterEntityIndices;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -14,11 +15,9 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterEntityIndices');
-        }
-
         /* @var TwitterEntityIndices $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterEntityIndices');
+
         return [$object->getFrom(), $object->getTo()];
     }
 
@@ -29,9 +28,7 @@ class TwitterEntityIndicesSerializer implements TwitterSerializer
      */
     public function unserialize($array, array $context = [])
     {
-        if (!$this->canUnserialize($array)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($array), 'object is not unserializable');
 
         return TwitterEntityIndices::create($array[0], $array[1]);
     }

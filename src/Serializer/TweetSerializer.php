@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterEntities;
@@ -55,17 +56,16 @@ class TweetSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of Tweet');
-        }
-
         /* @var Tweet $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of Tweet');
+        Assertion::eq(new \DateTimeZone('UTC'), $object->getDate()->getTimezone());
+
         $tweet = new \stdClass();
         $tweet->id = (string) $object->getId();
         $tweet->user = $this->userSerializer->serialize($object->getSender());
         $tweet->text = $object->getText();
         $tweet->lang = $object->getLang();
-        $tweet->created_at = $object->getDate()->setTimezone(new \DateTimeZone('UTC'))->format(TwitterDate::FORMAT);
+        $tweet->created_at = $object->getDate()->format(TwitterDate::FORMAT);
         $tweet->entities = $object->getEntities()?
             $this->twitterEntitiesSerializer->serialize($object->getEntities()):
             [];
@@ -97,16 +97,17 @@ class TweetSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        if (!$this->canUnserialize($obj)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($obj), 'object is not unserializable');
+
+        $createdAt = new \DateTimeImmutable($obj->created_at);
+        Assertion::eq(new \DateTimeZone('UTC'), $createdAt->getTimezone());
 
         return Tweet::create(
             TwitterMessageId::create($obj->id),
             $this->userSerializer->unserialize($obj->user),
             $obj->text,
             $obj->lang,
-            new \DateTimeImmutable($obj->created_at),
+            $createdAt,
             $obj->entities?$this->twitterEntitiesSerializer->unserialize($obj->entities):TwitterEntities::create(),
             $obj->coordinates?$this->coordinatesSerializer->unserialize($obj->coordinates):null,
             $obj->place?$this->placeSerializer->unserialize($obj->place):null,

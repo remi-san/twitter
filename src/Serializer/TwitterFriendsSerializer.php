@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterFriends;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -14,11 +15,9 @@ class TwitterFriendsSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterFriends');
-        }
-
         /* @var TwitterFriends $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterFriends');
+
         $friends = new \stdClass();
         $friends->friends = $object->getFriends();
 
@@ -32,9 +31,7 @@ class TwitterFriendsSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        if (!$this->canUnserialize($obj)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($obj), 'object is not unserializable');
 
         return TwitterFriends::create($obj->friends);
     }

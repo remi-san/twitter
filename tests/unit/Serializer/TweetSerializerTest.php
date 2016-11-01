@@ -188,7 +188,8 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         $tweetObj->user = $userObj;
         $tweetObj->text = 'my tweet';
         $tweetObj->lang = 'fr';
-        $tweetObj->created_at = '2015-01-01 12:00:00';
+        $tweetObj->created_at = (new \DateTimeImmutable('2015-01-01', new \DateTimeZone('UTC')))
+            ->format(TwitterDate::FORMAT);
         $tweetObj->entities = $entitiesObj;
         $tweetObj->coordinates = $coordinatesObj;
         $tweetObj->place = $placeObj;

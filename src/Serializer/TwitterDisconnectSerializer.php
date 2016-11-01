@@ -2,6 +2,7 @@
 
 namespace Twitter\Serializer;
 
+use Assert\Assertion;
 use Twitter\Object\TwitterDisconnect;
 use Twitter\TwitterSerializable;
 use Twitter\TwitterSerializer;
@@ -14,11 +15,9 @@ class TwitterDisconnectSerializer implements TwitterSerializer
      */
     public function serialize(TwitterSerializable $object)
     {
-        if (!$this->canSerialize($object)) {
-            throw new \InvalidArgumentException('$object must be an instance of TwitterDisconnect');
-        }
-
         /* @var TwitterDisconnect $object */
+        Assertion::true($this->canSerialize($object), 'object must be an instance of TwitterDisconnect');
+
         $obj = new \stdClass();
         $obj->code = $object->getCode();
         $obj->stream_name = $object->getStreamName();
@@ -37,9 +36,7 @@ class TwitterDisconnectSerializer implements TwitterSerializer
      */
     public function unserialize($obj, array $context = [])
     {
-        if (!$this->canUnserialize($obj)) {
-            throw new \InvalidArgumentException('$object is not unserializable');
-        }
+        Assertion::true($this->canUnserialize($obj), 'object is not unserializable');
 
         $d = $obj->disconnect;
 

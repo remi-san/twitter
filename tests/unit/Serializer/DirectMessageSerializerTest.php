@@ -119,7 +119,8 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
         $dmObj->sender = $senderObj;
         $dmObj->recipient = $recipientObj;
         $dmObj->text = 'direct message';
-        $dmObj->created_at = '2015-01-01 12:00:00';
+        $dmObj->created_at = (new \DateTimeImmutable('2015-01-01', new \DateTimeZone('UTC')))
+            ->format(TwitterDate::FORMAT);
         $dmObj->entities = $entitiesObj;
 
         $superDmObject = new \stdClass();

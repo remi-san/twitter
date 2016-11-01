@@ -2,6 +2,7 @@
 namespace Twitter\Test\Serializer;
 
 use Twitter\Object\Tweet;
+use Twitter\Object\TwitterDate;
 use Twitter\Object\TwitterEvent;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterEventSerializer;
@@ -130,7 +131,8 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $eventObj->source = $sourceObj;
         $eventObj->target = $userObj;
         $eventObj->target_object = $tweetObj;
-        $eventObj->created_at = '2015-01-01 12:00:00';
+        $eventObj->created_at = (new \DateTimeImmutable('2015-01-01', new \DateTimeZone('UTC')))
+            ->format(TwitterDate::FORMAT);
 
         $event = $this->serializer->unserialize($eventObj);
 
