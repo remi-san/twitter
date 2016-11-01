@@ -27,7 +27,7 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $user = $this->getTwitterUser(42, 'douglas');
 
@@ -39,7 +39,7 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
         $url = 'http://www.simple.com';
         $contentType = 'text/html';
@@ -60,7 +60,7 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $variantMediaObj = new \stdClass();
         $variantMediaObj->url = 'http://video.url/a.mpg';
@@ -77,7 +77,7 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
         $obj = new \stdClass();
 
@@ -89,7 +89,7 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterVariantMediaSerializer::build();
 

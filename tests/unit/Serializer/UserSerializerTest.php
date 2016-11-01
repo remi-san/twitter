@@ -27,7 +27,7 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $user = $this->getCoordinates();
 
@@ -39,7 +39,7 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
         $twitterUser = $this->getTwitterUser(1, 'user');
         $twitterUser->shouldReceive('getLang')->andReturn('en');
@@ -61,7 +61,7 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $userObj = new \stdClass();
         $userObj->id = 42;
@@ -86,7 +86,7 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
         $obj = new \stdClass();
 
@@ -98,7 +98,7 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterUserSerializer::build();
 

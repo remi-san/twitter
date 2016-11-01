@@ -76,7 +76,7 @@ class CoordinatesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $coordinates = $this->serviceUnderTest->unserialize($this->buildSerializedCoordinates());
 

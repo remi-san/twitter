@@ -27,7 +27,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $user = $this->getTwitterUser(42, 'douglas');
 
@@ -39,7 +39,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
         $code = '42';
         $streamName = 'abcde';
@@ -60,7 +60,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $disconnectObj = new \stdClass();
         $disconnectObj->code = 'code';
@@ -80,7 +80,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
         $obj = new \stdClass();
 
@@ -92,7 +92,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterDisconnectSerializer::build();
 

@@ -35,7 +35,7 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $user = $this->getTwitterUser(42, 'douglas');
 
@@ -47,7 +47,7 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
         $text = 'symbol';
 
@@ -68,7 +68,7 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $symbolObj = new \stdClass();
         $symbolObj->text = 'text';
@@ -86,7 +86,7 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
         $obj = new \stdClass();
 
@@ -98,7 +98,7 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterSymbolSerializer::build();
 

@@ -77,7 +77,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $user = $this->getTwitterUser(42, 'douglas');
 
@@ -89,7 +89,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
         $hashtagObj = new \stdClass();
         $hashtagObj->type = 'hashtag';
@@ -145,7 +145,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $hashtagObj = new \stdClass();
         $hashtagObj->type = 'hashtag';
@@ -201,7 +201,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
         $obj = new \stdClass();
 
@@ -213,7 +213,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterEntitiesSerializer::build();
 

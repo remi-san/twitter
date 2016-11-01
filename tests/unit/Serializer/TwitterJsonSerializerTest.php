@@ -86,7 +86,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithUnsupportedObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $obj = $this->getUserMention(null, 'user');
 
@@ -184,7 +184,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeTweet()
+    public function itShouldUnserializeTweet()
     {
         $obj = new \stdClass();
         $obj->text = 'text';
@@ -210,7 +210,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeDM()
+    public function itShouldUnserializeDM()
     {
         $obj = new \stdClass();
         $obj->direct_message = new \stdClass();
@@ -235,7 +235,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeEvent()
+    public function itShouldUnserializeEvent()
     {
         $obj = new \stdClass();
         $obj->event = 'dm';
@@ -260,7 +260,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeFriends()
+    public function itShouldUnserializeFriends()
     {
         $obj = new \stdClass();
         $obj->friends = [];
@@ -285,7 +285,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeDisconnect()
+    public function itShouldUnserializeDisconnect()
     {
         $obj = new \stdClass();
         $obj->disconnect = new \stdClass();
@@ -310,7 +310,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeDelete()
+    public function itShouldUnserializeDelete()
     {
         $obj = new \stdClass();
         $obj->delete = new \stdClass();
@@ -335,7 +335,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeUser()
+    public function itShouldUnserializeUser()
     {
         $obj = new \stdClass();
         $obj->screen_name = 'douglas';
@@ -360,7 +360,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testIllegalUnserialize()
+    public function itShouldNotUnserializeIllegalObject()
     {
         $this->eventTargetSerializer->shouldReceive('canUnserialize')->andReturn(false);
         $this->directMessageSerializer->shouldReceive('canUnserialize')->andReturn(false);
@@ -378,7 +378,7 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterJsonSerializer::build();
 

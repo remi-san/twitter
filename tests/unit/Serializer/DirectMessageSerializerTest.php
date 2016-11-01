@@ -1,38 +1,99 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Faker\Factory;
+use Mockery\Mock;
 use Twitter\Object\TwitterDate;
+use Twitter\Object\TwitterDirectMessage;
+use Twitter\Object\TwitterEntities;
+use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterDirectMessageSerializer;
 use Twitter\Serializer\TwitterEntitiesSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterMessageId;
+use Twitter\TwitterSerializable;
 
 class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var int */
+    private $id;
 
-    /**
-     * @var TwitterDirectMessageSerializer
-     */
-    private $serializer;
+    /** @var string */
+    private $text;
 
-    /**
-     * @var TwitterUserSerializer
-     */
+    /** @var \DateTimeInterface */
+    private $date;
+
+
+    /** @var object */
+    private $serializedSender;
+
+    /** @var object */
+    private $serializedRecipient;
+
+    /** @var object */
+    private $serializedEntities;
+
+
+    /** @var TwitterUser | Mock */
+    private $sender;
+
+    /** @var TwitterUser | Mock */
+    private $recipient;
+
+    /** @var TwitterEntities | Mock */
+    private $twitterEntities;
+
+
+    /** @var object */
+    private $serializedDirectMessage;
+
+    /** @var TwitterDirectMessage */
+    private $directMessage;
+
+
+    /** @var TwitterUserSerializer | Mock */
     private $userSerializer;
 
-    /**
-     * @var TwitterEntitiesSerializer
-     */
+    /** @var TwitterEntitiesSerializer | Mock */
     private $entitiesSerializer;
+
+
+    /** @var TwitterDirectMessageSerializer */
+    private $serviceUnderTest;
+
+
 
     public function setUp()
     {
-        $this->userSerializer = $this->getUserSerializer();
-        $this->entitiesSerializer = $this->getEntitiesSerializer();
-        $this->serializer = new TwitterDirectMessageSerializer(
+        $faker = Factory::create();
+
+        $this->id = $faker->randomNumber();
+        $this->text = $faker->text();
+        $this->date = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+
+        $this->serializedSender = new \stdClass();
+        $this->serializedRecipient = new \stdClass();
+        $this->serializedEntities = new \stdClass();
+
+        $this->sender = \Mockery::mock(TwitterUser::class);
+        $this->recipient = \Mockery::mock(TwitterUser::class);
+        $this->twitterEntities = \Mockery::mock(TwitterEntities::class);
+
+        $this->serializedDirectMessage = $this->getSerializedDirectMessage();
+        $this->directMessage = TwitterDirectMessage::create(
+            TwitterMessageId::create($this->id),
+            $this->sender,
+            $this->recipient,
+            $this->text,
+            $this->date,
+            $this->twitterEntities
+        );
+
+        $this->userSerializer = \Mockery::mock(TwitterUserSerializer::class);
+        $this->entitiesSerializer = \Mockery::mock(TwitterEntitiesSerializer::class);
+
+        $this->serviceUnderTest = new TwitterDirectMessageSerializer(
             $this->userSerializer,
             $this->entitiesSerializer
         );
@@ -46,115 +107,157 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
-        $user = $this->getTwitterUser(42, 'douglas');
-
-        $this->setExpectedException('\\InvalidArgumentException');
-
-        $this->serializer->serialize($user);
-    }
-
-    /**
-     * @test
-     */
-    public function testSerializeWithLegalObject()
-    {
-        $id = 666;
-        $text = 'dm';
-        $date = new \DateTimeImmutable();
-
-        $senderObj = new \stdClass();
-        $senderObj->type = 'sender';
-        $sender = $this->getTwitterUser(33, 'doc');
-        $this->userSerializer->shouldReceive('serialize')->with($sender)->andReturn($senderObj);
-
-        $recipientObj = new \stdClass();
-        $recipientObj->type = 'recipient';
-        $recipient = $this->getTwitterUser(42, 'douglas');
-        $this->userSerializer->shouldReceive('serialize')->with($recipient)->andReturn($recipientObj);
-
-        $entitiesObj = new \stdClass();
-        $entitiesObj->type = 'entities';
-        $entities = $this->getTwitterEntities();
-        $this->entitiesSerializer->shouldReceive('serialize')->with($entities)->andReturn($entitiesObj);
-
-        $obj = $this->getDirectMessage(TwitterMessageId::create($id), $text, $sender, $entities);
-        $obj->shouldReceive('getRecipient')->andReturn($recipient);
-        $obj->shouldReceive('getDate')->andReturn($date);
-
-        $serialized = $this->serializer->serialize($obj)->direct_message;
-
-        $this->assertEquals($id, $serialized->id);
-        $this->assertEquals($senderObj, $serialized->sender);
-        $this->assertEquals($recipientObj, $serialized->recipient);
-        $this->assertEquals($text, $serialized->text);
-        $this->assertEquals($date->getTimestamp(), (new \DateTimeImmutable($serialized->created_at))->getTimestamp());
-        $this->assertEquals($entitiesObj, $serialized->entities);
-    }
-
-    /**
-     * @test
-     */
-    public function testUnserialize()
-    {
-        $senderObj = new \stdClass();
-        $senderObj->type = 'sender';
-        $sender = $this->getTwitterUser(33, 'doc');
-        $this->userSerializer->shouldReceive('unserialize')->with($senderObj)->andReturn($sender);
-
-        $recipientObj = new \stdClass();
-        $recipientObj->type = 'recipient';
-        $recipient = $this->getTwitterUser(42, 'douglas');
-        $this->userSerializer->shouldReceive('unserialize')->with($recipientObj)->andReturn($recipient);
-
-        $entitiesObj = new \stdClass();
-        $entitiesObj->type = 'entities';
-        $entities = $this->getTwitterEntities();
-        $this->entitiesSerializer->shouldReceive('canUnserialize')->with($entitiesObj)->andReturn(true);
-        $this->entitiesSerializer->shouldReceive('unserialize')->with($entitiesObj)->andReturn($entities);
-
-        $dmObj = new \stdClass();
-        $dmObj->id = 42;
-        $dmObj->sender = $senderObj;
-        $dmObj->recipient = $recipientObj;
-        $dmObj->text = 'direct message';
-        $dmObj->created_at = (new \DateTimeImmutable('2015-01-01', new \DateTimeZone('UTC')))
-            ->format(TwitterDate::FORMAT);
-        $dmObj->entities = $entitiesObj;
-
-        $superDmObject = new \stdClass();
-        $superDmObject->direct_message = $dmObj;
-
-        $dm = $this->serializer->unserialize($superDmObject);
-
-        $this->assertEquals((string) $dmObj->id, (string) $dm->getId());
-        $this->assertEquals($sender, $dm->getSender());
-        $this->assertEquals($recipient, $dm->getRecipient());
-        $this->assertEquals($dmObj->text, $dm->getText());
-        $this->assertEquals(new \DateTimeImmutable($dmObj->created_at), $dm->getDate());
-        $this->assertEquals($entities, $dm->getEntities());
-    }
-
-    /**
-     * @test
-     */
-    public function testIllegalUnserialize()
-    {
-        $obj = new \stdClass();
+        $object = \Mockery::mock(TwitterSerializable::class);
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldSerializeWithLegalDirectMessage()
+    {
+        $this->itWillSerializeSender();
+        $this->itWillSerializeRecipient();
+        $this->itWillSerializeEntities();
+
+        $serialized = $this->serviceUnderTest->serialize($this->directMessage)->direct_message;
+
+        $this->assertEquals($this->id, $serialized->id);
+        $this->assertEquals($this->serializedSender, $serialized->sender);
+        $this->assertEquals($this->serializedRecipient, $serialized->recipient);
+        $this->assertEquals($this->text, $serialized->text);
+        $this->assertEquals($this->date->format(TwitterDate::FORMAT), $serialized->created_at);
+        $this->assertEquals($this->serializedEntities, $serialized->entities);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldUnserializeDM()
+    {
+        $this->itWillUnserializeSender();
+        $this->itWillUnserializeRecipient();
+        $this->itCanUnserializeEntities();
+        $this->itWillUnserializeEntities();
+
+        $innerDirectMessage = $this->serializedDirectMessage->direct_message;
+        $directMessage = $this->serviceUnderTest->unserialize($this->serializedDirectMessage);
+
+        $this->assertEquals((string) $innerDirectMessage->id, (string) $directMessage->getId());
+        $this->assertEquals($this->sender, $directMessage->getSender());
+        $this->assertEquals($this->recipient, $directMessage->getRecipient());
+        $this->assertEquals($innerDirectMessage->text, $directMessage->getText());
+        $this->assertEquals($innerDirectMessage->created_at, $directMessage->getDate()->format(TwitterDate::FORMAT));
+        $this->assertEquals($this->twitterEntities, $directMessage->getEntities());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldNotUnserializeIllegalObject()
+    {
+        $obj = $this->getIllegalSerializedObject();
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->serviceUnderTest->unserialize($obj);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterDirectMessageSerializer::build();
 
         $this->assertInstanceOf(TwitterDirectMessageSerializer::class, $serializer);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getSerializedDirectMessage()
+    {
+        $dmObj = new \stdClass();
+        $dmObj->id = $this->id;
+        $dmObj->sender = $this->serializedSender;
+        $dmObj->recipient = $this->serializedRecipient;
+        $dmObj->text = $this->text;
+        $dmObj->created_at = $this->date->format(TwitterDate::FORMAT);
+        $dmObj->entities = $this->serializedEntities;
+
+        $superDmObject = new \stdClass();
+        $superDmObject->direct_message = $dmObj;
+
+        return $superDmObject;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getIllegalSerializedObject()
+    {
+        return new \stdClass();
+    }
+
+    private function itWillSerializeSender()
+    {
+        $this->userSerializer
+            ->shouldReceive('serialize')
+            ->with($this->sender)
+            ->andReturn($this->serializedSender);
+    }
+
+    private function itWillSerializeRecipient()
+    {
+        $this->userSerializer
+            ->shouldReceive('serialize')
+            ->with($this->recipient)
+            ->andReturn($this->serializedRecipient);
+    }
+
+    private function itWillSerializeEntities()
+    {
+        $this->entitiesSerializer
+            ->shouldReceive('serialize')
+            ->with($this->twitterEntities)
+            ->andReturn($this->serializedEntities);
+    }
+
+    private function itWillUnserializeSender()
+    {
+        $this->userSerializer
+            ->shouldReceive('unserialize')
+            ->with($this->serializedSender)
+            ->andReturn($this->sender);
+    }
+
+    private function itWillUnserializeRecipient()
+    {
+        $this->userSerializer
+            ->shouldReceive('unserialize')
+            ->with($this->serializedRecipient)
+            ->andReturn($this->recipient);
+    }
+
+    private function itWillUnserializeEntities()
+    {
+        $this->entitiesSerializer
+            ->shouldReceive('unserialize')
+            ->with($this->serializedEntities)
+            ->andReturn($this->twitterEntities);
+    }
+
+    private function itCanUnserializeEntities()
+    {
+        $this->entitiesSerializer
+            ->shouldReceive('canUnserialize')
+            ->with($this->serializedEntities)
+            ->andReturn(true);
     }
 }

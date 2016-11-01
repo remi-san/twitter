@@ -38,7 +38,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithIllegalObject()
+    public function itShouldNotSerializeWithIllegalObject()
     {
         $user = $this->getTwitterUser(42, 'douglas');
 
@@ -51,7 +51,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObject()
+    public function itShouldSerializeWithLegalObject()
     {
         $tweetObj = new \stdClass();
         $tweetObj->id = 42;
@@ -69,7 +69,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testSerializeWithLegalObjectNotImplemented()
+    public function itShouldSerializeWithLegalObjectNotImplemented()
     {
         $this->setExpectedException('\\BadMethodCallException');
 
@@ -82,7 +82,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserialize()
+    public function itShouldUnserialize()
     {
         $tweetObj = new \stdClass();
         $tweetObj->id = 42;
@@ -109,7 +109,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUnserializeNull()
+    public function itShouldUnserializeNull()
     {
         $obj = new \stdClass();
 
@@ -123,7 +123,7 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testStaticBuilder()
+    public function itShouldBuildUsingStaticBuilder()
     {
         $serializer = TwitterEventTargetSerializer::build();
 
