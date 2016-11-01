@@ -2,6 +2,7 @@
 
 namespace Twitter\Object;
 
+use Assert\Assertion;
 use Twitter\TwitterMessage;
 use Twitter\TwitterMessageId;
 
@@ -45,9 +46,11 @@ abstract class AbstractMessage implements TwitterMessage
         TwitterMessageId $id,
         TwitterUser $sender,
         $text,
-        TwitterEntities $entities = null,
-        \DateTimeInterface $date = null
+        TwitterEntities $entities,
+        \DateTimeInterface $date
     ) {
+        Assertion::eq(new \DateTimeZone('UTC'), $date->getTimezone());
+
         $this->entities = $entities;
         $this->id = $id;
         $this->sender = $sender;

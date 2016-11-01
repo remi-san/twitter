@@ -222,7 +222,7 @@ class Tweet extends AbstractMessage implements TwitterEventTarget, TwitterMessag
         $text,
         $lang,
         \DateTimeInterface $createdAt,
-        TwitterEntities $entities = null,
+        TwitterEntities $entities,
         TwitterCoordinates $coordinates = null,
         TwitterPlace $place = null,
         $inReplyToStatusId = null,

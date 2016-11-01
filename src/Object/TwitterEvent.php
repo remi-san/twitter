@@ -2,6 +2,7 @@
 
 namespace Twitter\Object;
 
+use Assert\Assertion;
 use Twitter\TwitterDatedObject;
 use Twitter\TwitterEventTarget;
 
@@ -122,6 +123,9 @@ class TwitterEvent implements TwitterDatedObject
         \DateTimeInterface $date = null
     ) {
         $obj = new self();
+
+        Assertion::notNull($date);
+        Assertion::eq(new \DateTimeZone('UTC'), $date->getTimezone());
 
         $obj->type = $type;
 

@@ -53,7 +53,7 @@ class TwitterDirectMessage extends AbstractMessage implements TwitterMessage
         TwitterUser $recipient,
         $text,
         \DateTimeInterface $createdAt,
-        TwitterEntities $entities = null
+        TwitterEntities $entities
     ) {
         $obj = new self();
 

@@ -3,6 +3,7 @@ namespace Twitter\Test\Serializer;
 
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterDate;
+use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterEvent;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterEventSerializer;
@@ -80,7 +81,8 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
             TwitterUser::create(),
             'text',
             'fr',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            \Mockery::mock(TwitterEntities::class)
         );
         $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
 
@@ -122,7 +124,8 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
             TwitterUser::create(),
             'text',
             'fr',
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
+            \Mockery::mock(TwitterEntities::class)
         );
         $this->eventTargetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
 
