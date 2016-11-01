@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Mockery\Mock;
 use Twitter\Serializer\TwitterDeleteSerializer;
 use Twitter\Serializer\TwitterDirectMessageSerializer;
 use Twitter\Serializer\TwitterDisconnectSerializer;
@@ -17,45 +18,29 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
 {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
-    /**
-     * @var TwitterJsonSerializer
-     */
-    private $serializer;
-
-    /**
-     * @var TwitterEventTargetSerializer
-     */
+    /** @var TwitterEventTargetSerializer | Mock */
     private $eventTargetSerializer;
 
-    /**
-     * @var TwitterDirectMessageSerializer
-     */
+    /** @var TwitterDirectMessageSerializer | Mock */
     private $directMessageSerializer;
 
-    /**
-     * @var TwitterEventSerializer
-     */
+    /** @var TwitterEventSerializer | Mock */
     private $eventSerializer;
 
-    /**
-     * @var TwitterFriendsSerializer
-     */
+    /** @var TwitterFriendsSerializer | Mock */
     private $friendsSerializer;
 
-    /**
-     * @var TwitterDisconnectSerializer
-     */
+    /** @var TwitterDisconnectSerializer | Mock */
     private $disconnectSerializer;
 
-    /**
-     * @var TwitterDeleteSerializer
-     */
+    /** @var TwitterDeleteSerializer | Mock */
     private $deleteSerializer;
 
-    /**
-     * @var TwitterUserSerializer
-     */
+    /** @var TwitterUserSerializer | Mock */
     private $userSerializer;
+
+    /** @var TwitterJsonSerializer */
+    private $serializer;
 
     public function setUp()
     {
@@ -88,11 +73,11 @@ class TwitterJsonSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $obj = $this->getUserMention(null, 'user');
+        $object = \Mockery::mock(TwitterSerializable::class);
 
-        $this->setExpectedException('\\BadMethodCallException');
+        $this->setExpectedException(\BadMethodCallException::class);
 
-        $this->serializer->serialize($obj);
+        $this->serializer->serialize($object);
     }
 
     /**

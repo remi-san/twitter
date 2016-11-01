@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Mockery\Mock;
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterCoordinates;
 use Twitter\Object\TwitterDate;
@@ -18,35 +19,26 @@ use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterMessageId;
+use Twitter\TwitterSerializable;
 
 class TweetSerializerTest extends \PHPUnit_Framework_TestCase
 {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
-    /**
-     * @var TweetSerializer
-     */
-    private $serializer;
-
-    /**
-     * @var TwitterUserSerializer
-     */
+    /** @var TwitterUserSerializer | Mock */
     private $userSerializer;
 
-    /**
-     * @var TwitterEntitiesSerializer
-     */
+    /** @var TwitterEntitiesSerializer | Mock */
     private $entitiesSerializer;
 
-    /**
-     * @var TwitterCoordinatesSerializer
-     */
+    /** @var TwitterCoordinatesSerializer | Mock */
     private $coordinatesSerializer;
 
-    /**
-     * @var TwitterPlaceSerializer
-     */
+    /** @var TwitterPlaceSerializer | Mock */
     private $placeSerializer;
+
+    /** @var TweetSerializer */
+    private $serializer;
 
     public function setUp()
     {
@@ -73,11 +65,11 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $user = $this->getTwitterUser(42, 'douglas');
+        $object = \Mockery::mock(TwitterSerializable::class);
 
-        $this->setExpectedException('\\InvalidArgumentException');
+        $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($user);
+        $this->serializer->serialize($object);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Mockery\Mock;
 use Twitter\Object\TwitterEntityIndices;
 use Twitter\Object\TwitterMediaSize;
 use Twitter\Serializer\TwitterEntityIndicesSerializer;
@@ -8,25 +9,20 @@ use Twitter\Serializer\TwitterMediaSerializer;
 use Twitter\Serializer\TwitterMediaSizeSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterSerializable;
 
 class MediaSerializerTest extends \PHPUnit_Framework_TestCase
 {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
-    /**
-     * @var TwitterMediaSerializer
-     */
-    private $serializer;
-
-    /**
-     * @var TwitterEntityIndicesSerializer
-     */
+    /** @var TwitterEntityIndicesSerializer | Mock */
     private $entityIndicesSerializer;
 
-    /**
-     * @var TwitterMediaSizeSerializer
-     */
+    /** @var TwitterMediaSizeSerializer | Mock */
     private $mediaSizeSerializer;
+
+    /** @var TwitterMediaSerializer */
+    private $serializer;
 
     public function setUp()
     {
@@ -48,11 +44,11 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $user = $this->getTwitterUser(42, 'douglas');
+        $object = \Mockery::mock(TwitterSerializable::class);
 
-        $this->setExpectedException('\\InvalidArgumentException');
+        $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($user);
+        $this->serializer->serialize($object);
     }
 
     /**

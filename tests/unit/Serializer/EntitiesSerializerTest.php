@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Mockery\Mock;
 use Twitter\Serializer\TwitterEntitiesSerializer;
 use Twitter\Serializer\TwitterExtendedEntitySerializer;
 use Twitter\Serializer\TwitterHashtagSerializer;
@@ -10,45 +11,32 @@ use Twitter\Serializer\TwitterUrlSerializer;
 use Twitter\Serializer\TwitterUserMentionSerializer;
 use Twitter\Test\Mock\TwitterObjectMocker;
 use Twitter\Test\Mock\TwitterSerializerMocker;
+use Twitter\TwitterSerializable;
 
 class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
 {
     use TwitterObjectMocker, TwitterSerializerMocker;
 
-    /**
-     * @var TwitterEntitiesSerializer
-     */
-    private $serializer;
-
-    /**
-     * @var TwitterExtendedEntitySerializer
-     */
+    /** @var TwitterExtendedEntitySerializer | Mock */
     private $extendedEntitySerializer;
 
-    /**
-     * @var TwitterHashtagSerializer
-     */
+    /** @var TwitterHashtagSerializer | Mock */
     private $hashtagSerializer;
 
-    /**
-     * @var TwitterMediaSerializer
-     */
+    /** @var TwitterMediaSerializer | Mock */
     private $mediaSerializer;
 
-    /**
-     * @var TwitterSymbolSerializer
-     */
+    /** @var TwitterSymbolSerializer | Mock */
     private $symbolSerializer;
 
-    /**
-     * @var TwitterUrlSerializer
-     */
+    /** @var TwitterUrlSerializer | Mock */
     private $urlSerializer;
 
-    /**
-     * @var TwitterUserMentionSerializer
-     */
+    /** @var TwitterUserMentionSerializer | Mock */
     private $userMentionSerializer;
+
+    /** @var TwitterEntitiesSerializer */
+    private $serializer;
 
     public function setUp()
     {
@@ -79,11 +67,11 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $user = $this->getTwitterUser(42, 'douglas');
+        $object = \Mockery::mock(TwitterSerializable::class);
 
-        $this->setExpectedException('\\InvalidArgumentException');
+        $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($user);
+        $this->serializer->serialize($object);
     }
 
     /**
