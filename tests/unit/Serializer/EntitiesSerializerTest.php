@@ -84,7 +84,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
     private $userMentionSerializer;
 
     /** @var TwitterEntitiesSerializer */
-    private $serializer;
+    private $serviceUnderTest;
 
     public function setUp()
     {
@@ -112,7 +112,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
         $this->twitterEntities = $this->getTwitterEntities();
         $this->serializedEntities = $this->getSerializedEntities();
 
-        $this->serializer = new TwitterEntitiesSerializer(
+        $this->serviceUnderTest = new TwitterEntitiesSerializer(
             $this->extendedEntitySerializer,
             $this->hashtagSerializer,
             $this->mediaSerializer,
@@ -136,7 +136,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -151,7 +151,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
         $this->itWillSerializeMedia();
         $this->itWillSerializeExtendedEntity();
 
-        $serialized = $this->serializer->serialize($this->twitterEntities);
+        $serialized = $this->serviceUnderTest->serialize($this->twitterEntities);
 
         $this->assertEquals([$this->serializedHashtag], $serialized->hashtags);
         $this->assertEquals([$this->serializedSymbol], $serialized->symbols);
@@ -173,7 +173,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
         $this->itWillUnserializeMedia();
         $this->itWillUnserializeExtendedEntity();
 
-        $entity = $this->serializer->unserialize($this->serializedEntities);
+        $entity = $this->serviceUnderTest->unserialize($this->serializedEntities);
 
         $this->assertEquals(array($this->hashtag), $entity->getHashtags());
         $this->assertEquals(array($this->symbol), $entity->getSymbols());
@@ -192,7 +192,7 @@ class EntitiesSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->unserialize($obj);
     }
 
     /**

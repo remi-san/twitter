@@ -63,7 +63,6 @@ class DirectMessageSerializerTest extends \PHPUnit_Framework_TestCase
     private $serviceUnderTest;
 
 
-
     public function setUp()
     {
         $faker = Factory::create();

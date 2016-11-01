@@ -1,6 +1,7 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Faker\Factory;
 use Mockery\Mock;
 use Twitter\Object\TwitterDisconnect;
 use Twitter\Serializer\TwitterDisconnectSerializer;
@@ -24,13 +25,15 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     private $serializedTwitterDisconnect;
 
     /** @var TwitterDisconnectSerializer */
-    private $serializer;
+    private $serviceUnderTest;
 
     public function setUp()
     {
-        $this->code = '42';
-        $this->streamName = 'abcde';
-        $this->reason = 'whatever';
+        $faker = Factory::create();
+
+        $this->code = (string) $faker->randomNumber();
+        $this->streamName = $faker->word;
+        $this->reason = $faker->text();
 
         $this->twitterDisconnect = TwitterDisconnect::create(
             $this->code,
@@ -39,7 +42,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
         );
         $this->serializedTwitterDisconnect = $this->getSerializedTwitterDisconnect();
 
-        $this->serializer = new TwitterDisconnectSerializer();
+        $this->serviceUnderTest = new TwitterDisconnectSerializer();
     }
 
     public function tearDown()
@@ -56,7 +59,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -64,7 +67,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $serialized = $this->serializer->serialize($this->twitterDisconnect);
+        $serialized = $this->serviceUnderTest->serialize($this->twitterDisconnect);
 
         $this->assertEquals($this->code, $serialized->disconnect->code);
         $this->assertEquals($this->streamName, $serialized->disconnect->stream_name);
@@ -78,7 +81,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $innerDisconnect = $this->serializedTwitterDisconnect->disconnect;
 
-        $disconnect = $this->serializer->unserialize($this->serializedTwitterDisconnect);
+        $disconnect = $this->serviceUnderTest->unserialize($this->serializedTwitterDisconnect);
 
         $this->assertEquals($innerDisconnect->code, $disconnect->getCode());
         $this->assertEquals($innerDisconnect->stream_name, $disconnect->getStreamName());
@@ -94,7 +97,7 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->unserialize($obj);
     }
 
     /**
@@ -113,9 +116,9 @@ class DisconnectSerializerTest extends \PHPUnit_Framework_TestCase
     private function getSerializedTwitterDisconnect()
     {
         $innerDisconnect = new \stdClass();
-        $innerDisconnect->code = 'code';
-        $innerDisconnect->stream_name = 'stream';
-        $innerDisconnect->reason = 'reason';
+        $innerDisconnect->code = $this->code;
+        $innerDisconnect->stream_name = $this->streamName;
+        $innerDisconnect->reason = $this->reason;
 
         $serializedTwitterDisconnect = new \stdClass();
         $serializedTwitterDisconnect->disconnect = $innerDisconnect;

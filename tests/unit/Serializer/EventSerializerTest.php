@@ -26,13 +26,14 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
     private $eventTargetSerializer;
 
     /** @var TwitterEventSerializer */
-    private $serializer;
+    private $serviceUnderTest;
 
     public function setUp()
     {
         $this->userSerializer = $this->getUserSerializer();
         $this->eventTargetSerializer = $this->getEventTargetSerializer();
-        $this->serializer = new TwitterEventSerializer($this->userSerializer, $this->eventTargetSerializer);
+        
+        $this->serviceUnderTest = new TwitterEventSerializer($this->userSerializer, $this->eventTargetSerializer);
     }
 
     public function tearDown()
@@ -49,7 +50,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -89,7 +90,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $obj->shouldReceive('getObject')->andReturn($tweet);
         $obj->shouldReceive('getDate')->andReturn($date);
 
-        $serialized = $this->serializer->serialize($obj);
+        $serialized = $this->serviceUnderTest->serialize($obj);
 
         $this->assertEquals($type, $serialized->event);
         $this->assertEquals($date->getTimestamp(), (new \DateTimeImmutable($serialized->created_at))->getTimestamp());
@@ -133,7 +134,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $eventObj->created_at = (new \DateTimeImmutable('2015-01-01', new \DateTimeZone('UTC')))
             ->format(TwitterDate::FORMAT);
 
-        $event = $this->serializer->unserialize($eventObj);
+        $event = $this->serviceUnderTest->unserialize($eventObj);
 
         $this->assertEquals($eventObj->event, $event->getType());
         $this->assertEquals($source, $event->getSource());
@@ -151,7 +152,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->unserialize($obj);
     }
 
     /**

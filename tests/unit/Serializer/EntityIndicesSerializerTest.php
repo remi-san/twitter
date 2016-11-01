@@ -1,21 +1,30 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Faker\Factory;
+use Twitter\Object\TwitterEntityIndices;
 use Twitter\Serializer\TwitterEntityIndicesSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var int */
+    private $from;
+
+    /** @var int */
+    private $to;
 
     /** @var TwitterEntityIndicesSerializer */
-    private $serializer;
+    private $serviceUnderTest;
 
     public function setUp()
     {
-        $this->serializer = new TwitterEntityIndicesSerializer();
+        $faker = Factory::create();
+
+        $this->from = $faker->numberBetween(0, 50);
+        $this->to = $faker->numberBetween(51, 100);
+
+        $this->serviceUnderTest = new TwitterEntityIndicesSerializer();
     }
 
     public function tearDown()
@@ -32,7 +41,7 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -40,17 +49,12 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $from = 42;
-        $to = 666;
+        $entityIndices = TwitterEntityIndices::create($this->from, $this->to);
 
-        $obj = $this->getTwitterEntityIndices();
-        $obj->shouldReceive('getFrom')->andReturn($from);
-        $obj->shouldReceive('getTo')->andReturn($to);
+        $serialized = $this->serviceUnderTest->serialize($entityIndices);
 
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($from, $serialized[0]);
-        $this->assertEquals($to, $serialized[1]);
+        $this->assertEquals($this->from, $serialized[0]);
+        $this->assertEquals($this->to, $serialized[1]);
     }
 
     /**
@@ -58,12 +62,12 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $indicesObj = array(42, 666);
+        $serializedIndices = [$this->from, $this->to];
 
-        $indices = $this->serializer->unserialize($indicesObj);
+        $indices = $this->serviceUnderTest->unserialize($serializedIndices);
 
-        $this->assertEquals(42, $indices->getFrom());
-        $this->assertEquals(666, $indices->getTo());
+        $this->assertEquals($this->from, $indices->getFrom());
+        $this->assertEquals($this->to, $indices->getTo());
     }
 
     /**
@@ -71,11 +75,11 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
+        $obj = $this->getIllegalObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->unserialize($obj);
     }
 
     /**
@@ -86,5 +90,13 @@ class EntityIndicesSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterEntityIndicesSerializer::build();
 
         $this->assertInstanceOf(TwitterEntityIndicesSerializer::class, $serializer);
+    }
+
+    /**
+     * @return array
+     */
+    private function getIllegalObject()
+    {
+        return [];
     }
 }
