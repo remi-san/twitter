@@ -119,7 +119,7 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
+        $object = $this->getIllegalObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -131,28 +131,11 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $this->mediaSize->shouldReceive('getName')->andReturn($this->sizeName);
+        $this->itWillSerializeMediaSize();
+        $this->itWillSerializeVariantMedia();
+        $this->itWillSerializeIndices();
 
-        $this->mediaSizeSerializer->shouldReceive('serialize')->with($this->mediaSize)->andReturn($this->sizeObj);
-        $this->variantMediaSerializer->shouldReceive('serialize')->with($this->variant)->andReturn($this->variantObj);
-        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->indicesObj);
-
-        $obj = TwitterExtendedEntity::create(
-            $this->id,
-            $this->mediaUrl,
-            $this->mediaUrlHttps,
-            $this->url,
-            $this->displayUrl,
-            $this->expandedUrl,
-            [$this->mediaSize],
-            $this->type,
-            $this->videoInfo,
-            $this->durationMillis,
-            [$this->variant],
-            $this->indices
-        );
-
-        $serialized = $this->serializer->serialize($obj);
+        $serialized = $this->serializer->serialize($this->getTwitterExtendedEntity());
 
         $this->assertEquals($this->id, $serialized->id);
         $this->assertEquals($this->mediaUrl, $serialized->media_url);
@@ -173,25 +156,11 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $this->mediaSizeSerializer->shouldReceive('unserialize')->andReturn($this->mediaSize);
-        $this->variantMediaSerializer->shouldReceive('unserialize')->andReturn($this->variant);
-        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
+        $this->itWillUnserializeMediaSize();
+        $this->itWillUnserializeVariantMedia();
+        $this->itWillUnserializeIndices();
 
-        $extendedEntityObj = new \stdClass();
-        $extendedEntityObj->id = $this->id;
-        $extendedEntityObj->media_url = $this->mediaUrl;
-        $extendedEntityObj->media_url_https = $this->mediaUrlHttps;
-        $extendedEntityObj->url = $this->url;
-        $extendedEntityObj->display_url = $this->displayUrl;
-        $extendedEntityObj->expanded_url = $this->expandedUrl;
-        $extendedEntityObj->type = $this->type;
-        $extendedEntityObj->video_info = $this->videoInfo;
-        $extendedEntityObj->duration_millis = $this->durationMillis;
-        $extendedEntityObj->indices = [];
-        $extendedEntityObj->sizes = [$this->sizeName => $this->sizeObj];
-        $extendedEntityObj->variants = [$this->variantObj];
-
-        $extendedEntity = $this->serializer->unserialize($extendedEntityObj);
+        $extendedEntity = $this->serializer->unserialize($this->getSerializedObject());
 
         $this->assertEquals($this->id, $extendedEntity->getId());
         $this->assertEquals($this->mediaUrl, $extendedEntity->getMediaUrl());
@@ -202,7 +171,6 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->type, $extendedEntity->getType());
         $this->assertEquals($this->videoInfo, $extendedEntity->getVideoInfo());
         $this->assertEquals($this->durationMillis, $extendedEntity->getDurationMillis());
-
         $this->assertEquals($this->indices, $extendedEntity->getIndices());
         $this->assertEquals([$this->sizeName => $this->mediaSize], $extendedEntity->getSizes());
         $this->assertEquals([$this->variant], $extendedEntity->getVariants());
@@ -213,7 +181,7 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
+        $obj = $this->getIllegalSerializedObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -228,5 +196,94 @@ class ExtendedEntitySerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterExtendedEntitySerializer::build();
 
         $this->assertInstanceOf(TwitterExtendedEntitySerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterExtendedEntity
+     */
+    private function getTwitterExtendedEntity()
+    {
+        return TwitterExtendedEntity::create(
+            $this->id,
+            $this->mediaUrl,
+            $this->mediaUrlHttps,
+            $this->url,
+            $this->displayUrl,
+            $this->expandedUrl,
+            [$this->mediaSize],
+            $this->type,
+            $this->videoInfo,
+            $this->durationMillis,
+            [$this->variant],
+            $this->indices
+        );
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getSerializedObject()
+    {
+        $extendedEntityObj = new \stdClass();
+        $extendedEntityObj->id = $this->id;
+        $extendedEntityObj->media_url = $this->mediaUrl;
+        $extendedEntityObj->media_url_https = $this->mediaUrlHttps;
+        $extendedEntityObj->url = $this->url;
+        $extendedEntityObj->display_url = $this->displayUrl;
+        $extendedEntityObj->expanded_url = $this->expandedUrl;
+        $extendedEntityObj->type = $this->type;
+        $extendedEntityObj->video_info = $this->videoInfo;
+        $extendedEntityObj->duration_millis = $this->durationMillis;
+        $extendedEntityObj->indices = [];
+        $extendedEntityObj->sizes = [$this->sizeName => $this->sizeObj];
+        $extendedEntityObj->variants = [$this->variantObj];
+        return $extendedEntityObj;
+    }
+
+    private function itWillSerializeMediaSize()
+    {
+        $this->mediaSize->shouldReceive('getName')->andReturn($this->sizeName);
+        $this->mediaSizeSerializer->shouldReceive('serialize')->with($this->mediaSize)->andReturn($this->sizeObj);
+    }
+
+    private function itWillSerializeVariantMedia()
+    {
+        $this->variantMediaSerializer->shouldReceive('serialize')->with($this->variant)->andReturn($this->variantObj);
+    }
+
+    private function itWillSerializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->indicesObj);
+    }
+
+    private function itWillUnserializeMediaSize()
+    {
+        $this->mediaSizeSerializer->shouldReceive('unserialize')->andReturn($this->mediaSize);
+    }
+
+    private function itWillUnserializeVariantMedia()
+    {
+        $this->variantMediaSerializer->shouldReceive('unserialize')->andReturn($this->variant);
+    }
+
+    private function itWillUnserializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getIllegalObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getIllegalSerializedObject()
+    {
+        return new \stdClass();
     }
 }

@@ -1,20 +1,22 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Twitter\Object\TwitterFriends;
 use Twitter\Serializer\TwitterFriendsSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var int[] */
+    private $friends;
 
     /** @var TwitterFriendsSerializer */
     private $serializer;
 
     public function setUp()
     {
+        $this->friends = [1, 2, 3];
+
         $this->serializer = new TwitterFriendsSerializer();
     }
 
@@ -28,7 +30,7 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
+        $object = $this->getIllegalObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -40,14 +42,11 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $friends = array(1, 2, 3);
-
-        $obj = $this->getFriends();
-        $obj->shouldReceive('getFriends')->andReturn($friends);
+        $obj = $this->getLegalObject();
 
         $serialized = $this->serializer->serialize($obj);
 
-        $this->assertEquals($friends, $serialized->friends);
+        $this->assertEquals($this->friends, $serialized->friends);
     }
 
     /**
@@ -55,12 +54,11 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $friendsObj = new \stdClass();
-        $friendsObj->friends = array(1, 2, 3);
+        $friendsObj = $this->getSerializedObject();
 
         $friends = $this->serializer->unserialize($friendsObj);
 
-        $this->assertEquals($friendsObj->friends, $friends->getFriends());
+        $this->assertEquals($this->friends, $friends->getFriends());
     }
 
     /**
@@ -68,7 +66,7 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
+        $obj = $this->getIllegaleSerializedObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -83,5 +81,39 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterFriendsSerializer::build();
 
         $this->assertInstanceOf(TwitterFriendsSerializer::class, $serializer);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getSerializedObject()
+    {
+        $friendsObj = new \stdClass();
+        $friendsObj->friends = $this->friends;
+        return $friendsObj;
+    }
+
+    /**
+     * @return TwitterFriends
+     */
+    private function getLegalObject()
+    {
+        return TwitterFriends::create($this->friends);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getIllegaleSerializedObject()
+    {
+        return new \stdClass();
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getIllegalObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
     }
 }
