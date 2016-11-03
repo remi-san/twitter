@@ -2,19 +2,41 @@
 namespace Twitter\Test\Serializer;
 
 use Mockery\Mock;
-use Twitter\Object\Tweet;
 use Twitter\Object\TwitterDate;
-use Twitter\Object\TwitterEntities;
 use Twitter\Object\TwitterEvent;
 use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterEventSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
-use Twitter\TwitterMessageId;
+use Twitter\TwitterEventTarget;
 use Twitter\TwitterSerializable;
 
 class EventSerializerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var string */
+    private $type;
+
+    /** @var \DateTimeInterface */
+    private $date;
+
+    /** @var TwitterUser | Mock */
+    private $source;
+
+    /** @var TwitterUser | Mock */
+    private $target;
+
+    /** @var TwitterEventTarget | Mock */
+    private $targetObject;
+
+    /** @var object */
+    private $serializedSource;
+
+    /** @var object */
+    private $serializedTarget;
+
+    /** @var object */
+    private $serializedTargetObject;
+
     /** @var TwitterUserSerializer | Mock */
     private $userSerializer;
 
@@ -26,6 +48,16 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->type = TwitterEvent::FAVORITE;
+        $this->date = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $this->source = \Mockery::mock(TwitterUser::class);
+        $this->target = \Mockery::mock(TwitterUser::class);
+        $this->targetObject = \Mockery::mock(TwitterEventTarget::class);
+
+        $this->serializedSource = new \stdClass();
+        $this->serializedTarget = new \stdClass();
+        $this->serializedTargetObject = new \stdClass();
+
         $this->userSerializer = \Mockery::mock(TwitterUserSerializer::class);
         $this->eventTargetSerializer = \Mockery::mock(TwitterEventTargetSerializer::class);
 
@@ -42,7 +74,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
+        $object = $this->getIllegalObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -54,43 +86,19 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $type = TwitterEvent::FAVORITE;
-        $date = new \DateTimeImmutable();
+        $this->itWillSerializeSource();
+        $this->itWillSerializeTarget();
+        $this->itWillWSerializeTargetObject();
 
-        $sourceObj = new \stdClass();
-        $source = \Mockery::mock(TwitterUser::class);
-        $this->userSerializer->shouldReceive('serialize')->with($source)->andReturn($sourceObj);
-
-        $userObj = new \stdClass();
-        $user = \Mockery::mock(TwitterUser::class);
-        $this->userSerializer->shouldReceive('serialize')->with($user)->andReturn($userObj);
-
-        $tweetObj = new \stdClass();
-        $tweet = Tweet::create(
-            TwitterMessageId::create(1),
-            TwitterUser::create(),
-            'text',
-            'fr',
-            new \DateTimeImmutable(),
-            \Mockery::mock(TwitterEntities::class)
-        );
-        $this->eventTargetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj);
-
-        $obj = TwitterEvent::create(
-            $type,
-            $source,
-            $user,
-            $tweet,
-            $date
-        );
+        $obj = $this->getEvent();
 
         $serialized = $this->serviceUnderTest->serialize($obj);
 
-        $this->assertEquals($type, $serialized->event);
-        $this->assertEquals($date->getTimestamp(), (new \DateTimeImmutable($serialized->created_at))->getTimestamp());
-        $this->assertEquals($sourceObj, $serialized->source);
-        $this->assertEquals($userObj, $serialized->target);
-        $this->assertEquals($tweetObj, $serialized->target_object);
+        $this->assertEquals($this->type, $serialized->event);
+        $this->assertEquals($this->date->format(TwitterDate::FORMAT), $serialized->created_at);
+        $this->assertEquals($this->serializedSource, $serialized->source);
+        $this->assertEquals($this->serializedTarget, $serialized->target);
+        $this->assertEquals($this->serializedTargetObject, $serialized->target_object);
     }
 
     /**
@@ -98,39 +106,18 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $sourceObj = new \stdClass();
-        $source = \Mockery::mock(TwitterUser::class);
-        $this->userSerializer->shouldReceive('unserialize')->with($sourceObj)->andReturn($source);
+        $this->itWillUnserializeSource();
+        $this->itWillUnserializeTarget();
+        $this->itWillUnserializeTargetObject();
 
-        $userObj = new \stdClass();
-        $user = \Mockery::mock(TwitterUser::class);
-        $this->userSerializer->shouldReceive('unserialize')->with($userObj)->andReturn($user);
-
-        $tweetObj = new \stdClass();
-        $tweet = Tweet::create(
-            TwitterMessageId::create(1),
-            TwitterUser::create(),
-            'text',
-            'fr',
-            new \DateTimeImmutable(),
-            \Mockery::mock(TwitterEntities::class)
-        );
-        $this->eventTargetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
-
-        $eventObj = new \stdClass();
-        $eventObj->event = '';
-        $eventObj->source = $sourceObj;
-        $eventObj->target = $userObj;
-        $eventObj->target_object = $tweetObj;
-        $eventObj->created_at = (new \DateTimeImmutable('2015-01-01', new \DateTimeZone('UTC')))
-            ->format(TwitterDate::FORMAT);
+        $eventObj = $this->getSerializedEvent();
 
         $event = $this->serviceUnderTest->unserialize($eventObj);
 
         $this->assertEquals($eventObj->event, $event->getType());
-        $this->assertEquals($source, $event->getSource());
-        $this->assertEquals($user, $event->getTarget());
-        $this->assertEquals($tweet, $event->getObject());
+        $this->assertEquals($this->source, $event->getSource());
+        $this->assertEquals($this->target, $event->getTarget());
+        $this->assertEquals($this->targetObject, $event->getObject());
         $this->assertEquals(new \DateTimeImmutable($eventObj->created_at), $event->getDate());
     }
 
@@ -139,7 +126,7 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
+        $obj = $this->getIllegalSerializedObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -154,5 +141,79 @@ class EventSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterEventSerializer::build();
 
         $this->assertInstanceOf(TwitterEventSerializer::class, $serializer);
+    }
+
+    private function itWillSerializeSource()
+    {
+        $this->userSerializer->shouldReceive('serialize')->with($this->source)->andReturn($this->serializedSource);
+    }
+
+    private function itWillSerializeTarget()
+    {
+        $this->userSerializer->shouldReceive('serialize')->with($this->target)->andReturn($this->serializedTarget);
+    }
+
+    private function itWillWSerializeTargetObject()
+    {
+        $this->eventTargetSerializer
+            ->shouldReceive('serialize')
+            ->with($this->targetObject)
+            ->andReturn($this->serializedTargetObject);
+    }
+
+    private function itWillUnserializeSource()
+    {
+        $this->userSerializer->shouldReceive('unserialize')->with($this->serializedSource)->andReturn($this->source);
+    }
+
+    private function itWillUnserializeTarget()
+    {
+        $this->userSerializer->shouldReceive('unserialize')->with($this->serializedTarget)->andReturn($this->target);
+    }
+
+    private function itWillUnserializeTargetObject()
+    {
+        $this->eventTargetSerializer
+            ->shouldReceive('unserialize')
+            ->with($this->serializedTargetObject)
+            ->andReturn($this->targetObject);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getSerializedEvent()
+    {
+        $eventObj = new \stdClass();
+        $eventObj->event = $this->type;
+        $eventObj->source = $this->serializedSource;
+        $eventObj->target = $this->serializedTarget;
+        $eventObj->target_object = $this->serializedTargetObject;
+        $eventObj->created_at = $this->date->format(TwitterDate::FORMAT);
+        return $eventObj;
+    }
+
+    /**
+     * @return TwitterEvent
+     */
+    private function getEvent()
+    {
+        return TwitterEvent::create($this->type, $this->source, $this->target, $this->targetObject, $this->date);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getIllegalObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getIllegalSerializedObject()
+    {
+        return new \stdClass();
     }
 }

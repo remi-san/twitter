@@ -3,29 +3,24 @@ namespace Twitter\Test\Serializer;
 
 use Mockery\Mock;
 use Twitter\Object\Tweet;
-use Twitter\Object\TwitterEntities;
-use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TweetSerializer;
 use Twitter\Serializer\TwitterEventTargetSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
-use Twitter\TwitterMessageId;
+use Twitter\TwitterEventTarget;
 use Twitter\TwitterSerializable;
 
 class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
-
     /** @var TweetSerializer | Mock */
     private $tweetSerializer;
 
     /** @var TwitterEventTargetSerializer */
-    private $serializer;
+    private $serviceUnderTest;
 
     public function setUp()
     {
-        $this->tweetSerializer = $this->getTweetSerializer();
-        $this->serializer = new TwitterEventTargetSerializer($this->tweetSerializer);
+        $this->tweetSerializer = \Mockery::mock(TweetSerializer::class);
+
+        $this->serviceUnderTest = new TwitterEventTargetSerializer($this->tweetSerializer);
     }
 
     public function tearDown()
@@ -38,12 +33,13 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-        $this->tweetSerializer->shouldReceive('canSerialize')->with($object)->andReturn(false);
+        $object = $this->getIllegalObject();
+
+        $this->tweetSerializerCanNotSerialize($object);
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -52,16 +48,15 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     public function itShouldSerializeWithLegalObject()
     {
         $tweetObj = new \stdClass();
-        $tweetObj->id = 42;
-        $tweetObj->user = new \stdClass();
-        $tweetObj->text = 'my tweet';
+        $tweet = \Mockery::mock(Tweet::class);
 
-        $tweet = $this->getTweet();
+        $this->tweetSerializerCanSerialize($tweet);
 
-        $this->tweetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj)->once();
-        $this->tweetSerializer->shouldReceive('canSerialize')->with($tweet)->andReturn(true);
+        $this->assertTweetSerializerWillSerializeTweet($tweet, $tweetObj);
 
-        $this->serializer->serialize($tweet);
+        $return = $this->serviceUnderTest->serialize($tweet);
+
+        $this->assertEquals($tweetObj, $return);
     }
 
     /**
@@ -69,12 +64,13 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObjectNotImplemented()
     {
-        $this->setExpectedException('\\BadMethodCallException');
+        $object = \Mockery::mock(TwitterEventTarget::class);
 
-        $obj = \Mockery::mock('\\Twitter\\TwitterEventTarget');
-        $this->tweetSerializer->shouldReceive('canSerialize')->with($obj)->andReturn(true);
+        $this->tweetSerializerCanNotSerialize($object);
 
-        $this->serializer->serialize($obj);
+        $this->setExpectedException(\BadMethodCallException::class);
+
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -83,23 +79,12 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
     public function itShouldUnserialize()
     {
         $tweetObj = new \stdClass();
-        $tweetObj->id = 42;
-        $tweetObj->user = new \stdClass();
-        $tweetObj->text = 'my tweet';
+        $tweet = \Mockery::mock(Tweet::class);
 
-        $tweet = Tweet::create(
-            TwitterMessageId::create(1),
-            TwitterUser::create(),
-            'text',
-            'fr',
-            new \DateTimeImmutable(),
-            \Mockery::mock(TwitterEntities::class)
-        );
+        $this->tweetSerializerCanUnserialize($tweetObj);
+        $this->assertTweetSerializerWillUnserializeTweet($tweetObj, $tweet);
 
-        $this->tweetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet);
-        $this->tweetSerializer->shouldReceive('canUnserialize')->with($tweetObj)->andReturn(true);
-
-        $eventTarget = $this->serializer->unserialize($tweetObj);
+        $eventTarget = $this->serviceUnderTest->unserialize($tweetObj);
 
         $this->assertEquals($tweet, $eventTarget);
     }
@@ -109,11 +94,11 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserializeNull()
     {
-        $obj = new \stdClass();
+        $obj = $this->getNullObject();
 
         $this->tweetSerializer->shouldReceive('canUnserialize')->with($obj)->andReturn(false);
 
-        $eventTarget = $this->serializer->unserialize($obj);
+        $eventTarget = $this->serviceUnderTest->unserialize($obj);
 
         $this->assertNull($eventTarget);
     }
@@ -126,5 +111,63 @@ class EventTargetSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterEventTargetSerializer::build();
 
         $this->assertInstanceOf(TwitterEventTargetSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getIllegalObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @param $object
+     */
+    private function tweetSerializerCanNotSerialize($object)
+    {
+        $this->tweetSerializer->shouldReceive('canSerialize')->with($object)->andReturn(false);
+    }
+
+    /**
+     * @param $tweet
+     */
+    private function tweetSerializerCanSerialize($tweet)
+    {
+        $this->tweetSerializer->shouldReceive('canSerialize')->with($tweet)->andReturn(true);
+    }
+
+    /**
+     * @param $tweet
+     * @param $tweetObj
+     */
+    private function assertTweetSerializerWillSerializeTweet($tweet, $tweetObj)
+    {
+        $this->tweetSerializer->shouldReceive('serialize')->with($tweet)->andReturn($tweetObj)->once();
+    }
+
+    /**
+     * @param $tweetObj
+     */
+    private function tweetSerializerCanUnserialize($tweetObj)
+    {
+        $this->tweetSerializer->shouldReceive('canUnserialize')->with($tweetObj)->andReturn(true);
+    }
+
+    /**
+     * @param $tweetObj
+     * @param $tweet
+     */
+    private function assertTweetSerializerWillUnserializeTweet($tweetObj, $tweet)
+    {
+        $this->tweetSerializer->shouldReceive('unserialize')->with($tweetObj)->andReturn($tweet)->once();
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getNullObject()
+    {
+        return new \stdClass();
     }
 }
