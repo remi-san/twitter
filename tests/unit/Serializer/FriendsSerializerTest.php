@@ -11,13 +11,13 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
     private $friends;
 
     /** @var TwitterFriendsSerializer */
-    private $serializer;
+    private $serviceUnderTest;
 
     public function setUp()
     {
         $this->friends = [1, 2, 3];
 
-        $this->serializer = new TwitterFriendsSerializer();
+        $this->serviceUnderTest = new TwitterFriendsSerializer();
     }
 
     public function tearDown()
@@ -34,7 +34,7 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serviceUnderTest->serialize($object);
     }
 
     /**
@@ -44,7 +44,7 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->getLegalObject();
 
-        $serialized = $this->serializer->serialize($obj);
+        $serialized = $this->serviceUnderTest->serialize($obj);
 
         $this->assertEquals($this->friends, $serialized->friends);
     }
@@ -56,7 +56,7 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $friendsObj = $this->getSerializedObject();
 
-        $friends = $this->serializer->unserialize($friendsObj);
+        $friends = $this->serviceUnderTest->unserialize($friendsObj);
 
         $this->assertEquals($this->friends, $friends->getFriends());
     }
@@ -70,7 +70,7 @@ class FriendsSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serviceUnderTest->unserialize($obj);
     }
 
     /**
