@@ -96,11 +96,9 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serviceUnderTest->serialize($object);
+        $this->serviceUnderTest->serialize($this->getInvalidObject());
     }
 
     /**
@@ -108,23 +106,10 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $this->mediaSize->shouldReceive('getName')->andReturn($this->sizeName);
-        $this->mediaSizeSerializer->shouldReceive('serialize')->with($this->mediaSize)->andReturn($this->serializedSize);
-        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->serializedIndices);
+        $this->givenMediaSerializerWillSerializeMedia();
+        $this->givenIndicesSerializerWillSerializeIndices();
 
-        $obj = TwitterMedia::create(
-            $this->id,
-            $this->mediaUrl,
-            $this->mediaUrlHttps,
-            $this->url,
-            $this->displayUrl,
-            $this->expandedUrl,
-            [$this->mediaSize],
-            $this->type,
-            $this->indices
-        );
-
-        $serialized = $this->serviceUnderTest->serialize($obj);
+        $serialized = $this->serviceUnderTest->serialize($this->getValidObject());
 
         $this->assertEquals($this->id, $serialized->id);
         $this->assertEquals($this->mediaUrl, $serialized->media_url);
@@ -142,22 +127,10 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $this->mediaSizeSerializer->shouldReceive('unserialize')->andReturn($this->mediaSize);
+        $this->givenMediaSerializerWillUnserializeMedia();
+        $this->givenIndicesSerializerWillUnserializeIndices();
 
-        $mediaObj = new \stdClass();
-        $mediaObj->id = $this->id;
-        $mediaObj->media_url = $this->mediaUrl;
-        $mediaObj->media_url_https = $this->mediaUrlHttps;
-        $mediaObj->url = $this->url;
-        $mediaObj->display_url = $this->displayUrl;
-        $mediaObj->expanded_url = $this->expandedUrl;
-        $mediaObj->type = $this->type;
-        $mediaObj->indices = $this->serializedIndices;
-        $mediaObj->sizes = [ $this->sizeName => $this->serializedSize ];
-
-        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
-
-        $media = $this->serviceUnderTest->unserialize($mediaObj);
+        $media = $this->serviceUnderTest->unserialize($this->getValidSerializedObject());
 
         $this->assertEquals($this->id, $media->getId());
         $this->assertEquals($this->mediaUrl, $media->getMediaUrl());
@@ -175,11 +148,9 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serviceUnderTest->unserialize($obj);
+        $this->serviceUnderTest->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -190,5 +161,86 @@ class MediaSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterMediaSerializer::build();
 
         $this->assertInstanceOf(TwitterMediaSerializer::class, $serializer);
+    }
+
+    private function givenMediaSerializerWillSerializeMedia()
+    {
+        $this->mediaSize
+            ->shouldReceive('getName')
+            ->andReturn($this->sizeName);
+        $this->mediaSizeSerializer
+            ->shouldReceive('serialize')
+            ->with($this->mediaSize)
+            ->andReturn($this->serializedSize);
+    }
+
+    private function givenIndicesSerializerWillSerializeIndices()
+    {
+        $this->entityIndicesSerializer
+            ->shouldReceive('serialize')
+            ->with($this->indices)
+            ->andReturn($this->serializedIndices);
+    }
+
+    private function givenMediaSerializerWillUnserializeMedia()
+    {
+        $this->mediaSizeSerializer->shouldReceive('unserialize')->andReturn($this->mediaSize);
+    }
+
+    private function givenIndicesSerializerWillUnserializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterMedia
+     */
+    private function getValidObject()
+    {
+        return TwitterMedia::create(
+            $this->id,
+            $this->mediaUrl,
+            $this->mediaUrlHttps,
+            $this->url,
+            $this->displayUrl,
+            $this->expandedUrl,
+            [$this->mediaSize],
+            $this->type,
+            $this->indices
+        );
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $mediaObj = new \stdClass();
+        $mediaObj->id = $this->id;
+        $mediaObj->media_url = $this->mediaUrl;
+        $mediaObj->media_url_https = $this->mediaUrlHttps;
+        $mediaObj->url = $this->url;
+        $mediaObj->display_url = $this->displayUrl;
+        $mediaObj->expanded_url = $this->expandedUrl;
+        $mediaObj->type = $this->type;
+        $mediaObj->indices = $this->serializedIndices;
+        $mediaObj->sizes = [$this->sizeName => $this->serializedSize];
+        return $mediaObj;
     }
 }

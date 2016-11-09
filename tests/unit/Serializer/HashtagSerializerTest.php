@@ -10,6 +10,15 @@ use Twitter\TwitterSerializable;
 
 class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var string */
+    private $text;
+
+    /** @var TwitterEntityIndices | Mock */
+    private $indices;
+
+    /** @var array */
+    private $indicesObj;
+
     /** @var TwitterEntityIndicesSerializer | Mock */
     private $entityIndicesSerializer;
 
@@ -18,6 +27,11 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->text = 'hashtag';
+        $this->indices = \Mockery::mock(TwitterEntityIndices::class);
+
+        $this->indicesObj = [];
+
         $this->entityIndicesSerializer = \Mockery::mock(TwitterEntityIndicesSerializer::class);
 
         $this->serviceUnderTest = new TwitterHashtagSerializer($this->entityIndicesSerializer);
@@ -33,11 +47,9 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serviceUnderTest->serialize($object);
+        $this->serviceUnderTest->serialize($this->getInvalidObject());
     }
 
     /**
@@ -45,18 +57,12 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $text = 'hashtag';
-        $indices = \Mockery::mock(TwitterEntityIndices::class);
-        $indicesObj = new \stdClass();
+        $this->givenSerializerWillSerializeIndices();
 
-        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+        $serialized = $this->serviceUnderTest->serialize($this->getValidObject());
 
-        $obj = TwitterHashtag::create($text, $indices);
-
-        $serialized = $this->serviceUnderTest->serialize($obj);
-
-        $this->assertEquals($text, $serialized->text);
-        $this->assertEquals($indicesObj, $serialized->indices);
+        $this->assertEquals($this->text, $serialized->text);
+        $this->assertEquals($this->indicesObj, $serialized->indices);
     }
 
     /**
@@ -64,17 +70,12 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $hashtagObj = new \stdClass();
-        $hashtagObj->text = 'text';
-        $hashtagObj->indices = [];
+        $this->givenSerializerWillUnserializeIndices();
 
-        $indices = \Mockery::mock(TwitterEntityIndices::class);
-        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
+        $hashtag = $this->serviceUnderTest->unserialize($this->getValidSerializedObject());
 
-        $hashtag = $this->serviceUnderTest->unserialize($hashtagObj);
-
-        $this->assertEquals($hashtagObj->text, $hashtag->getText());
-        $this->assertEquals($indices, $hashtag->getIndices());
+        $this->assertEquals($this->text, $hashtag->getText());
+        $this->assertEquals($this->indices, $hashtag->getIndices());
     }
 
     /**
@@ -82,11 +83,9 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serviceUnderTest->unserialize($obj);
+        $this->serviceUnderTest->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -97,5 +96,50 @@ class HashtagSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterHashtagSerializer::build();
 
         $this->assertInstanceOf(TwitterHashtagSerializer::class, $serializer);
+    }
+
+    private function givenSerializerWillSerializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->indicesObj);
+    }
+
+    private function givenSerializerWillUnserializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterHashtag
+     */
+    private function getValidObject()
+    {
+        return TwitterHashtag::create($this->text, $this->indices);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $hashtagObj = new \stdClass();
+        $hashtagObj->text = $this->text;
+        $hashtagObj->indices = $this->indicesObj;
+        return $hashtagObj;
     }
 }

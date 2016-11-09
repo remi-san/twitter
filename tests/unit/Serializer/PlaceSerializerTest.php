@@ -3,14 +3,10 @@ namespace Twitter\Test\Serializer;
 
 use Twitter\Object\TwitterPlace;
 use Twitter\Serializer\TwitterPlaceSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
-
     /** @var TwitterPlaceSerializer */
     private $serializer;
 
@@ -29,11 +25,9 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -41,9 +35,7 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $obj = $this->getPlace();
-
-        $serialized = $this->serializer->serialize($obj);
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
         $this->assertEquals(new \stdClass(), $serialized);
     }
@@ -53,9 +45,7 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $placeObj = new \stdClass();
-
-        $place = $this->serializer->unserialize($placeObj);
+        $place = $this->serializer->unserialize($this->getValidSerializedObject());
 
         $this->assertTrue($place instanceof TwitterPlace);
     }
@@ -67,7 +57,7 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize(null);
+        $this->serializer->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -78,5 +68,37 @@ class PlaceSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterPlaceSerializer::build();
 
         $this->assertInstanceOf(TwitterPlaceSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterPlace
+     */
+    private function getValidObject()
+    {
+        return \Mockery::mock(TwitterPlace::class);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        return new \stdClass();
+    }
+
+    /**
+     * @return null
+     */
+    private function getInvalidSerializedObject()
+    {
+        return null;
     }
 }

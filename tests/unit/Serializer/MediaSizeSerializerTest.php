@@ -1,20 +1,34 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Twitter\Object\TwitterMediaSize;
 use Twitter\Serializer\TwitterMediaSizeSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var string */
+    private $name;
+
+    /** @var int */
+    private $width;
+
+    /** @var int */
+    private $height;
+
+    /** @var bool */
+    private $resize;
 
     /** @var TwitterMediaSizeSerializer */
     private $serializer;
 
     public function setUp()
     {
+        $this->name = 'name';
+        $this->width = 1920;
+        $this->height = 1080;
+        $this->resize = false;
+
         $this->serializer = new TwitterMediaSizeSerializer();
     }
 
@@ -28,11 +42,9 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -40,20 +52,11 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $w = 1920;
-        $h = 1080;
-        $resize = false;
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
-        $obj = $this->getTwitterMediaSize();
-        $obj->shouldReceive('getWidth')->andReturn($w);
-        $obj->shouldReceive('getHeight')->andReturn($h);
-        $obj->shouldReceive('getResize')->andReturn($resize);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($w, $serialized->w);
-        $this->assertEquals($h, $serialized->h);
-        $this->assertEquals($resize, $serialized->resize);
+        $this->assertEquals($this->width, $serialized->w);
+        $this->assertEquals($this->height, $serialized->h);
+        $this->assertEquals($this->resize, $serialized->resize);
     }
 
     /**
@@ -61,20 +64,16 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $sizeName = '1080p';
-
-        $mediaSizeObj = new \stdClass();
-        $mediaSizeObj->w = 1920;
-        $mediaSizeObj->h = 1080;
-        $mediaSizeObj->resize = false;
-
         $mediaSize = $this->serializer
-            ->unserialize($mediaSizeObj, array(TwitterMediaSizeSerializer::NAME_VAR => $sizeName));
+            ->unserialize(
+                $this->getValidSerializedObject(),
+                array(TwitterMediaSizeSerializer::NAME_VAR => $this->name)
+            );
 
-        $this->assertEquals($sizeName, $mediaSize->getName());
-        $this->assertEquals($mediaSizeObj->resize, $mediaSize->getResize());
-        $this->assertEquals($mediaSizeObj->w, $mediaSize->getWidth());
-        $this->assertEquals($mediaSizeObj->h, $mediaSize->getHeight());
+        $this->assertEquals($this->name, $mediaSize->getName());
+        $this->assertEquals($this->resize, $mediaSize->getResize());
+        $this->assertEquals($this->width, $mediaSize->getWidth());
+        $this->assertEquals($this->height, $mediaSize->getHeight());
     }
 
     /**
@@ -82,11 +81,9 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serializer->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -97,5 +94,41 @@ class MediaSizeSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterMediaSizeSerializer::build();
 
         $this->assertInstanceOf(TwitterMediaSizeSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterMediaSize
+     */
+    private function getValidObject()
+    {
+        return TwitterMediaSize::create($this->name, $this->width, $this->height, $this->resize);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $mediaSizeObj = new \stdClass();
+        $mediaSizeObj->w = $this->width;
+        $mediaSizeObj->h = $this->height;
+        $mediaSizeObj->resize = $this->resize;
+        return $mediaSizeObj;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
     }
 }

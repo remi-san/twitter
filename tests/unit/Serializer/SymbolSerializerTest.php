@@ -3,15 +3,21 @@ namespace Twitter\Test\Serializer;
 
 use Mockery\Mock;
 use Twitter\Object\TwitterEntityIndices;
+use Twitter\Object\TwitterSymbol;
 use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterSymbolSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var string */
+    private $text;
+
+    /** @var TwitterEntityIndices | Mock */
+    private $indices;
+
+    /** @var int[] */
+    private $indicesObj;
 
     /** @var TwitterEntityIndicesSerializer | Mock */
     private $entityIndicesSerializer;
@@ -21,7 +27,13 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityIndicesSerializer = $this->getEntityIndicesSerializer();
+        $this->text = 'symbol';
+        $this->indices = \Mockery::mock(TwitterEntityIndices::class);
+
+        $this->indicesObj = [42, 666];
+
+        $this->entityIndicesSerializer = \Mockery::mock(TwitterEntityIndicesSerializer::class);
+
         $this->serializer = new TwitterSymbolSerializer($this->entityIndicesSerializer);
     }
 
@@ -35,11 +47,9 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -47,20 +57,12 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $text = 'symbol';
+        $this->givenIndicesSerializerWillSerializeIndices();
 
-        $indices = $this->getIndices();
-        $indicesObj = new \stdClass();
-        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
-        $obj = $this->getSymbol();
-        $obj->shouldReceive('getText')->andReturn($text);
-        $obj->shouldReceive('getIndices')->andReturn($indices);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($text, $serialized->text);
-        $this->assertEquals($indicesObj, $serialized->indices);
+        $this->assertEquals($this->text, $serialized->text);
+        $this->assertEquals($this->indicesObj, $serialized->indices);
     }
 
     /**
@@ -68,17 +70,12 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $symbolObj = new \stdClass();
-        $symbolObj->text = 'text';
-        $symbolObj->indices = array(42, 666);
+        $this->givenIndicesSerializerWillUnserializeIndices();
 
-        $indices = TwitterEntityIndices::create(42, 666);
-        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
+        $symbol = $this->serializer->unserialize($this->getValidSerializedObject());
 
-        $symbol = $this->serializer->unserialize($symbolObj);
-
-        $this->assertEquals($symbolObj->text, $symbol->getText());
-        $this->assertEquals($indices, $symbol->getIndices());
+        $this->assertEquals($this->text, $symbol->getText());
+        $this->assertEquals($this->indices, $symbol->getIndices());
     }
 
     /**
@@ -86,11 +83,9 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serializer->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -101,5 +96,50 @@ class SymbolSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterSymbolSerializer::build();
 
         $this->assertInstanceOf(TwitterSymbolSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterSymbol
+     */
+    private function getValidObject()
+    {
+        return TwitterSymbol::create($this->text, $this->indices);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $symbolObj = new \stdClass();
+        $symbolObj->text = $this->text;
+        $symbolObj->indices = $this->indicesObj;
+        return $symbolObj;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
+    }
+
+    private function givenIndicesSerializerWillSerializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->indicesObj);
+    }
+
+    private function givenIndicesSerializerWillUnserializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
     }
 }
