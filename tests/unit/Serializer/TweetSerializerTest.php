@@ -194,6 +194,39 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function itShouldSerializeWithLegalObjectWithoutCoordinatesOrPlace()
+    {
+        $this->givenUserSerializerWillSerializeUser();
+        $this->givenEntitiesSerializerWillSerializeEntities();
+
+        $this->givenCoordinatesSerializerWillNotSerializeCoordinates();
+        $this->givenPlaceSerializerWillNotSerializePlace();
+
+        $serialized = $this->serializer->serialize($this->getLeanValidObject());
+
+        $this->assertEquals($this->id, $serialized->id);
+        $this->assertEquals($this->text, $serialized->text);
+        $this->assertEquals($this->userObj, $serialized->user);
+        $this->assertEquals($this->lang, $serialized->lang);
+        $this->assertEquals($this->date->format(TwitterDate::FORMAT), $serialized->created_at);
+        $this->assertEquals($this->entitiesObj, $serialized->entities);
+        $this->assertNull($serialized->coordinates);
+        $this->assertNull($serialized->place);
+        $this->assertEquals($this->replyStatusId, $serialized->in_reply_to_status_id);
+        $this->assertEquals($this->replyUserId, $serialized->in_reply_to_user_id);
+        $this->assertEquals($this->replyUserScreenName, $serialized->in_reply_to_screen_name);
+        $this->assertEquals($this->retweeted, $serialized->retweeted);
+        $this->assertEquals($this->retweetCount, $serialized->retweet_count);
+        $this->assertEquals($this->favorited, $serialized->favorited);
+        $this->assertEquals($this->favoriteCount, $serialized->favorite_count);
+        $this->assertEquals($this->truncated, $serialized->truncated);
+        $this->assertEquals($this->source, $serialized->source);
+        $this->assertNotNull($serialized->retweeted_status);
+    }
+
+    /**
+     * @test
+     */
     public function itShouldUnserialize()
     {
         $this->givenUserSerializerWillUnserializeUser();
@@ -288,6 +321,40 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
         return $tweet;
     }
 
+    private function getLeanValidObject()
+    {
+        $retweet = Tweet::create(
+            $this->retweetId,
+            $this->user,
+            $this->retweetText,
+            $this->lang,
+            $this->date,
+            $this->entities
+        );
+
+        $tweet = Tweet::create(
+            $this->id,
+            $this->user,
+            $this->text,
+            $this->lang,
+            $this->date,
+            $this->entities,
+            null,
+            null,
+            $this->replyStatusId,
+            $this->replyUserId,
+            $this->replyUserScreenName,
+            $this->retweeted,
+            $this->retweetCount,
+            $this->favorited,
+            $this->favoriteCount,
+            $this->truncated,
+            $this->source,
+            $retweet
+        );
+        return $tweet;
+    }
+
     /**
      * @return \stdClass
      */
@@ -353,6 +420,20 @@ class TweetSerializerTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('serialize')
             ->with($this->place)
             ->andReturn($this->placeObj);
+    }
+
+    private function givenCoordinatesSerializerWillNotSerializeCoordinates()
+    {
+        $this->coordinatesSerializer
+            ->shouldReceive('serialize')
+            ->never();
+    }
+
+    private function givenPlaceSerializerWillNotSerializePlace()
+    {
+        $this->placeSerializer
+            ->shouldReceive('serialize')
+            ->never();
     }
 
     private function givenUserSerializerWillUnserializeUser()

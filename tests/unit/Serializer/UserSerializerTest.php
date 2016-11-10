@@ -1,20 +1,46 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Twitter\Object\TwitterUser;
 use Twitter\Serializer\TwitterUserSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class UserSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var int */
+    private $id;
+
+    /** @var string */
+    private $name;
+
+    /** @var string */
+    private $screenName;
+
+    /** @var string */
+    private $lang;
+
+    /** @var string */
+    private $location;
+
+    /** @var string */
+    private $profileImageUrl;
+
+    /** @var string */
+    private $profileImageUrlHttps;
 
     /** @var TwitterUserSerializer */
     private $serializer;
 
     public function setUp()
     {
+        $this->id = 1;
+        $this->screenName = 'douglas';
+        $this->name = 'Douglas Adams';
+        $this->lang = 'fr';
+        $this->location = 'Paris';
+        $this->profileImageUrl = 'http://my.image';
+        $this->profileImageUrlHttps = 'https://my.image';
+
         $this->serializer = new TwitterUserSerializer();
     }
 
@@ -28,11 +54,9 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -40,21 +64,15 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $twitterUser = $this->getTwitterUser(1, 'user');
-        $twitterUser->shouldReceive('getLang')->andReturn('en');
-        $twitterUser->shouldReceive('getLocation')->andReturn('location');
-        $twitterUser->shouldReceive('getProfileImageUrl')->andReturn('url');
-        $twitterUser->shouldReceive('getProfileImageUrlHttps')->andReturn('surl');
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
-        $serialized = $this->serializer->serialize($twitterUser);
-
-        $this->assertEquals($twitterUser->getId(), $serialized->id);
-        $this->assertEquals($twitterUser->getScreenName(), $serialized->screen_name);
-        $this->assertEquals($twitterUser->getName(), $serialized->name);
-        $this->assertEquals($twitterUser->getLang(), $serialized->lang);
-        $this->assertEquals($twitterUser->getLocation(), $serialized->location);
-        $this->assertEquals($twitterUser->getProfileImageUrl(), $serialized->profile_background_image_url);
-        $this->assertEquals($twitterUser->getProfileImageUrlHttps(), $serialized->profile_background_image_url_https);
+        $this->assertEquals($this->id, $serialized->id);
+        $this->assertEquals($this->screenName, $serialized->screen_name);
+        $this->assertEquals($this->name, $serialized->name);
+        $this->assertEquals($this->lang, $serialized->lang);
+        $this->assertEquals($this->location, $serialized->location);
+        $this->assertEquals($this->profileImageUrl, $serialized->profile_background_image_url);
+        $this->assertEquals($this->profileImageUrlHttps, $serialized->profile_background_image_url_https);
     }
 
     /**
@@ -62,24 +80,15 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $userObj = new \stdClass();
-        $userObj->id = 42;
-        $userObj->screen_name = 'douglas';
-        $userObj->name = 'Douglas Adams';
-        $userObj->lang = 'fr';
-        $userObj->location = 'Paris';
-        $userObj->profile_background_image_url= 'http://background.url/image.jpg';
-        $userObj->profile_background_image_url_https= 'https://background.url/image.jpg';
+        $user = $this->serializer->unserialize($this->getValidSerializedObject());
 
-        $user = $this->serializer->unserialize($userObj);
-
-        $this->assertEquals($userObj->id, $user->getId());
-        $this->assertEquals($userObj->screen_name, $user->getScreenName());
-        $this->assertEquals($userObj->name, $user->getName());
-        $this->assertEquals($userObj->lang, $user->getLang());
-        $this->assertEquals($userObj->location, $user->getLocation());
-        $this->assertEquals($userObj->profile_background_image_url, $user->getProfileImageUrl());
-        $this->assertEquals($userObj->profile_background_image_url_https, $user->getProfileImageUrlHttps());
+        $this->assertEquals($this->id, $user->getId());
+        $this->assertEquals($this->screenName, $user->getScreenName());
+        $this->assertEquals($this->name, $user->getName());
+        $this->assertEquals($this->lang, $user->getLang());
+        $this->assertEquals($this->location, $user->getLocation());
+        $this->assertEquals($this->profileImageUrl, $user->getProfileImageUrl());
+        $this->assertEquals($this->profileImageUrlHttps, $user->getProfileImageUrlHttps());
     }
 
     /**
@@ -87,11 +96,9 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serializer->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -102,5 +109,54 @@ class UserSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterUserSerializer::build();
 
         $this->assertInstanceOf(TwitterUserSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterUser
+     */
+    private function getValidObject()
+    {
+        $twitterUser = TwitterUser::create(
+            $this->id,
+            $this->screenName,
+            $this->name,
+            $this->lang,
+            $this->location,
+            $this->profileImageUrl,
+            $this->profileImageUrlHttps
+        );
+        return $twitterUser;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $userObj = new \stdClass();
+        $userObj->id = $this->id;
+        $userObj->screen_name = $this->screenName;
+        $userObj->name = $this->name;
+        $userObj->lang = $this->lang;
+        $userObj->location = $this->location;
+        $userObj->profile_background_image_url = $this->profileImageUrl;
+        $userObj->profile_background_image_url_https = $this->profileImageUrlHttps;
+        return $userObj;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
     }
 }

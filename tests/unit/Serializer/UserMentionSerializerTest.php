@@ -3,15 +3,27 @@ namespace Twitter\Test\Serializer;
 
 use Mockery\Mock;
 use Twitter\Object\TwitterEntityIndices;
+use Twitter\Object\TwitterUserMention;
 use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterUserMentionSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var int */
+    private $id;
+
+    /** @var string */
+    private $name;
+
+    /** @var string */
+    private $screenName;
+
+    /** @var TwitterEntityIndices */
+    private $indices;
+
+    /** @var array */
+    private $indicesObj;
 
     /** @var TwitterEntityIndicesSerializer | Mock */
     private $entityIndicesSerializer;
@@ -21,7 +33,15 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->entityIndicesSerializer = $this->getEntityIndicesSerializer();
+        $this->id = 42;
+        $this->name = 'douglas';
+        $this->screenName = 'douglas d';
+        $this->indices = \Mockery::mock(TwitterEntityIndices::class);
+
+        $this->indicesObj = [];
+
+        $this->entityIndicesSerializer = \Mockery::mock(TwitterEntityIndicesSerializer::class);
+
         $this->serializer = new TwitterUserMentionSerializer($this->entityIndicesSerializer);
     }
 
@@ -35,11 +55,9 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -47,22 +65,14 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $id = 42;
-        $name = 'douglas';
+        $this->givenIndicesSerializerWillSerializeIndices();
 
-        $indices = $this->getIndices();
-        $indicesObj = new \stdClass();
-        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
-        $obj = $this->getUserMention(42, $name);
-        $obj->shouldReceive('getIndices')->andReturn($indices);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($id, $serialized->id);
-        $this->assertEquals($name, $serialized->screen_name);
-        $this->assertEquals($name, $serialized->name);
-        $this->assertEquals($indicesObj, $serialized->indices);
+        $this->assertEquals($this->id, $serialized->id);
+        $this->assertEquals($this->screenName, $serialized->screen_name);
+        $this->assertEquals($this->name, $serialized->name);
+        $this->assertEquals($this->indicesObj, $serialized->indices);
     }
 
     /**
@@ -70,21 +80,14 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $userMentionObj = new \stdClass();
-        $userMentionObj->id = 42;
-        $userMentionObj->screen_name = 'douglas';
-        $userMentionObj->name = 'Douglas Adams';
-        $userMentionObj->indices = array(42, 666);
+        $this->givenIndicesSerializerWillUnserializeIndices();
 
-        $indices = TwitterEntityIndices::create(42, 666);
-        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
+        $userMention = $this->serializer->unserialize($this->getValidSerializedObject());
 
-        $userMention = $this->serializer->unserialize($userMentionObj);
-
-        $this->assertEquals($userMentionObj->id, $userMention->getId());
-        $this->assertEquals($userMentionObj->screen_name, $userMention->getScreenName());
-        $this->assertEquals($userMentionObj->name, $userMention->getName());
-        $this->assertEquals($indices, $userMention->getIndices());
+        $this->assertEquals($this->id, $userMention->getId());
+        $this->assertEquals($this->screenName, $userMention->getScreenName());
+        $this->assertEquals($this->name, $userMention->getName());
+        $this->assertEquals($this->indices, $userMention->getIndices());
     }
 
     /**
@@ -92,11 +95,9 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serializer->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -107,5 +108,52 @@ class UserMentionSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterUserMentionSerializer::build();
 
         $this->assertInstanceOf(TwitterUserMentionSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterUserMention
+     */
+    private function getValidObject()
+    {
+        return TwitterUserMention::create($this->id, $this->screenName, $this->name, $this->indices);
+    }
+
+    private function givenIndicesSerializerWillSerializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->indicesObj);
+    }
+
+    private function givenIndicesSerializerWillUnserializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $userMentionObj = new \stdClass();
+        $userMentionObj->id = $this->id;
+        $userMentionObj->screen_name = $this->screenName;
+        $userMentionObj->name = $this->name;
+        $userMentionObj->indices = $this->indicesObj;
+        return $userMentionObj;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
     }
 }

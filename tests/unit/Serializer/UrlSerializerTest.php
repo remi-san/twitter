@@ -3,25 +3,46 @@ namespace Twitter\Test\Serializer;
 
 use Mockery\Mock;
 use Twitter\Object\TwitterEntityIndices;
+use Twitter\Object\TwitterUrl;
 use Twitter\Serializer\TwitterEntityIndicesSerializer;
 use Twitter\Serializer\TwitterUrlSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class UrlSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var string */
+    private $url;
+
+    /** @var string */
+    private $displayUrl;
+
+    /** @var string */
+    private $expandedUrl;
+
+    /** @var TwitterEntityIndices */
+    private $indices;
+
+    /** @var array */
+    private $indicesObj;
 
     /** @var TwitterEntityIndicesSerializer | Mock */
     private $entityIndicesSerializer;
+
 
     /** @var TwitterUrlSerializer */
     private $serializer;
 
     public function setUp()
     {
-        $this->entityIndicesSerializer = $this->getEntityIndicesSerializer();
+        $this->url = 'http://www.simple.com';
+        $this->displayUrl = 'http://www.display.com';
+        $this->expandedUrl = 'http://www.expanded.com';
+        $this->indices = \Mockery::mock(TwitterEntityIndices::class);
+
+        $this->indicesObj = [];
+
+        $this->entityIndicesSerializer = \Mockery::mock(TwitterEntityIndicesSerializer::class);
+
         $this->serializer = new TwitterUrlSerializer($this->entityIndicesSerializer);
     }
 
@@ -35,11 +56,9 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -47,26 +66,14 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $url = 'http://www.simple.com';
-        $displayUrl = 'http://www.display.com';
-        $expandedUrl = 'http://www.expanded.com';
+        $this->givenIndicesSerializerWillSerializeIndices();
 
-        $indices = $this->getIndices();
-        $indicesObj = new \stdClass();
-        $this->entityIndicesSerializer->shouldReceive('serialize')->with($indices)->andReturn($indicesObj);
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
-        $obj = $this->getUrl();
-        $obj->shouldReceive('getUrl')->andReturn($url);
-        $obj->shouldReceive('getDisplayUrl')->andReturn($displayUrl);
-        $obj->shouldReceive('getExpandedUrl')->andReturn($expandedUrl);
-        $obj->shouldReceive('getIndices')->andReturn($indices);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($url, $serialized->url);
-        $this->assertEquals($displayUrl, $serialized->display_url);
-        $this->assertEquals($expandedUrl, $serialized->expanded_url);
-        $this->assertEquals($indicesObj, $serialized->indices);
+        $this->assertEquals($this->url, $serialized->url);
+        $this->assertEquals($this->displayUrl, $serialized->display_url);
+        $this->assertEquals($this->expandedUrl, $serialized->expanded_url);
+        $this->assertEquals($this->indicesObj, $serialized->indices);
     }
 
     /**
@@ -74,21 +81,14 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $urlObj = new \stdClass();
-        $urlObj->url = 'http://ur.l';
-        $urlObj->display_url = 'http://display.url';
-        $urlObj->expanded_url = 'http://expanded.url';
-        $urlObj->indices = array(42, 666);
+        $this->givenIndicesSerializerWillUnserializeIndices();
 
-        $indices = TwitterEntityIndices::create(42, 666);
-        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($indices);
+        $url = $this->serializer->unserialize($this->getValidSerializedObject());
 
-        $url = $this->serializer->unserialize($urlObj);
-
-        $this->assertEquals($urlObj->url, $url->getUrl());
-        $this->assertEquals($urlObj->display_url, $url->getDisplayUrl());
-        $this->assertEquals($urlObj->expanded_url, $url->getExpandedUrl());
-        $this->assertEquals($indices, $url->getIndices());
+        $this->assertEquals($this->url, $url->getUrl());
+        $this->assertEquals($this->displayUrl, $url->getDisplayUrl());
+        $this->assertEquals($this->expandedUrl, $url->getExpandedUrl());
+        $this->assertEquals($this->indices, $url->getIndices());
     }
 
     /**
@@ -96,11 +96,9 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->unserialize($obj);
+        $this->serializer->unserialize($this->getInvalidSerializedObject());
     }
 
     /**
@@ -111,5 +109,52 @@ class UrlSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterUrlSerializer::build();
 
         $this->assertInstanceOf(TwitterUrlSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterUrl
+     */
+    private function getValidObject()
+    {
+        return TwitterUrl::create($this->url, $this->displayUrl, $this->expandedUrl, $this->indices);
+    }
+
+    private function givenIndicesSerializerWillSerializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('serialize')->with($this->indices)->andReturn($this->indicesObj);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $urlObj = new \stdClass();
+        $urlObj->url = $this->url;
+        $urlObj->display_url = $this->displayUrl;
+        $urlObj->expanded_url = $this->expandedUrl;
+        $urlObj->indices = $this->indicesObj;
+        return $urlObj;
+    }
+
+    private function givenIndicesSerializerWillUnserializeIndices()
+    {
+        $this->entityIndicesSerializer->shouldReceive('unserialize')->andReturn($this->indices);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
     }
 }

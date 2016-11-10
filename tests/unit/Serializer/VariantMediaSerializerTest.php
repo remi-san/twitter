@@ -1,20 +1,30 @@
 <?php
 namespace Twitter\Test\Serializer;
 
+use Twitter\Object\TwitterVariantMedia;
 use Twitter\Serializer\TwitterVariantMediaSerializer;
-use Twitter\Test\Mock\TwitterObjectMocker;
-use Twitter\Test\Mock\TwitterSerializerMocker;
 use Twitter\TwitterSerializable;
 
 class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    use TwitterObjectMocker, TwitterSerializerMocker;
+    /** @var string */
+    private $contentType;
+
+    /** @var string */
+    private $url;
+
+    /** @var int */
+    private $bitrate;
 
     /** @var TwitterVariantMediaSerializer */
     private $serializer;
 
     public function setUp()
     {
+        $this->contentType = 'text/html';
+        $this->url = 'http://www.simple.com';
+        $this->bitrate = 1024;
+
         $this->serializer = new TwitterVariantMediaSerializer();
     }
 
@@ -28,11 +38,9 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotSerializeWithIllegalObject()
     {
-        $object = \Mockery::mock(TwitterSerializable::class);
-
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->serializer->serialize($object);
+        $this->serializer->serialize($this->getInvalidObject());
     }
 
     /**
@@ -40,20 +48,11 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldSerializeWithLegalObject()
     {
-        $url = 'http://www.simple.com';
-        $contentType = 'text/html';
-        $bitrate = 1024;
+        $serialized = $this->serializer->serialize($this->getValidObject());
 
-        $obj = $this->getVariantMedia();
-        $obj->shouldReceive('getContentType')->andReturn($contentType);
-        $obj->shouldReceive('getUrl')->andReturn($url);
-        $obj->shouldReceive('getBitrate')->andReturn($bitrate);
-
-        $serialized = $this->serializer->serialize($obj);
-
-        $this->assertEquals($url, $serialized->url);
-        $this->assertEquals($contentType, $serialized->content_type);
-        $this->assertEquals($bitrate, $serialized->bitrate);
+        $this->assertEquals($this->url, $serialized->url);
+        $this->assertEquals($this->contentType, $serialized->content_type);
+        $this->assertEquals($this->bitrate, $serialized->bitrate);
     }
 
     /**
@@ -61,16 +60,11 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldUnserialize()
     {
-        $variantMediaObj = new \stdClass();
-        $variantMediaObj->url = 'http://video.url/a.mpg';
-        $variantMediaObj->bitrate = 320;
-        $variantMediaObj->content_type = 'video/mpeg';
+        $variantMedia = $this->serializer->unserialize($this->getValidSerializedObject());
 
-        $variantMedia = $this->serializer->unserialize($variantMediaObj);
-
-        $this->assertEquals($variantMediaObj->url, $variantMedia->getUrl());
-        $this->assertEquals($variantMediaObj->bitrate, $variantMedia->getBitrate());
-        $this->assertEquals($variantMediaObj->content_type, $variantMedia->getContentType());
+        $this->assertEquals($this->url, $variantMedia->getUrl());
+        $this->assertEquals($this->bitrate, $variantMedia->getBitrate());
+        $this->assertEquals($this->contentType, $variantMedia->getContentType());
     }
 
     /**
@@ -78,7 +72,7 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldNotUnserializeIllegalObject()
     {
-        $obj = new \stdClass();
+        $obj = $this->getInvalidSerializedObject();
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
@@ -93,5 +87,45 @@ class VariantMediaSerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = TwitterVariantMediaSerializer::build();
 
         $this->assertInstanceOf(TwitterVariantMediaSerializer::class, $serializer);
+    }
+
+    /**
+     * @return TwitterSerializable
+     */
+    private function getInvalidObject()
+    {
+        return \Mockery::mock(TwitterSerializable::class);
+    }
+
+    /**
+     * @return TwitterVariantMedia
+     */
+    private function getValidObject()
+    {
+        return TwitterVariantMedia::create(
+            $this->contentType,
+            $this->url,
+            $this->bitrate
+        );
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getValidSerializedObject()
+    {
+        $variantMediaObj = new \stdClass();
+        $variantMediaObj->url = $this->url;
+        $variantMediaObj->bitrate = $this->bitrate;
+        $variantMediaObj->content_type = $this->contentType;
+        return $variantMediaObj;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getInvalidSerializedObject()
+    {
+        return new \stdClass();
     }
 }

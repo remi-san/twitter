@@ -66,13 +66,13 @@ class TweetSerializer implements TwitterSerializer
         $tweet->text = $object->getText();
         $tweet->lang = $object->getLang();
         $tweet->created_at = $object->getDate()->format(TwitterDate::FORMAT);
-        $tweet->entities = $object->getEntities()?
-            $this->twitterEntitiesSerializer->serialize($object->getEntities()):
-            [];
-        $tweet->coordinates = $object->getCoordinates()?
+        $tweet->entities = $this->twitterEntitiesSerializer->serialize($object->getEntities());
+        $tweet->coordinates = $object->getCoordinates() ?
             $this->coordinatesSerializer->serialize($object->getCoordinates()):
             null;
-        $tweet->place = $object->getPlace()?$this->placeSerializer->serialize($object->getPlace()):null;
+        $tweet->place = $object->getPlace() ?
+            $this->placeSerializer->serialize($object->getPlace()):
+            null;
         $tweet->in_reply_to_status_id = $object->getInReplyToStatusId();
         $tweet->in_reply_to_user_id = $object->getInReplyToUserId();
         $tweet->in_reply_to_screen_name = $object->getInReplyToScreenName();
