@@ -24,7 +24,7 @@ class FriendsTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $friends = TwitterFriends::create($this->list);
 

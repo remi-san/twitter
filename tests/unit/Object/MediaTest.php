@@ -58,7 +58,7 @@ class MediaTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $media = TwitterMedia::create(
             $this->id,

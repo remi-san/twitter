@@ -44,7 +44,7 @@ class TwitterTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testProperties()
+    public function itShouldTestProperties()
     {
         $this->assertEquals(TwitterType::TWITTER, $this->twitterType->getName());
         $this->assertEquals(TwitterType::SQL_TYPE, $this->twitterType->getSQLDeclaration([], $this->platform));

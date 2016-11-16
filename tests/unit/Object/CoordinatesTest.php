@@ -32,7 +32,7 @@ class CoordinatesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $coordinates = TwitterCoordinates::create($this->long, $this->lat, $this->type);
 

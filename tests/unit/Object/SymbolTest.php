@@ -29,7 +29,7 @@ class SymbolTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $symbol = TwitterSymbol::create($this->text, $this->indices);
 

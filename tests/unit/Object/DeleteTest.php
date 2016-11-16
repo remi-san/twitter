@@ -36,7 +36,7 @@ class DeleteTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $delete = TwitterDelete::create($this->type, $this->id, $this->userId, $this->date);
 

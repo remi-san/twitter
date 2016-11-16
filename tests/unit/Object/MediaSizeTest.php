@@ -36,7 +36,7 @@ class MediaSizeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $mediaSize = TwitterMediaSize::create($this->name, $this->width, $this->height, $this->resize);
 

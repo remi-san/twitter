@@ -76,7 +76,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $dm = TwitterDirectMessage::create(
             $this->id,
@@ -99,7 +99,7 @@ class DirectMessageTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testEntities()
+    public function itShouldBuildTheObjectWithEntities()
     {
         $this->messageContainsHashtag();
         $this->messageContainsUserMention();

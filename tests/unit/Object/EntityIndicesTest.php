@@ -28,7 +28,7 @@ class EntityIndicesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $entityIndices = TwitterEntityIndices::create($this->from, $this->to);
 

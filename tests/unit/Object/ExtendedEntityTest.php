@@ -71,7 +71,7 @@ class ExtendedEntityTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testGettersSetters()
+    public function itShouldBuildTheObject()
     {
         $media = TwitterExtendedEntity::create(
             $this->id,

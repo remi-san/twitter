@@ -32,7 +32,7 @@ class DisconnectTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $disconnect = TwitterDisconnect::create($this->code, $this->streamName, $this->reason);
 

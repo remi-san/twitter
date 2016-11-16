@@ -131,7 +131,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $tweet = Tweet::create(
             $this->id,
@@ -178,7 +178,7 @@ class TweetTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testEntities()
+    public function itShouldBuildTheObjectWithEntities()
     {
         $this->messageContainsHashtag();
         $this->messageContainsUserMention();

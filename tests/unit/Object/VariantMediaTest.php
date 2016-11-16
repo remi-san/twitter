@@ -32,7 +32,7 @@ class VariantMediaTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $variantMedia = TwitterVariantMedia::create(
             $this->contentType,

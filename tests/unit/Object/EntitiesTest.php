@@ -47,7 +47,7 @@ class EntitiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $entities = TwitterEntities::create(
             $this->hashtags,

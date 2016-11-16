@@ -37,7 +37,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $urlObject = TwitterUrl::create($this->url, $this->displayUrl, $this->expandedUrl, $this->indices);
 

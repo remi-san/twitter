@@ -37,7 +37,7 @@ class UserMentionTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testConstructor()
+    public function itShouldBuildTheObject()
     {
         $userMention = TwitterUserMention::create($this->id, $this->screenName, $this->name, $this->indices);
 
