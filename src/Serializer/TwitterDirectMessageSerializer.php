@@ -67,7 +67,7 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
     {
         Assertion::true($this->canUnserialize($directMessage), 'object is not unserializable');
 
-        $dm = $directMessage->direct_message;
+        $dm = $this->hasPrefix($directMessage) ? $directMessage->direct_message : $directMessage;
 
         $createdAt = new \DateTimeImmutable($dm->created_at);
         Assertion::eq(new \DateTimeZone('UTC'), $createdAt->getTimezone());
@@ -98,7 +98,17 @@ class TwitterDirectMessageSerializer implements TwitterSerializer
      */
     public function canUnserialize($object)
     {
-        return (isset($object->direct_message));
+        return $this->hasPrefix($object) || (isset($object->sender) && isset($object->recipient));
+    }
+
+    /**
+     * @param $object
+     *
+     * @return bool
+     */
+    private function hasPrefix($object)
+    {
+        return isset($object->direct_message);
     }
 
     /**
