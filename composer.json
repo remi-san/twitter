@@ -14,7 +14,12 @@
             "role": "Developer"
         }
     ],
+    "require": {
+        "beberlei/assert": "^2.6",
+        "psr/log": "^1.0"
+    },
     "require-dev": {
+        "jublonet/codebird-php": "~3.0",
         "phpunit/phpunit": "~4.5",
         "Mockery/Mockery": "~0.9",
         "friendsofphp/php-cs-fixer": "^1.10",
@@ -23,7 +28,8 @@
         "fzaninotto/faker": "^1.6"
     },
     "suggest": {
-        "doctrine/orm": "Use the twitter types in doctrine"
+        "doctrine/orm": "Use the twitter types in doctrine",
+        "jublonet/codebird-php": "To get the codebird implementation to access the twitter API"
     },
     "autoload": {
         "psr-4": {
@@ -35,12 +41,10 @@
             "Twitter\\Test\\" : "tests/unit/"
         }
     },
+    "bin": [ "bin/twitter" ],
     "extra": {
         "branch-alias": {
             "dev-master": "0.1.x-dev"
         }
-    },
-    "require": {
-        "beberlei/assert": "^2.6"
     }
 }

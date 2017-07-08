@@ -1,0 +1,111 @@
+#!/usr/bin/env php
+<?php
+use Symfony\Component\Console\Application;
+use Twitter\API\REST\Factory\CodebirdFactory;
+use Twitter\API\REST\Gateway\CodebirdTwitterApiGateway;
+use Twitter\Console\AuthenticationCommand;
+
+function autoload()
+{
+    $autoloadFiles = [
+        __DIR__.'/../autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/../../../autoload.php'
+    ];
+
+    foreach ($autoloadFiles as $autoloadFile) {
+        if (file_exists($autoloadFile)) {
+            require_once $autoloadFile;
+        }
+    }
+}
+
+/**
+ * @return null|string
+ */
+function getConfig()
+{
+    $directories = [
+        getcwd(),
+        getcwd() . DIRECTORY_SEPARATOR . 'config',
+        __DIR__ . '/..',
+        __DIR__ . '/../config',
+        __DIR__ . '/../..',
+        __DIR__ . '/../../config',
+        __DIR__ . '/../../../..',
+        __DIR__ . '/../../../../config'
+    ];
+
+    $configFile = null;
+    foreach ($directories as $directory) {
+        $configFile = $directory . DIRECTORY_SEPARATOR . 'twitter-cli-config.php';
+
+        if (file_exists($configFile)) {
+            break;
+        }
+    }
+
+    if ($configFile === null || ! file_exists($configFile)) {
+        showHelp();
+        exit(1);
+    }
+
+    if (! is_readable($configFile)) {
+        showReadErrorMessage($configFile);
+        exit(1);
+    }
+
+    $config = require $configFile;
+
+    if (!is_array($config) ||
+        ! isset($config['key']) ||
+        ! isset($config['secret'])
+    ) {
+        echo 'Configuration file must return an array containing the "key", "secret" keys.' . "\n";
+        exit(1);
+    }
+
+    return $config;
+}
+
+function showHelp()
+{
+    echo <<<HELP
+You are missing a "twitter-cli-config.php" or "config/twitter-cli-config.php" file
+in your project, which is required to get the Burrow Console working. You can use
+the following sample as a template:
+
+<?php
+return [
+    'key' => '<your_key>',
+    'secret' => '<your_secret>'
+];
+
+HELP;
+}
+
+/**
+ * @param $configFile
+ */
+function showReadErrorMessage($configFile)
+{
+    echo 'Configuration file [' . $configFile . '] does not have read permission.' . "\n";
+}
+
+
+autoload();
+$config = getConfig();
+
+$application = new Application();
+$application->add(
+    new AuthenticationCommand(
+        new CodebirdTwitterApiGateway(
+            new CodebirdFactory(),
+            $config['key'],
+            $config['secret']
+        ),
+        'api:authenticate'
+    )
+);
+
+$application->run();
