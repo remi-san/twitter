@@ -70,7 +70,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function getAuthenticationUrl()
     {
-        $reply = $this->handleResult($this->codebird->oauth_requestToken())->getContent();
+        $reply = $this->handleResult(
+            $this->callApi('oauth_requestToken')
+        )->getContent();
 
         $this->authenticate(new AuthenticationToken($reply->oauth_token, $reply->oauth_token_secret));
 
@@ -89,7 +91,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     public function getAuthenticationToken($verificationToken)
     {
         $reply = $this->handleResult(
-            $this->codebird->oauth_accessToken(['oauth_verifier' => $verificationToken])
+            $this->callApi('oauth_accessToken', ['oauth_verifier' => $verificationToken])
         )->getContent();
 
         return new AuthenticationToken($reply->oauth_token, $reply->oauth_token_secret);
@@ -108,7 +110,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
         callable $callback
     ) {
         $this->codebird->setStreamingCallback($callback);
-        $this->codebird->user($request->toArray());
+        $this->callApi('user', $request->toArray());
     }
 
     /**
@@ -120,7 +122,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function getUserInformation(UserInformationQuery $request)
     {
-        return $this->handleResult($this->codebird->users_show($request->toArray()));
+        return $this->handleResult(
+            $this->callApi('users_show', $request->toArray())
+        );
     }
 
     /**
@@ -135,7 +139,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     public function statusesMentionsTimeLine(MentionsTimelineQuery $query)
     {
         return $this->handleResult(
-            $this->codebird->statuses_mentionsTimeline($query->toArray()),
+            $this->callApi('statuses_mentionsTimeline', $query->toArray()),
             true
         );
     }
@@ -152,7 +156,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     public function statusesUserTimeLine(UserTimelineQuery $query)
     {
         return $this->handleResult(
-            $this->codebird->statuses_userTimeline($query->toArray()),
+            $this->callApi('statuses_userTimeline', $query->toArray()),
             true
         );
     }
@@ -169,7 +173,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     public function directMessages(DirectMessageQuery $query)
     {
         return $this->handleResult(
-            $this->codebird->directMessages($query->toArray()),
+            $this->callApi('directMessages', $query->toArray()),
             true
         );
     }
@@ -186,7 +190,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     public function sentDirectMessages(SentDirectMessageQuery $query)
     {
         return $this->handleResult(
-            $this->codebird->directMessages_sent($query->toArray()),
+            $this->callApi('directMessages_sent', $query->toArray()),
             true
         );
     }
@@ -200,7 +204,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function friends(FriendsListQuery $query)
     {
-        return $this->handleResult($this->codebird->friends_list($query->toArray()));
+        return $this->handleResult(
+            $this->callApi('friends_list', $query->toArray())
+        );
     }
 
     /**
@@ -214,7 +220,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function updateStatus(TweetParameters $parameters)
     {
-        return $this->handleResult($this->codebird->statuses_update($parameters->toArray()));
+        return $this->handleResult(
+            $this->callApi('statuses_update', $parameters->toArray())
+        );
     }
 
     /**
@@ -228,7 +236,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function newDirectMessage(DirectMessageParameters $parameters)
     {
-        return $this->handleResult($this->codebird->directMessages_new($parameters->toArray()));
+        return $this->handleResult(
+            $this->callApi('directMessages_new', $parameters->toArray())
+        );
     }
 
     /**
@@ -242,7 +252,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function deleteStatus(DeleteTweetParameters $parameters)
     {
-        return $this->handleResult($this->codebird->statuses_destroy_ID($parameters->toArray()));
+        return $this->handleResult(
+            $this->callApi('statuses_destroy_ID', $parameters->toArray())
+        );
     }
 
     /**
@@ -256,7 +268,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function deleteDirectMessage(DeleteDirectMessageParameters $parameters)
     {
-        return $this->handleResult($this->codebird->directMessages_destroy($parameters->toArray()));
+        return $this->handleResult(
+            $this->callApi('directMessages_destroy', $parameters->toArray())
+        );
     }
 
     /**
@@ -270,7 +284,9 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function createFriendship(FollowParameters $parameters)
     {
-        return $this->handleResult($this->codebird->friendships_create($parameters->toArray()));
+        return $this->handleResult(
+            $this->callApi('friendships_create', $parameters->toArray())
+        );
     }
 
     /**
@@ -284,7 +300,22 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function destroyFriendship(UserIdentifier $parameters)
     {
-        return $this->handleResult($this->codebird->friendships_destroy($parameters->toArray()));
+        return $this->handleResult(
+            $this->callApi('friendships_destroy', $parameters->toArray())
+        );
+    }
+
+    /**
+     * Call the twitter API
+     *
+     * @param string   $slugifiedRoute
+     * @param string[] $parameters
+     *
+     * @return object|array
+     */
+    private function callApi($slugifiedRoute, array $parameters = [])
+    {
+        return $this->codebird->{$slugifiedRoute}($parameters);
     }
 
     /**
