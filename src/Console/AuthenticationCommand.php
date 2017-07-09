@@ -16,8 +16,6 @@ use Twitter\API\REST\TwitterApiGateway;
 /**
  * Class AuthenticationCommand
  *
- * @package TwitterStream\Console
- *
  * @codeCoverageIgnore
  */
 class AuthenticationCommand extends Command
