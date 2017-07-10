@@ -1,5 +1,5 @@
 <?php
-namespace Twitter\Test\API\REST;
+namespace Twitter\Test\API\REST\Client;
 
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
@@ -23,7 +23,7 @@ use Twitter\API\REST\Response\UnlimitedApiRate;
 use Twitter\API\REST\TwitterApiGateway;
 use Twitter\API\REST\TwitterClient;
 
-class RestApiTest extends \PHPUnit_Framework_TestCase
+class TwitterClientTest extends \PHPUnit_Framework_TestCase
 {
     /** @var int */
     private $from;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Twitter\Test\API\REST;
+namespace Twitter\Test\API\REST\Gateway;
 
 use Codebird\Codebird;
 use Faker\Factory;
@@ -21,7 +21,7 @@ use Twitter\API\REST\Query\User\UserInformationQuery;
 use Twitter\API\REST\Response\ApiResponse;
 use Twitter\API\REST\TwitterApiGateway;
 
-class TwitterApiAdapterTest extends \PHPUnit_Framework_TestCase
+class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Generator */
     private $faker;

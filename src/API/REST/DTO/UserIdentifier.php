@@ -26,22 +26,6 @@ class UserIdentifier implements ApiParameters
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getScreenName()
-    {
-        return $this->screenName;
-    }
-
-    /**
      * @param int $id
      *
      * @return UserIdentifier

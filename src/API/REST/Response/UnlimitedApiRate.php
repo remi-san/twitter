@@ -25,6 +25,6 @@ class UnlimitedApiRate implements ApiRate
      */
     public function nextWindow()
     {
-        return new \DateTimeImmutable('now', new \DateTimeZone(\DateTimeZone::UTC));
+        return new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
 }
