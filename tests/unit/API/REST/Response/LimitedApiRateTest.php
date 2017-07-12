@@ -42,7 +42,7 @@ class LimitedApiRateTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldTestAReachedLimit()
     {
-        $time = time();
+        $time = time() + 1000;
         $rate = new LimitedApiRate(10, 0, $time);
 
         $this->assertEquals(10, $rate->getLimit());

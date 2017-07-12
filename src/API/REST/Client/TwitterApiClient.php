@@ -127,7 +127,7 @@ class TwitterApiClient implements TwitterClient, LoggerAwareInterface
         if (!empty($tweets) && $from !== null) {
             $moreTweets = $this->getMentionsTweets($from, min(array_keys($tweets))-1);
             if (!empty($moreTweets)) {
-                $tweets = $tweets + $moreTweets;
+                $tweets += $moreTweets;
             }
         }
         ksort($tweets);
@@ -164,7 +164,7 @@ class TwitterApiClient implements TwitterClient, LoggerAwareInterface
         if (!empty($dms) && $from !== null) {
             $moreDms = $this->getDirectMessages($from, min(array_keys($dms))-1);
             if (!empty($moreDms)) {
-                $dms = $dms + $moreDms;
+                $dms += $moreDms;
             }
         }
         ksort($dms);
@@ -373,6 +373,15 @@ class TwitterApiClient implements TwitterClient, LoggerAwareInterface
     }
 
     /**
+     * @param string  $category
+     * @param ApiRate $rate
+     */
+    public function setRateLimit($category, ApiRate $rate)
+    {
+        $this->rateLimits[$category] = $rate;
+    }
+
+    /**
      * @param string $category
      *
      * @throws TwitterRateLimitException
@@ -395,6 +404,6 @@ class TwitterApiClient implements TwitterClient, LoggerAwareInterface
      */
     private function handleResponse($category, ApiResponse $response)
     {
-        $this->rateLimits[$category] = $response->getRate();
+        $this->setRateLimit($category, $response->getRate());
     }
 }

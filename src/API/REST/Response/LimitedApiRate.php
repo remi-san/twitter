@@ -47,7 +47,8 @@ class LimitedApiRate implements ApiRate
      */
     public function canMakeAnotherCall()
     {
-        return $this->remaining > 0;
+        return $this->reset <= new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+            || $this->remaining > 0;
     }
 
     /**

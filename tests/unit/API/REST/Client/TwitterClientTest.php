@@ -3,7 +3,25 @@ namespace Twitter\Test\API\REST\Client;
 
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
+use Twitter\API\Exception\TwitterRateLimitException;
 use Twitter\API\REST\Client\TwitterApiClient;
+use Twitter\API\REST\DTO\DeleteDirectMessageParameters;
+use Twitter\API\REST\DTO\DeleteTweetParameters;
+use Twitter\API\REST\DTO\DirectMessageParameters;
+use Twitter\API\REST\DTO\FollowParameters;
+use Twitter\API\REST\DTO\TweetParameters;
+use Twitter\API\REST\DTO\UserIdentifier;
+use Twitter\API\REST\Query\DirectMessage\DirectMessageQuery;
+use Twitter\API\REST\Query\DirectMessage\SentDirectMessageQuery;
+use Twitter\API\REST\Query\Friends\FriendsListQuery;
+use Twitter\API\REST\Query\Tweet\MentionsTimelineQuery;
+use Twitter\API\REST\Query\Tweet\UserTimelineQuery;
+use Twitter\API\REST\Response\ApiResponse;
+use Twitter\API\REST\Response\HttpStatus;
+use Twitter\API\REST\Response\LimitedApiRate;
+use Twitter\API\REST\Response\UnlimitedApiRate;
+use Twitter\API\REST\TwitterApiGateway;
+use Twitter\API\REST\TwitterClient;
 use Twitter\Object\Tweet;
 use Twitter\Object\TwitterDirectMessage;
 use Twitter\Object\TwitterUser;
@@ -11,17 +29,6 @@ use Twitter\Serializer\TweetSerializer;
 use Twitter\Serializer\TwitterDirectMessageSerializer;
 use Twitter\Serializer\TwitterUserSerializer;
 use Twitter\TwitterMessageId;
-use Twitter\API\REST\DTO\DirectMessageParameters;
-use Twitter\API\REST\DTO\FollowParameters;
-use Twitter\API\REST\DTO\TweetParameters;
-use Twitter\API\REST\DTO\UserIdentifier;
-use Twitter\API\REST\Query\DirectMessage\DirectMessageQuery;
-use Twitter\API\REST\Query\Tweet\MentionsTimelineQuery;
-use Twitter\API\REST\Response\ApiResponse;
-use Twitter\API\REST\Response\HttpStatus;
-use Twitter\API\REST\Response\UnlimitedApiRate;
-use Twitter\API\REST\TwitterApiGateway;
-use Twitter\API\REST\TwitterClient;
 
 class TwitterClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,6 +53,9 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
     /** @var int */
     private $userId;
 
+    /** @var string */
+    private $userName;
+
     /** @var object */
     private $firstSerializedDirectMessage;
 
@@ -63,6 +73,12 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
 
     /** @var object */
     private $thirdSerializedTweet;
+
+    /** @var object */
+    private $firstSerializedFriend;
+
+    /** @var object */
+    private $secondSerializedFriend;
 
     /** @var object */
     private $serializedErrorMessage;
@@ -88,6 +104,12 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
     /** @var TwitterUser | Mock */
     private $user;
 
+    /** @var TwitterUser */
+    private $firstFriend;
+
+    /** @var TwitterUser */
+    private $secondFriend;
+
     /** @var TwitterUserSerializer | Mock */
     private $userSerializer;
 
@@ -103,7 +125,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
     /** @var LoggerInterface | Mock */
     private $logger;
 
-    /** @var TwitterClient */
+    /** @var TwitterApiClient */
     private $restApi;
 
     /**
@@ -130,6 +152,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
 
         $this->message = 'my message';
         $this->userId  = 42;
+        $this->userName = 'RemiSan';
 
         $this->firstSerializedDirectMessage = $this->getSerializedDirectMessage($this->topId);
         $this->secondSerializedDirectMessage = $this->getSerializedDirectMessage($this->stepId);
@@ -138,6 +161,9 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         $this->firstSerializedTweet = $this->getSerializedTweet($this->topId);
         $this->secondSerializedTweet = $this->getSerializedTweet($this->stepId);
         $this->thirdSerializedTweet = $this->getSerializedTweet($this->minId);
+
+        $this->firstSerializedFriend = $this->getSerializedFriend('1');
+        $this->secondSerializedFriend = $this->getSerializedFriend('2');
 
         $this->serializedErrorMessage = $this->getSerializedErrorMessage();
         
@@ -148,6 +174,9 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         $this->tweet = $this->getTweet(TwitterMessageId::create($this->topId));
         $this->secondTweet = $this->getTweet(TwitterMessageId::create($this->stepId));
         $this->thirdTweet = $this->getTweet(TwitterMessageId::create($this->minId));
+
+        $this->firstFriend = $this->getFriend('1');
+        $this->secondFriend = $this->getFriend('2');
 
         $this->user = $this->getUser($this->userId);
 
@@ -175,11 +204,23 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function itShouldFailIfApiRateHasBeenReachedAlready()
+    {
+        $this->givenInformationRateHasBeenReachedAlready();
+
+        $this->setExpectedException(TwitterRateLimitException::class);
+
+        $this->restApi->getUser($this->userName);
+    }
+
+    /**
+     * @test
+     */
     public function itShouldGetUserInformation()
     {
         $this->givenUserInformationAPICallWillReturnUserInfo();
 
-        $user = $this->restApi->getUser('RemiSan');
+        $user = $this->restApi->getUser($this->userName);
 
         $this->assertEquals($this->user, $user);
     }
@@ -220,7 +261,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldGetDirectMessagesInMultipleAPICall()
+    public function itShouldGetDirectMessagesInMultipleAPICalls()
     {
         $return = [
             $this->minId => $this->thirdDirectMessage,
@@ -232,9 +273,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         $this->givenSecondDirectMessageAPICallWillReturnOtherDirectMessages();
         $this->givenThirdDirectMessageAPICallWillNotReturnDirectMessages();
 
-        $this->givenDirectMessageSerializerCanUnserializeFirstDirectMessage();
-        $this->givenDirectMessageSerializerCanUnserializeSecondDirectMessage();
-        $this->givenDirectMessageSerializerCanUnserializeThirdDirectMessage();
+        $this->givenAllDirectMessagesAreUnserializable();
 
         $dms = $this->restApi->getDirectMessages($this->from, $this->to);
 
@@ -289,13 +328,68 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         $this->givenSecondTweetAPICallWillReturnTweets();
         $this->givenThirdTweetAPICallWillNotReturnTweets();
 
-        $this->givenTweetSerializerCanUnserializeFirstTweet();
-        $this->givenTweetSerializerCanUnserializeSecondTweet();
-        $this->givenTweetSerializerCanUnserializeThirdTweet();
+        $this->givenAllTweetsAreUnserializable();
 
         $tweets = $this->restApi->getMentionsTweets($this->from, $this->to);
 
         $this->assertEquals($return, $tweets);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldGetSentTweets()
+    {
+        $return = [
+            $this->minId  => $this->thirdTweet,
+            $this->stepId => $this->secondTweet,
+            $this->topId  => $this->tweet
+        ];
+
+        $this->givenSentTweetAPICallWillReturnTweets();
+        $this->givenAllTweetsAreUnserializable();
+
+        $tweets = $this->restApi->getSentTweets($this->userName);
+
+        $this->assertEquals($return, $tweets);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldGetSentDirectMessages()
+    {
+        $return = [
+            $this->minId => $this->thirdDirectMessage,
+            $this->stepId  => $this->secondDirectMessage,
+            $this->topId => $this->directMessage
+        ];
+
+        $this->givenSentDirectMessageAPICallWillReturnDirectMessages();
+        $this->givenAllDirectMessagesAreUnserializable();
+
+        $dms = $this->restApi->getSentDirectMessages();
+
+        $this->assertEquals($return, $dms);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldGetFollowedUsers()
+    {
+        $return = [
+            $this->firstFriend,
+            $this->secondFriend
+        ];
+
+        $this->givenFriendApiCallReturnsFriends();
+        $this->givenUserSerializerCanUnserializeFirstFriend();
+        $this->givenUserSerializerCanUnserializeSecondFriend();
+
+        $friends = $this->restApi->getFollowedUsers($this->user);
+
+        $this->assertEquals($return, $friends);
     }
 
     /**
@@ -326,6 +420,26 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         $this->givenNewTweetReplyAPICallSucceeds();
 
         $this->restApi->sendTweet($this->message, $this->tweet);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldDeleteTweet()
+    {
+        $this->assertApiCallForDeletingTweetWillBeMade();
+
+        $this->restApi->deleteTweet($this->tweet);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldDeleteDirectMessage()
+    {
+        $this->assertApiCallForDeletingDirectMessageWillBeMade();
+
+        $this->restApi->deleteDirectMessage($this->directMessage);
     }
 
     /**
@@ -390,6 +504,19 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $id
+     *
+     * @return \stdClass
+     */
+    private function getSerializedFriend($id)
+    {
+        $friend = new \stdClass();
+        $friend->id = $id;
+
+        return $friend;
+    }
+
+    /**
      * @param $id
      *
      * @return TwitterDirectMessage
@@ -399,7 +526,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         /** @var TwitterDirectMessage | Mock $directMessage */
         $directMessage = \Mockery::mock(TwitterDirectMessage::class);
         $directMessage->shouldReceive('getId')->andReturn($id);
-        
+
         return $directMessage;
     }
 
@@ -413,7 +540,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         /** @var Tweet | Mock $tweet */
         $tweet = \Mockery::mock(Tweet::class);
         $tweet->shouldReceive('getId')->andReturn(TwitterMessageId::create($id));
-        
+
         return $tweet;
     }
 
@@ -427,8 +554,34 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         /** @var TwitterUser | Mock $user */
         $user = \Mockery::mock(TwitterUser::class);
         $user->shouldReceive('getId')->andReturn($id);
-        
+
         return $user;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return TwitterUser
+     */
+    private function getFriend($id)
+    {
+        /** @var TwitterUser | Mock $user */
+        $user = \Mockery::mock(TwitterUser::class);
+        $user->shouldReceive('getId')->andReturn($id);
+
+        return $user;
+    }
+
+    private function givenInformationRateHasBeenReachedAlready()
+    {
+        $this->restApi->setRateLimit(
+            TwitterClient::GET_USER,
+            new LimitedApiRate(
+                1,
+                0,
+                time() + 100
+            )
+        );
     }
 
     private function givenDirectMessageAPICallWillNotReturnDirectMessages()
@@ -484,6 +637,20 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
             ->andReturn(self::getResponse([]));
     }
 
+    private function givenSentDirectMessageAPICallWillReturnDirectMessages()
+    {
+        $this->adapter
+            ->shouldReceive('sentDirectMessages')
+            ->with(\Mockery::on(function (SentDirectMessageQuery $query) {
+                return $query == new SentDirectMessageQuery(200);
+            }))
+            ->andReturn(self::getResponse([
+                $this->topId => $this->firstSerializedDirectMessage,
+                $this->stepId => $this->secondSerializedDirectMessage,
+                $this->minId => $this->thirdSerializedDirectMessage
+            ]));
+    }
+
     private function givenDirectMessageSerializerCanUnserializeFirstDirectMessage()
     {
         $this->dmSerializer
@@ -506,6 +673,13 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('unserialize')
             ->with($this->thirdSerializedDirectMessage)
             ->andReturn($this->thirdDirectMessage);
+    }
+
+    private function givenAllDirectMessagesAreUnserializable()
+    {
+        $this->givenDirectMessageSerializerCanUnserializeFirstDirectMessage();
+        $this->givenDirectMessageSerializerCanUnserializeSecondDirectMessage();
+        $this->givenDirectMessageSerializerCanUnserializeThirdDirectMessage();
     }
 
     private function givenTweetAPICallWillNotReturnTweets()
@@ -561,6 +735,20 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
             ->andReturn(self::getResponse([]));
     }
 
+    private function givenSentTweetAPICallWillReturnTweets()
+    {
+        $this->adapter
+            ->shouldReceive('statusesUserTimeLine')
+            ->with(\Mockery::on(function (UserTimelineQuery $query) {
+                return $query == new UserTimelineQuery(UserIdentifier::fromScreenName($this->userName), 200);
+            }))
+            ->andReturn(self::getResponse([
+                $this->topId => $this->firstSerializedTweet,
+                $this->stepId => $this->secondSerializedTweet,
+                $this->minId => $this->thirdSerializedTweet
+            ]));
+    }
+
     private function givenTweetSerializerCanUnserializeFirstTweet()
     {
         $this->tweetSerializer
@@ -585,18 +773,53 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
             ->andReturn($this->thirdTweet);
     }
 
+    private function givenAllTweetsAreUnserializable()
+    {
+        $this->givenTweetSerializerCanUnserializeFirstTweet();
+        $this->givenTweetSerializerCanUnserializeSecondTweet();
+        $this->givenTweetSerializerCanUnserializeThirdTweet();
+    }
+
     private function givenNewDirectMessageAPICallSucceeds()
     {
         $this->adapter
             ->shouldReceive('newDirectMessage')
             ->with(\Mockery::on(function (DirectMessageParameters $params) {
-                return $params == new DirectMessageParameters(
-                    UserIdentifier::fromId($this->userId),
-                    $this->message
-                );
+                return $params == new DirectMessageParameters(UserIdentifier::fromId($this->userId), $this->message);
             }))
             ->andReturn(self::getResponse([]))
             ->once();
+    }
+
+    private function givenFriendApiCallReturnsFriends()
+    {
+        $response = new \stdClass();
+        $response->users = [ $this->firstSerializedFriend, $this->secondSerializedFriend ];
+        $response->next_cursor = 0;
+
+        $this->adapter
+            ->shouldReceive('friends')
+            ->with(\Mockery::on(function (FriendsListQuery $query) {
+                return $query == new FriendsListQuery(UserIdentifier::fromId($this->userId), 200, -1);
+            }))
+            ->andReturn(self::getResponse($response))
+            ->once();
+    }
+
+    private function givenUserSerializerCanUnserializeFirstFriend()
+    {
+        $this->userSerializer
+            ->shouldReceive('unserialize')
+            ->with($this->firstSerializedFriend)
+            ->andReturn($this->firstFriend);
+    }
+
+    private function givenUserSerializerCanUnserializeSecondFriend()
+    {
+        $this->userSerializer
+            ->shouldReceive('unserialize')
+            ->with($this->secondSerializedFriend)
+            ->andReturn($this->secondFriend);
     }
 
     private function givenNewTweetAPICallSucceeds()
@@ -650,5 +873,27 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
             ->andReturn(self::getResponse([]))
             ->once();
         $this->userSerializer->shouldReceive('unserialize')->andReturn($this->user)->once();
+    }
+
+    private function assertApiCallForDeletingTweetWillBeMade()
+    {
+        $this->adapter
+            ->shouldReceive('deleteStatus')
+            ->with(\Mockery::on(function (DeleteTweetParameters $params) {
+                return $params == new DeleteTweetParameters((string) $this->tweet->getId());
+            }))
+            ->andReturn(self::getResponse([]))
+            ->once();
+    }
+
+    private function assertApiCallForDeletingDirectMessageWillBeMade()
+    {
+        $this->adapter
+            ->shouldReceive('deleteDirectMessage')
+            ->with(\Mockery::on(function (DeleteDirectMessageParameters $params) {
+                return $params == new DeleteDirectMessageParameters((string) $this->directMessage->getId());
+            }))
+            ->andReturn(self::getResponse([]))
+            ->once();
     }
 }
