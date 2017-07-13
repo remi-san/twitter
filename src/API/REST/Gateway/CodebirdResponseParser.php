@@ -123,7 +123,7 @@ class CodebirdResponseParser
                     $content[(int) $index] = $obj;
                 }
             }
-        } elseif (empty($content)) {
+        } elseif (count((array) $content) === 0) {
             $content = null;
         }
 

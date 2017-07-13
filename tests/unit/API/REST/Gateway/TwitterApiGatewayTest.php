@@ -154,7 +154,6 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
         );
 
         self::assertInstanceOf(ApiResponse::class, $userInformation);
-        self::assertEquals($this->userInfo, $userInformation->getContent());
     }
 
     /**
