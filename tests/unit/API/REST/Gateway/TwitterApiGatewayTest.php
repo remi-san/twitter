@@ -12,6 +12,7 @@ use Twitter\API\REST\DTO\FollowParameters;
 use Twitter\API\REST\DTO\TweetParameters;
 use Twitter\API\REST\DTO\UserIdentifier;
 use Twitter\API\REST\Factory\CodebirdFactory;
+use Twitter\API\REST\Gateway\CodebirdResponseParser;
 use Twitter\API\REST\Gateway\CodebirdTwitterApiGateway;
 use Twitter\API\REST\OAuth\AuthenticationToken;
 use Twitter\API\REST\Query\DirectMessage\DirectMessageQuery;
@@ -71,8 +72,6 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 
         $this->codebird = \Mockery::mock(Codebird::class);
         $this->codebird->shouldReceive('setReturnFormat');
-        $this->codebirdFactory = \Mockery::mock(CodebirdFactory::class);
-        $this->codebirdFactory->shouldReceive('build')->andReturn($this->codebird);
 
         $this->oauthToken = $this->faker->uuid;
         $this->oauthTokenSecret = $this->faker->uuid;
@@ -94,9 +93,8 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
         $this->userInfo->httpstatus = 200;
 
         $this->classUnderTest = new CodebirdTwitterApiGateway(
-            $this->codebirdFactory,
-            $this->faker->uuid,
-            $this->faker->uuid
+            $this->codebird,
+            new CodebirdResponseParser()
         );
     }
 
@@ -185,11 +183,35 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function itShouldQueryUserTimeline()
+    {
+        // TODO test
+    }
+
+    /**
+     * @test
+     */
     public function itShouldQueryDirectMessages()
     {
         $this->assertItWillQueryTwitterDirectMessagesAPI();
 
         $this->classUnderTest->directMessages(new DirectMessageQuery());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldQuerySentDirectMessages()
+    {
+        // TODO test
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldQueryFriends()
+    {
+        // TODO test
     }
 
     /**
@@ -210,6 +232,22 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertItWillPostNewDirectMessageToAPI();
 
         $this->classUnderTest->newDirectMessage($this->dmParams);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldDeleteStatus()
+    {
+        // TODO test
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldDeleteDirectMessage()
+    {
+        // TODO test
     }
 
     /**

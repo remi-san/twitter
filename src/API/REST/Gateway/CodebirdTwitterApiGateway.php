@@ -12,7 +12,6 @@ use Twitter\API\REST\DTO\DirectMessageParameters;
 use Twitter\API\REST\DTO\FollowParameters;
 use Twitter\API\REST\DTO\TweetParameters;
 use Twitter\API\REST\DTO\UserIdentifier;
-use Twitter\API\REST\Factory\CodebirdFactory;
 use Twitter\API\REST\OAuth\AuthenticationToken;
 use Twitter\API\REST\Query\DirectMessage\DirectMessageQuery;
 use Twitter\API\REST\Query\DirectMessage\SentDirectMessageQuery;
@@ -21,11 +20,7 @@ use Twitter\API\REST\Query\Stream\UserStreamQuery;
 use Twitter\API\REST\Query\Tweet\MentionsTimelineQuery;
 use Twitter\API\REST\Query\Tweet\UserTimelineQuery;
 use Twitter\API\REST\Query\User\UserInformationQuery;
-use Twitter\API\REST\Response\ApiRate;
 use Twitter\API\REST\Response\ApiResponse;
-use Twitter\API\REST\Response\HttpStatus;
-use Twitter\API\REST\Response\LimitedApiRate;
-use Twitter\API\REST\Response\UnlimitedApiRate;
 use Twitter\API\REST\TwitterApiGateway;
 
 class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterface
@@ -35,20 +30,23 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     /** @var Codebird */
     private $codebird;
 
+    /** @var CodebirdResponseParser */
+    private $responseParser;
+
     /**
      * Constructor
      *
-     * @param CodebirdFactory $factory
-     * @param string          $consumerKey
-     * @param string          $consumerSecret
+     * @param Codebird               $codebird
+     * @param CodebirdResponseParser $responseParser
      */
     public function __construct(
-        CodebirdFactory $factory,
-        $consumerKey,
-        $consumerSecret
+        Codebird $codebird,
+        CodebirdResponseParser $responseParser
     ) {
-        $this->codebird = $factory->build($consumerKey, $consumerSecret);
+        $this->codebird = $codebird;
         $this->codebird->setReturnFormat('OBJECT');
+
+        $this->responseParser = $responseParser;
     }
 
     /**
@@ -70,7 +68,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function getAuthenticationUrl()
     {
-        $reply = $this->handleResult(
+        $reply = $this->responseParser->parseObject(
             $this->callApi('oauth_requestToken')
         )->getContent();
 
@@ -90,7 +88,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function getAuthenticationToken($verificationToken)
     {
-        $reply = $this->handleResult(
+        $reply = $this->responseParser->parseObject(
             $this->callApi('oauth_accessToken', ['oauth_verifier' => $verificationToken])
         )->getContent();
 
@@ -122,7 +120,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function getUserInformation(UserInformationQuery $request)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('users_show', $request->toArray())
         );
     }
@@ -138,9 +136,8 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function statusesMentionsTimeLine(MentionsTimelineQuery $query)
     {
-        return $this->handleResult(
-            $this->callApi('statuses_mentionsTimeline', $query->toArray()),
-            true
+        return $this->responseParser->parseList(
+            $this->callApi('statuses_mentionsTimeline', $query->toArray())
         );
     }
 
@@ -155,9 +152,8 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function statusesUserTimeLine(UserTimelineQuery $query)
     {
-        return $this->handleResult(
-            $this->callApi('statuses_userTimeline', $query->toArray()),
-            true
+        return $this->responseParser->parseList(
+            $this->callApi('statuses_userTimeline', $query->toArray())
         );
     }
 
@@ -172,9 +168,8 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function directMessages(DirectMessageQuery $query)
     {
-        return $this->handleResult(
-            $this->callApi('directMessages', $query->toArray()),
-            true
+        return $this->responseParser->parseList(
+            $this->callApi('directMessages', $query->toArray())
         );
     }
 
@@ -189,9 +184,8 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function sentDirectMessages(SentDirectMessageQuery $query)
     {
-        return $this->handleResult(
-            $this->callApi('directMessages_sent', $query->toArray()),
-            true
+        return $this->responseParser->parseList(
+            $this->callApi('directMessages_sent', $query->toArray())
         );
     }
 
@@ -204,7 +198,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function friends(FriendsListQuery $query)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('friends_list', $query->toArray())
         );
     }
@@ -220,7 +214,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function updateStatus(TweetParameters $parameters)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('statuses_update', $parameters->toArray())
         );
     }
@@ -236,7 +230,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function newDirectMessage(DirectMessageParameters $parameters)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('directMessages_new', $parameters->toArray())
         );
     }
@@ -252,7 +246,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function deleteStatus(DeleteTweetParameters $parameters)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('statuses_destroy_ID', $parameters->toArray())
         );
     }
@@ -268,7 +262,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function deleteDirectMessage(DeleteDirectMessageParameters $parameters)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('directMessages_destroy', $parameters->toArray())
         );
     }
@@ -284,7 +278,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function createFriendship(FollowParameters $parameters)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('friendships_create', $parameters->toArray())
         );
     }
@@ -300,7 +294,7 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
      */
     public function destroyFriendship(UserIdentifier $parameters)
     {
-        return $this->handleResult(
+        return $this->responseParser->parseObject(
             $this->callApi('friendships_destroy', $parameters->toArray())
         );
     }
@@ -316,96 +310,5 @@ class CodebirdTwitterApiGateway implements TwitterApiGateway, LoggerAwareInterfa
     private function callApi($slugifiedRoute, array $parameters = [])
     {
         return $this->codebird->{$slugifiedRoute}($parameters);
-    }
-
-    /**
-     * Handles a twitter API response object
-     *
-     * @param object $result
-     * @param bool   $isList
-     *
-     * @return ApiResponse
-     *
-     * @throws TwitterException
-     */
-    private function handleResult($result, $isList = false)
-    {
-        $this->handleErrors($result);
-
-        $httpStatus = $this->getHttpStatus($result);
-        $rate = $this->getRate($result);
-        $content = $this->getContent($result, $isList);
-
-        return new ApiResponse($httpStatus, $content, $rate);
-    }
-
-    /**
-     * @param object $result
-     *
-     * @throws TwitterException
-     */
-    private function handleErrors($result)
-    {
-        if (isset($result->errors)) {
-            $error = reset($result->errors);
-            throw new TwitterException($error->message, $error->code);
-        }
-    }
-
-    /**
-     * @param object $result
-     *
-     * @return HttpStatus
-     *
-     * @throws TwitterException
-     */
-    private function getHttpStatus($result)
-    {
-        $httpStatus = new HttpStatus($result->httpstatus);
-        if ($httpStatus->isError()) {
-            throw new TwitterException($result->message);
-        }
-
-        return $httpStatus;
-    }
-
-    /**
-     * @param object $result
-     *
-     * @return ApiRate
-     */
-    private function getRate($result)
-    {
-        if (isset($result->rate)) {
-            return new LimitedApiRate($result->rate['limit'], $result->rate['remaining'], $result->rate['reset']);
-        }
-
-        return new UnlimitedApiRate();
-    }
-
-    /**
-     * @param object $result
-     * @param bool   $isList
-     *
-     * @return object|array|null
-     */
-    private function getContent($result, $isList)
-    {
-        $content = $result;
-
-        unset($content->httpstatus, $content->rate);
-
-        if ($isList) {
-            $content = [];
-            foreach ($result as $index => $obj) {
-                if (is_numeric($index)) {
-                    $content[(int) $index] = $obj;
-                }
-            }
-        } elseif (empty($content)) {
-            $content = null;
-        }
-
-        return $content;
     }
 }
