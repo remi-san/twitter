@@ -345,6 +345,8 @@ class TwitterApiClient implements TwitterClient, LoggerAwareInterface
      */
     public function follow(TwitterUser $user)
     {
+        $this->logger->info('Follow @' . $user->getScreenName());
+
         $this->checkRate(self::FOLLOW);
 
         $params =  new FollowParameters(UserIdentifier::fromId($user->getId()));
