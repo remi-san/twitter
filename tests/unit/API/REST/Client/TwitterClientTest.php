@@ -554,6 +554,7 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         /** @var TwitterUser | Mock $user */
         $user = \Mockery::mock(TwitterUser::class);
         $user->shouldReceive('getId')->andReturn($id);
+        $user->shouldReceive('getScreenName')->andReturn('');
 
         return $user;
     }
