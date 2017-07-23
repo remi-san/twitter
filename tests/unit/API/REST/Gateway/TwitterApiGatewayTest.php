@@ -7,17 +7,21 @@ use Faker\Factory;
 use Faker\Generator;
 use Mockery\Mock;
 use Twitter\API\Exception\TwitterException;
+use Twitter\API\REST\DTO\DeleteDirectMessageParameters;
+use Twitter\API\REST\DTO\DeleteTweetParameters;
 use Twitter\API\REST\DTO\DirectMessageParameters;
 use Twitter\API\REST\DTO\FollowParameters;
 use Twitter\API\REST\DTO\TweetParameters;
 use Twitter\API\REST\DTO\UserIdentifier;
-use Twitter\API\REST\Factory\CodebirdFactory;
 use Twitter\API\REST\Gateway\CodebirdResponseParser;
 use Twitter\API\REST\Gateway\CodebirdTwitterApiGateway;
 use Twitter\API\REST\OAuth\AuthenticationToken;
 use Twitter\API\REST\Query\DirectMessage\DirectMessageQuery;
+use Twitter\API\REST\Query\DirectMessage\SentDirectMessageQuery;
+use Twitter\API\REST\Query\Friends\FriendsListQuery;
 use Twitter\API\REST\Query\Stream\UserStreamQuery;
 use Twitter\API\REST\Query\Tweet\MentionsTimelineQuery;
+use Twitter\API\REST\Query\Tweet\UserTimelineQuery;
 use Twitter\API\REST\Query\User\UserInformationQuery;
 use Twitter\API\REST\Response\ApiResponse;
 use Twitter\API\REST\TwitterApiGateway;
@@ -29,9 +33,6 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 
     /** @var Codebird | Mock */
     private $codebird;
-
-    /** @var CodebirdFactory | Mock */
-    private $codebirdFactory;
 
     /** @var string */
     private $oauthToken;
@@ -48,8 +49,38 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
     /** @var string */
     private $query;
 
-    /** @var object */
+    /** @var \stdClass */
     private $userInfo;
+
+    /** @var UserIdentifier */
+    private $userIdentifier;
+
+    /** @var UserInformationQuery */
+    private $userInformationQuery;
+
+    /** @var UserStreamQuery */
+    private $userStreamQuery;
+
+    /** @var MentionsTimelineQuery */
+    private $mentionsTimelineQuery;
+
+    /** @var UserTimelineQuery */
+    private $userTimelineQuery;
+
+    /** @var DirectMessageQuery */
+    private $directMessageQuery;
+
+    /** @var SentDirectMessageQuery */
+    private $sentDirectMessageQuery;
+
+    /** @var FriendsListQuery */
+    private $friendsListQuery;
+
+    /** @var DeleteTweetParameters */
+    private $deleteTweetParameters;
+
+    /** @var DeleteDirectMessageParameters */
+    private $deleteDirectMessageParameters;
 
     /** @var TweetParameters */
     private $tweetParams;
@@ -66,6 +97,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
     /** @var TwitterApiGateway */
     private $classUnderTest;
 
+
     public function setUp()
     {
         $this->faker = Factory::create();
@@ -78,9 +110,19 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 
         $this->verificationToken = $this->faker->word;
 
-        $this->callback = function() {};
+        $this->callback = function () {
+        };
         $this->query = $this->faker->word;
 
+        $this->userIdentifier = UserIdentifier::fromScreenName('RemiSan');
+
+        $this->friendsListQuery = new FriendsListQuery($this->userIdentifier);
+        $this->sentDirectMessageQuery = new SentDirectMessageQuery();
+        $this->directMessageQuery = new DirectMessageQuery();
+        $this->userTimelineQuery = new UserTimelineQuery($this->userIdentifier);
+        $this->userStreamQuery = new UserStreamQuery();
+        $this->userInformationQuery = new UserInformationQuery($this->userIdentifier);
+        $this->mentionsTimelineQuery = new MentionsTimelineQuery();
         $this->tweetParams = new TweetParameters($this->faker->sentence());
         $this->dmParams = new DirectMessageParameters(
             UserIdentifier::fromId($this->faker->randomNumber()),
@@ -88,6 +130,8 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
         );
         $this->followParams = new FollowParameters(UserIdentifier::fromId($this->faker->randomNumber()));
         $this->unfollowParams = UserIdentifier::fromId($this->faker->randomNumber());
+        $this->deleteDirectMessageParameters = new DeleteDirectMessageParameters($this->faker->randomNumber());
+        $this->deleteTweetParameters = new DeleteTweetParameters($this->faker->randomNumber());
 
         $this->userInfo = new \stdClass();
         $this->userInfo->httpstatus = 200;
@@ -149,9 +193,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertItWillCallTwitterApiForUserInformation();
 
-        $userInformation = $this->classUnderTest->getUserInformation(
-            new UserInformationQuery(UserIdentifier::fromScreenName('RemiSan'))
-        );
+        $userInformation = $this->classUnderTest->getUserInformation($this->userInformationQuery);
 
         self::assertInstanceOf(ApiResponse::class, $userInformation);
     }
@@ -164,7 +206,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertItWillFollowUserStream();
 
         $this->classUnderTest->consumeUserStream(
-            new UserStreamQuery(),
+            $this->userStreamQuery,
             $this->callback
         );
     }
@@ -176,7 +218,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertItWillQueryTwitterStatusAPI();
 
-        $this->classUnderTest->statusesMentionsTimeLine(new MentionsTimelineQuery());
+        $this->classUnderTest->statusesMentionsTimeLine($this->mentionsTimelineQuery);
     }
 
     /**
@@ -184,7 +226,9 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldQueryUserTimeline()
     {
-        // TODO test
+        $this->assertItWillQueryTwitterStatusTimelineAPI();
+
+        $this->classUnderTest->statusesUserTimeLine($this->userTimelineQuery);
     }
 
     /**
@@ -194,7 +238,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertItWillQueryTwitterDirectMessagesAPI();
 
-        $this->classUnderTest->directMessages(new DirectMessageQuery());
+        $this->classUnderTest->directMessages($this->directMessageQuery);
     }
 
     /**
@@ -202,7 +246,9 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldQuerySentDirectMessages()
     {
-        // TODO test
+        $this->assertItWillQueryTwitterSentDirectMessagesAPI();
+
+        $this->classUnderTest->sentDirectMessages($this->sentDirectMessageQuery);
     }
 
     /**
@@ -210,7 +256,9 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldQueryFriends()
     {
-        // TODO test
+        $this->assertItWillQueryTwitterFriendAPI();
+
+        $this->classUnderTest->friends($this->friendsListQuery);
     }
 
     /**
@@ -238,7 +286,9 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldDeleteStatus()
     {
-        // TODO test
+        $this->assertItWillDeleteStatusThroughAPI();
+
+        $this->classUnderTest->deleteStatus($this->deleteTweetParameters);
     }
 
     /**
@@ -246,7 +296,9 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldDeleteDirectMessage()
     {
-        // TODO test
+        $this->assertItWillDeleteDirectMessageThroughAPI();
+
+        $this->classUnderTest->deleteDirectMessage($this->deleteDirectMessageParameters);
     }
 
     /**
@@ -311,15 +363,17 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
         $authResult = $this->getAuthenticationResult();
         $this->codebird
             ->shouldReceive('oauth_accessToken')
-            ->with(
-                ['oauth_verifier' => $this->verificationToken]
-            )->andReturn($authResult);
+            ->with([ 'oauth_verifier' => $this->verificationToken ])
+            ->andReturn($authResult);
     }
 
     private function assertItWillAskForARequestToken()
     {
         $authResult = $this->getAuthenticationResult();
-        $this->codebird->shouldReceive('oauth_requestToken')->andReturn($authResult)->once();
+        $this->codebird
+            ->shouldReceive('oauth_requestToken')
+            ->andReturn($authResult)
+            ->once();
     }
 
     private function assertItWillAuthenticateWithRequestToken()
@@ -334,36 +388,74 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 
     private function assertItWillFollowUserStream()
     {
-        $this->codebird->shouldReceive('setStreamingCallback')->with($this->callback)->once();
-        $this->codebird->shouldReceive('user')->once();
+        $this->codebird
+            ->shouldReceive('setStreamingCallback')
+            ->with($this->callback)
+            ->once();
+        $this->codebird
+            ->shouldReceive('user')
+            ->with($this->userStreamQuery->toArray())
+            ->once();
     }
 
     private function assertItWillQueryTwitterStatusAPI()
     {
-        $result = new \stdClass();
-        $result->httpstatus = 200;
+        $result = $this->getApiResponse();
 
         $this->codebird
             ->shouldReceive('statuses_mentionsTimeline')
+            ->with($this->mentionsTimelineQuery->toArray())
+            ->andReturn($result)
+            ->once();
+    }
+
+    private function assertItWillQueryTwitterStatusTimelineAPI()
+    {
+        $result = $this->getApiResponse();
+
+        $this->codebird
+            ->shouldReceive('statuses_userTimeline')
+            ->with($this->userTimelineQuery->toArray())
             ->andReturn($result)
             ->once();
     }
 
     private function assertItWillQueryTwitterDirectMessagesAPI()
     {
-        $result = new \stdClass();
-        $result->httpstatus = 200;
+        $result = $this->getApiResponse();
 
         $this->codebird
             ->shouldReceive('directMessages')
+            ->with($this->directMessageQuery->toArray())
+            ->andReturn($result)
+            ->once();
+    }
+
+    private function assertItWillQueryTwitterSentDirectMessagesAPI()
+    {
+        $result = $this->getApiResponse();
+
+        $this->codebird
+            ->shouldReceive('directMessages_sent')
+            ->with($this->sentDirectMessageQuery->toArray())
+            ->andReturn($result)
+            ->once();
+    }
+
+    private function assertItWillQueryTwitterFriendAPI()
+    {
+        $result = $this->getApiResponse();
+
+        $this->codebird
+            ->shouldReceive('friends_list')
+            ->with($this->friendsListQuery->toArray())
             ->andReturn($result)
             ->once();
     }
 
     private function assertItWillPostNewStatusToAPI()
     {
-        $result = new \stdClass();
-        $result->httpstatus = 200;
+        $result = $this->getApiResponse();
 
         $this->codebird
             ->shouldReceive('statuses_update')
@@ -374,8 +466,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 
     private function assertItWillPostNewDirectMessageToAPI()
     {
-        $result = new \stdClass();
-        $result->httpstatus = 200;
+        $result = $this->getApiResponse();
 
         $this->codebird
             ->shouldReceive('directMessages_new')
@@ -384,10 +475,31 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
             ->once();
     }
 
+    private function assertItWillDeleteStatusThroughAPI()
+    {
+        $result = $this->getApiResponse();
+
+        $this->codebird
+            ->shouldReceive('statuses_destroy_ID')
+            ->with($this->deleteTweetParameters->toArray())
+            ->andReturn($result)
+            ->once();
+    }
+
+    private function assertItWillDeleteDirectMessageThroughAPI()
+    {
+        $result = $this->getApiResponse();
+
+        $this->codebird
+            ->shouldReceive('directMessages_destroy')
+            ->with($this->deleteDirectMessageParameters->toArray())
+            ->andReturn($result)
+            ->once();
+    }
+
     private function assertItWillPostFollowCommandToAPI()
     {
-        $result = new \stdClass();
-        $result->httpstatus = 200;
+        $result = $this->getApiResponse();
 
         $this->codebird
             ->shouldReceive('friendships_create')
@@ -398,8 +510,7 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
 
     private function assertItWillPostUnfollowCommandToAPI()
     {
-        $result = new \stdClass();
-        $result->httpstatus = 200;
+        $result = $this->getApiResponse();
 
         $this->codebird
             ->shouldReceive('friendships_destroy')
@@ -441,5 +552,15 @@ class TwitterApiGatewayTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('users_show')
             ->andReturn($this->userInfo)
             ->once();
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getApiResponse()
+    {
+        $result = new \stdClass();
+        $result->httpstatus = 200;
+        return $result;
     }
 }
